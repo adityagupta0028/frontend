@@ -1,0 +1,565 @@
+/* Wishlist Page Styles */
+
+.wishlist-breadcrumb {
+  padding: 20px 0 15px 0;
+  font-size: 14px;
+  color: #868686;
+  margin-bottom: 30px;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.wishlist-breadcrumb a {
+  color: #868686;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.wishlist-breadcrumb a:hover {
+  color: #2C2C2C;
+}
+
+.breadcrumb-separator {
+  margin: 0 6px;
+  color: #868686;
+  font-weight: normal;
+}
+
+.breadcrumb-current {
+  color: #868686;
+}
+
+/* Page Header */
+.wishlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  padding: 0 20px;
+}
+
+.wishlist-title {
+  font-size: 32px;
+  font-weight: 400;
+  color: #2C2C2C;
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.share-wishlist-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid #2C2C2C;
+  color: #2C2C2C;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.share-wishlist-btn:hover {
+  background: #2C2C2C;
+  color: #ffffff;
+}
+
+/* Category Tabs */
+.wishlist-tabs {
+  display: flex;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.tab-btn {
+  padding: 12px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #868686;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  margin-bottom: -1px;
+}
+
+.tab-btn:hover {
+  color: #2C2C2C;
+}
+
+.tab-btn.active {
+  color: #2C2C2C;
+  border-bottom-color: #cb8161;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 24px;
+  font-weight: 400;
+  color: #2C2C2C;
+  margin: 0 0 30px 0;
+  font-family: 'Cormorant Garamond', serif;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 20px;
+}
+
+/* Wishlist Section */
+.wishlist-section {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  padding: 0 20px;
+}
+
+.wishlist-products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+/* Product Card */
+.wishlist-product-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.wishlist-product-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* Square aspect ratio */
+  background: #f6f6f6;
+  overflow: hidden;
+}
+
+.product-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.product-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.action-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #2C2C2C;
+}
+
+.action-icon:hover {
+  background: #ffffff;
+  transform: scale(1.1);
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.product-name {
+  font-size: 18px;
+  font-weight: 400;
+  color: #2C2C2C;
+  margin: 0 0 5px 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.product-type {
+  font-size: 14px;
+  color: #868686;
+  margin: 0 0 10px 0;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2C2C2C;
+  margin: 0 0 15px 0;
+}
+
+.complete-ring-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #2C2C2C;
+  color: #2C2C2C;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.complete-ring-btn:hover {
+  background: #2C2C2C;
+  color: #ffffff;
+}
+
+.product-options {
+  display: flex;
+  gap: 10px;
+}
+
+.size-select {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  background: #ffffff;
+  color: #2C2C2C;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.add-to-bag-btn {
+  flex: 1;
+  padding: 12px;
+  background: #2C2C2C;
+  border: 1px solid #2C2C2C;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-to-bag-btn:hover {
+  background: #cb8161;
+  border-color: #cb8161;
+}
+
+/* Promotional Card */
+.promotional-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.promo-image {
+  position: relative;
+  width: 100%;
+  padding-top: 150%; /* Taller aspect ratio */
+  overflow: hidden;
+}
+
+.promo-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7);
+}
+
+.promo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px;
+}
+
+.promo-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 0 10px 0;
+  font-weight: 500;
+}
+
+.promo-title {
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.book-appointment-btn {
+  width: 100%;
+  padding: 15px;
+  background: #2C2C2C;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.book-appointment-btn:hover {
+  background: #cb8161;
+}
+
+/* You May Also Like Section */
+.you-may-also-like {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+  position: relative;
+}
+
+.you-may-also-like .section-title {
+  margin-bottom: 30px;
+}
+
+.recommended-products {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.recommended-products::-webkit-scrollbar {
+  height: 4px;
+}
+
+.recommended-products::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.recommended-products::-webkit-scrollbar-thumb {
+  background: #cb8161;
+  border-radius: 2px;
+}
+
+.recommended-product-card {
+  min-width: 200px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  position: relative;
+}
+
+.recommended-product-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #2C2C2C;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 2;
+  font-weight: 600;
+}
+
+.product-badge.gift {
+  background: #cb8161;
+}
+
+.product-badge.bestseller {
+  background: #2C2C2C;
+}
+
+.product-badge.award {
+  background: #cb8161;
+}
+
+.product-badge.loved {
+  background: #2C2C2C;
+}
+
+.recommended-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.recommended-name {
+  font-size: 14px;
+  font-weight: 400;
+  color: #2C2C2C;
+  margin: 15px 15px 5px;
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 1.4;
+}
+
+.recommended-details {
+  font-size: 12px;
+  color: #868686;
+  margin: 0 15px 5px;
+  font-style: italic;
+}
+
+.recommended-price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2C2C2C;
+  margin: 0 15px 10px;
+}
+
+.color-swatches {
+  display: flex;
+  gap: 5px;
+  padding: 0 15px 15px;
+}
+
+.color-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #d4af37;
+  border: 1px solid #e5e5e5;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.color-swatch:hover {
+  transform: scale(1.2);
+}
+
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #2C2C2C;
+  z-index: 3;
+}
+
+.scroll-arrow:hover {
+  background: #cb8161;
+  border-color: #cb8161;
+  color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .wishlist-products {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .wishlist-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .wishlist-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .wishlist-products {
+    grid-template-columns: 1fr;
+  }
+
+  .wishlist-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn {
+    white-space: nowrap;
+    padding: 12px 15px;
+  }
+
+  .wishlist-title {
+    font-size: 24px;
+  }
+
+  .recommended-products {
+    gap: 15px;
+  }
+
+  .recommended-product-card {
+    min-width: 180px;
+  }
+
+  .scroll-arrow {
+    display: none;
+  }
+}
+
+/* Prevent blur */
+.wishlist-section,
+.wishlist-product-card,
+.recommended-product-card {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+

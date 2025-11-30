@@ -1,0 +1,260 @@
+/* My Appointments Page Styles */
+
+.my-appointments-breadcrumb {
+  padding: 20px 0 15px 0;
+  font-size: 14px;
+  color: #868686;
+  margin-bottom: 30px;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.my-appointments-breadcrumb a {
+  color: #868686;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.my-appointments-breadcrumb a:hover {
+  color: #2C2C2C;
+}
+
+.breadcrumb-separator {
+  margin: 0 6px;
+  color: #868686;
+  font-weight: normal;
+}
+
+.breadcrumb-current {
+  color: #868686;
+}
+
+/* Header */
+.my-appointments-header {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  padding: 0 20px;
+}
+
+.my-appointments-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2C2C2C;
+  margin: 0 0 15px 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.title-divider {
+  width: 100%;
+  height: 1px;
+  background: #e5e5e5;
+  margin: 0;
+}
+
+/* Appointments Container */
+.appointments-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+.appointments-table-wrapper {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.appointments-table thead {
+  background: #f6f6f6;
+}
+
+.appointments-table th {
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2C2C2C;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.appointments-table td {
+  padding: 15px 20px;
+  font-size: 14px;
+  color: #2C2C2C;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.appointments-table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.appointments-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Table Cell Styles */
+.meeting-id {
+  font-weight: 500;
+  font-family: 'Courier New', monospace;
+  color: #2C2C2C;
+}
+
+.meeting-link {
+  max-width: 250px;
+}
+
+.link-text {
+  color: #0066cc;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+  word-break: break-all;
+}
+
+.link-text:hover {
+  color: #004499;
+}
+
+.created-date,
+.meeting-date {
+  color: #2C2C2C;
+}
+
+.meeting-time {
+  font-weight: 500;
+  color: #2C2C2C;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-scheduled {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-completed {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.status-cancelled {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.status-default {
+  background: #f5f5f5;
+  color: #616161;
+}
+
+/* No Appointments */
+.no-appointments {
+  text-align: center;
+  padding: 60px 20px;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+.no-appointments p {
+  font-size: 16px;
+  color: #868686;
+  margin: 0 0 20px 0;
+}
+
+.book-appointment-link {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #2C2C2C;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.book-appointment-link:hover {
+  background: #cb8161;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .appointments-table {
+    font-size: 13px;
+  }
+
+  .appointments-table th,
+  .appointments-table td {
+    padding: 12px 15px;
+  }
+
+  .my-appointments-title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .appointments-table-wrapper {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .appointments-table {
+    min-width: 600px;
+  }
+
+  .appointments-table th,
+  .appointments-table td {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .my-appointments-title {
+    font-size: 28px;
+  }
+
+  .link-text {
+    font-size: 11px;
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
+
+/* Prevent blur */
+.my-appointments-header,
+.appointments-container,
+.appointments-table {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+

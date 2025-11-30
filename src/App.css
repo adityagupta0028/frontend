@@ -1,0 +1,27 @@
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#page {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.site-main {
+  width: 100%;
+}
+
+.main-content {
+  width: 100%;
+}
+
+.content-area {
+  width: 100%;
+}
+
+.site-content {
+  width: 100%;
+}
