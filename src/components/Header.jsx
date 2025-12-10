@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import './Header.css';
 
 function Header() {
   const navigate = useNavigate();
@@ -223,21 +224,325 @@ function Header() {
                   <li className="level-0 menu-item menu-item-has-children">
                     <Link to="/shop"><span className="menu-item-text">Shop</span></Link>
                     <ul className="sub-menu">
-                      <li className="level-1 menu-item">
-                        <Link to="/shop"><span className="menu-item-text">Products</span></Link> 
-                      </li>
-                      <li>
-                        <Link to="/details"><span className="menu-item-text">Details</span></Link>
-                      </li>
-                      <li>
-                        <Link to="/cart"><span className="menu-item-text">Cart</span></Link>
-                      </li>
-                      <li>
-                        <Link to="/checkout"><span className="menu-item-text">Checkout</span></Link>
-                      </li>
-                      <li>
-                        <Link to="/wishlist"><span className="menu-item-text">Wishlist</span></Link>
-                      </li>
+                      <div className="container row mx-auto">
+                        <div className="col-md-6">
+                          <h3 className="border-bottom pb-2 fw-bold">CURATED RINGS</h3>
+                          <div className="row">
+                            <div className="col-md-6">
+                              <p>Shop by Style</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/shop"><span className="menu-item-text">Solitaire</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/shop"><span className="menu-item-text">Side Stone</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/shop"><span className="menu-item-text">Halo</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/shop"><span className="menu-item-text">Vintage</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/shop"><span className="menu-item-text">Botanical</span></Link>
+                              </li>
+                            </div>
+                            <div className="col-md-6">
+                              <p>Shop by Shape</p>
+                              <div className="row">
+                                <div className="col-6">
+                                  <li className="level-1 menu-item px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Round</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Princess</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Oval</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Cushio</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Radiant</span></Link>
+                                  </li>
+                                </div>
+                                <div className="col-6">
+                                  <li className="level-1 menu-item px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Pear</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Enerald</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Assher</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Heart</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/shop"><span className="menu-item-text">Vintage Cuts</span></Link>
+                                  </li>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="intro-btn w-100 mt-4">
+                            <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center">View all</Link>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <h3 className="border-bottom pb-2 fw-bold">DESIGN STUDIO</h3>
+                          <div className="row">
+                            <div className="col-12">
+                              <img src="/media/site-headdder.jpg" alt="image" className="w-100" />
+                            </div>
+                            <div className="col-md-12 d-flex">
+                              <div className="intro-btn mt-4 me-4">
+                                <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with Setting</Link>
+                              </div>
+                              <div className="intro-btn mt-4">
+                                <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with a Diamond</Link>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <p className="fw-bold border-bottom mt-3 pb-2">Diamond Education</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 1</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 2</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 3</span></Link>
+                              </li>
+                            </div>
+                            <div className="col-md-6">
+                              <p className="fw-bold border-bottom mt-3 pb-2">Jewelry Guide</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 1</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 2</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 3</span></Link>
+                              </li>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ul>
+                  </li>
+                  <li className="level-0 menu-item menu-item-has-children">
+                    <Link to="/engagement-rings"><span className="menu-item-text">Engagement</span></Link>
+                    <ul className="sub-menu">
+                      <div className="container row mx-auto">
+                        <div className="col-md-6">
+                          <h3 className="border-bottom pb-2 fw-bold">ENGAGEMENT RINGS</h3>
+                          <div className="row">
+                            <div className="col-md-6">
+                              <p>Shop by Style</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Classic</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Modern</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Vintage</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Custom</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Halo</span></Link>
+                              </li>
+                            </div>
+                            <div className="col-md-6">
+                              <p>Shop by Shape</p>
+                              <div className="row">
+                                <div className="col-6">
+                                  <li className="level-1 menu-item px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Round</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Princess</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Oval</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Cushion</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Radiant</span></Link>
+                                  </li>
+                                </div>
+                                <div className="col-6">
+                                  <li className="level-1 menu-item px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Pear</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Emerald</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Asscher</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/engagement-rings"><span className="menu-item-text">Heart</span></Link>
+                                  </li>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="intro-btn w-100 mt-4">
+                            <Link to="/engagement-rings" className="w-100 button button-black button-arrow animation-horizontal text-center">View all</Link>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <h3 className="border-bottom pb-2 fw-bold">DESIGN STUDIO</h3>
+                          <div className="row">
+                            <div className="col-12">
+                              <img src="/media/product/cat-1.jpg" alt="image" className="w-100" />
+                            </div>
+                            <div className="col-md-12 d-flex">
+                              <div className="intro-btn mt-4 me-4">
+                                <Link to="/engagement-rings" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with Setting</Link>
+                              </div>
+                              <div className="intro-btn mt-4">
+                                <Link to="/engagement-rings" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with a Diamond</Link>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <p className="fw-bold border-bottom mt-3 pb-2">Diamond Education</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">The 4 C's</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Diamond Shapes</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Ring Settings</span></Link>
+                              </li>
+                            </div>
+                            <div className="col-md-6">
+                              <p className="fw-bold border-bottom mt-3 pb-2">Jewelry Guide</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Ring Sizing</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Care & Maintenance</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/engagement-rings"><span className="menu-item-text">Custom Design</span></Link>
+                              </li>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ul>
+                  </li>
+                  <li className="level-0 menu-item menu-item-has-children">
+                    <Link to="/wedding"><span className="menu-item-text">Wedding</span></Link>
+                    <ul className="sub-menu">
+                      <div className="container row mx-auto">
+                        <div className="col-md-6">
+                          <h3 className="border-bottom pb-2 fw-bold">WEDDING BANDS</h3>
+                          <div className="row">
+                            <div className="col-md-6">
+                              <p>Shop by Style</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Classic</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Eternity</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Vintage</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Modern</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Matching Sets</span></Link>
+                              </li>
+                            </div>
+                            <div className="col-md-6">
+                              <p>Shop by Material</p>
+                              <div className="row">
+                                <div className="col-6">
+                                  <li className="level-1 menu-item px-0">
+                                    <Link to="/wedding"><span className="menu-item-text">Gold</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/wedding"><span className="menu-item-text">Platinum</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/wedding"><span className="menu-item-text">Rose Gold</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/wedding"><span className="menu-item-text">White Gold</span></Link>
+                                  </li>
+                                </div>
+                                <div className="col-6">
+                                  <li className="level-1 menu-item px-0">
+                                    <Link to="/wedding"><span className="menu-item-text">Diamond</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/wedding"><span className="menu-item-text">Plain</span></Link>
+                                  </li>
+                                  <li className="px-0">
+                                    <Link to="/wedding"><span className="menu-item-text">Engraved</span></Link>
+                                  </li>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="intro-btn w-100 mt-4">
+                            <Link to="/wedding" className="w-100 button button-black button-arrow animation-horizontal text-center">View all</Link>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <h3 className="border-bottom pb-2 fw-bold">DESIGN STUDIO</h3>
+                          <div className="row">
+                            <div className="col-12">
+                              <img src="/media/product/cat-6-1.jpg" alt="image" className="w-100" />
+                            </div>
+                            <div className="col-md-12 d-flex">
+                              <div className="intro-btn mt-4 me-4">
+                                <Link to="/wedding" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with Setting</Link>
+                              </div>
+                              <div className="intro-btn mt-4">
+                                <Link to="/wedding" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with a Diamond</Link>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <p className="fw-bold border-bottom mt-3 pb-2">Wedding Guide</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Ring Sizing</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Matching Sets</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Care & Maintenance</span></Link>
+                              </li>
+                            </div>
+                            <div className="col-md-6">
+                              <p className="fw-bold border-bottom mt-3 pb-2">Anniversary Bands</p>
+                              <li className="level-1 menu-item px-0">
+                                <Link to="/wedding"><span className="menu-item-text">5 Year</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/wedding"><span className="menu-item-text">10 Year</span></Link>
+                              </li>
+                              <li className="px-0">
+                                <Link to="/wedding"><span className="menu-item-text">Custom</span></Link>
+                              </li>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </ul>
                   </li>
                   <li className="level-0 menu-item">

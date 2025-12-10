@@ -21,6 +21,8 @@ import Profile from './pages/Profile';
 import Privacy from './pages/Privacy';
 import ReturnPolicy from './pages/ReturnPolicy';
 import Terms from './pages/Terms';
+import Engagement from './pages/Engagement';
+import Wedding from './pages/Wedding';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -49,6 +51,8 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/return-policy" element={<ReturnPolicy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/engagement-rings" element={<Engagement />} />
+          <Route path="/wedding" element={<Wedding />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
