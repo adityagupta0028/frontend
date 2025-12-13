@@ -17,7 +17,6 @@ function About() {
               </div>
             </div>
           </div>
-
           <div id="content" className="site-content" role="main">
             <div className="page-about-us">
               <section className="section section-padding m-t-20 m-b-70">

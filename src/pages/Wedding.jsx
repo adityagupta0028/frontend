@@ -1,40 +1,153 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useGetSubCategoryQuery } from '../Services/CategoryApi';
+import { useGetProductQuery } from '../Services/ProductApi';
+import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
+
+// Wedding Category ID
+const WEDDING_CATEGORY_ID = '6939a0978c7aaa4fcdf5940c';
 
 function Wedding() {
   const [layoutView, setLayoutView] = useState('grid');
 
-  const categories = [
-    { id: 1, name: 'Bracelets', image: '/media/product/cat-6-1.jpg' },
-    { id: 2, name: 'Charms', image: '/media/product/cat-6-2.jpg' },
-    { id: 3, name: 'Earrings', image: '/media/product/cat-6-3.jpg' },
-    { id: 4, name: 'Necklaces', image: '/media/product/cat-6-4.jpg' },
-    { id: 5, name: 'Rings', image: '/media/product/cat-6-5.jpg' },
-    { id: 6, name: 'Rings', image: '/media/product/cat-6-6.jpg' },
-  ];
+  // Fetch subcategories for Wedding category
+  const { 
+    data: subcategoriesData, 
+    isLoading: subcategoriesLoading,
+    error: subcategoriesError 
+  } = useGetSubCategoryQuery(WEDDING_CATEGORY_ID);
 
-  const products = [
-    { id: 1, name: 'Medium Flat Hoops', price: 150.00, image: '/media/product/1.jpg', hoverImage: '/media/product/1-2.jpg', rating: 0, reviews: 0, label: 'hot', hasFilters: true },
-    { id: 2, name: 'Yilver And Turquoise Earrings', price: 100.00, originalPrice: 150.00, image: '/media/product/5.jpg', hoverImage: '/media/product/5-2.jpg', rating: 5, reviews: 1, label: 'sale', discount: '-33%', hasBorder: true },
-    { id: 3, name: 'Bold Pearl Hoop Earrings', price: 150.00, image: '/media/product/2.jpg', hoverImage: '/media/product/2-2.jpg', rating: 0, reviews: 0 },
-    { id: 4, name: 'Bora Armchair', price: 100.00, originalPrice: 150.00, image: '/media/product/6.jpg', hoverImage: '/media/product/6-2.jpg', rating: 4, reviews: 2, label: 'both', discount: '-33%', hasBorder: true },
-    { id: 5, name: 'Twin Hoops', price: 90.00, originalPrice: 100.00, image: '/media/product/3.jpg', hoverImage: '/media/product/3-2.jpg', rating: 5, reviews: 5, label: 'both', discount: '-23%' },
-    { id: 6, name: 'Diamond Bracelet', price: 50.00, originalPrice: 79.00, image: '/media/product/7.jpg', hoverImage: '/media/product/7-2.jpg', rating: 0, reviews: 0, label: 'sale', discount: '-37%', hasBorder: true },
-    { id: 7, name: 'Yilver And Turquoise Earrings', price: 120.00, image: '/media/product/4.jpg', hoverImage: '/media/product/4-2.jpg', rating: 0, reviews: 0 },
-    { id: 8, name: 'X Hoop Earrings', price: 180.00, originalPrice: 200.00, image: '/media/product/8.jpg', hoverImage: '/media/product/8-2.jpg', rating: 5, reviews: 3, label: 'sale', discount: '-10%', hasBorder: true },
-    { id: 9, name: 'Yintage Medallion Necklace', price: 140.00, image: '/media/product/9.jpg', hoverImage: '/media/product/9-2.jpg', rating: 4, reviews: 1, label: 'hot', hasBorder: true },
-  ];
+  // Transform subcategories from API
+  const subcategories = useMemo(() => {
+    if (subcategoriesData?.data?.subcategories && subcategoriesData.data.subcategories.length > 0) {
+      return subcategoriesData.data.subcategories.map((sub, index) => ({
+        id: sub._id || index + 1,
+        name: sub.title || sub.subCategoryName || 'Subcategory',
+        image: sub.image 
+          ? (sub.image.startsWith('http') 
+              ? sub.image 
+              : `${GetUrl.IMAGE_URL}${sub.image}`)
+          : `/media/product/cat-6-${(index % 6) + 1}.jpg`,
+      }));
+    }
+    // Fallback to default subcategories if API data is not available
+    return [
+      { id: 1, name: 'Bracelets', image: '/media/product/cat-6-1.jpg' },
+      { id: 2, name: 'Charms', image: '/media/product/cat-6-2.jpg' },
+      { id: 3, name: 'Earrings', image: '/media/product/cat-6-3.jpg' },
+      { id: 4, name: 'Necklaces', image: '/media/product/cat-6-4.jpg' },
+      { id: 5, name: 'Rings', image: '/media/product/cat-6-5.jpg' },
+      { id: 6, name: 'Rings', image: '/media/product/cat-6-6.jpg' },
+    ];
+  }, [subcategoriesData]);
+
+  // Fetch products for Wedding category
+  const { 
+    data: productsData, 
+    isLoading: productsLoading,
+    error: productsError 
+  } = useGetProductQuery({
+    categoryId: WEDDING_CATEGORY_ID,
+    limit: 20,
+    page: 1,
+  });
+
+  // Transform products from API
+  const products = useMemo(() => {
+    if (productsData?.data?.products && productsData.data.products.length > 0) {
+      return productsData.data.products.map((product) => {
+        const images = product.images || [];
+        const mainImage = images[0] 
+          ? (images[0].startsWith('http') 
+              ? images[0] 
+              : `${GetUrl.IMAGE_URL}/${images[0]}`)
+          : '/media/product/1.jpg';
+        const hoverImage = images[1] 
+          ? (images[1].startsWith('http') 
+              ? images[1] 
+              : `${GetUrl.IMAGE_URL}/${images[1]}`)
+          : mainImage;
+        
+        const originalPrice = product.original_price || 0;
+        const discountedPrice = product.discounted_price || originalPrice;
+        const discount = originalPrice && discountedPrice < originalPrice
+          ? Math.round(((originalPrice - discountedPrice) / originalPrice) * 100)
+          : null;
+        
+        let label = null;
+        if (product.promotion_label) label = 'hot';
+        if (product.discount_label || discount) label = label ? 'both' : 'sale';
+        
+        return {
+          id: product._id || product.product_id,
+          name: product.product_name || 'Product',
+          price: discountedPrice,
+          originalPrice: originalPrice,
+          image: mainImage,
+          hoverImage: hoverImage,
+          rating: product.average_rating || 0,
+          reviews: product.review_count || 0,
+          label: label,
+          discount: discount ? `-${discount}%` : null,
+          hasFilters: false,
+          hasBorder: false,
+        };
+      });
+    }
+    // Fallback to default products if API data is not available
+    return [
+      { id: 1, name: 'Medium Flat Hoops', price: 150.00, image: '/media/product/1.jpg', hoverImage: '/media/product/1-2.jpg', rating: 0, reviews: 0, label: 'hot', hasFilters: true },
+      { id: 2, name: 'Yilver And Turquoise Earrings', price: 100.00, originalPrice: 150.00, image: '/media/product/5.jpg', hoverImage: '/media/product/5-2.jpg', rating: 5, reviews: 1, label: 'sale', discount: '-33%', hasBorder: true },
+      { id: 3, name: 'Bold Pearl Hoop Earrings', price: 150.00, image: '/media/product/2.jpg', hoverImage: '/media/product/2-2.jpg', rating: 0, reviews: 0 },
+      { id: 4, name: 'Bora Armchair', price: 100.00, originalPrice: 150.00, image: '/media/product/6.jpg', hoverImage: '/media/product/6-2.jpg', rating: 4, reviews: 2, label: 'both', discount: '-33%', hasBorder: true },
+      { id: 5, name: 'Twin Hoops', price: 90.00, originalPrice: 100.00, image: '/media/product/3.jpg', hoverImage: '/media/product/3-2.jpg', rating: 5, reviews: 5, label: 'both', discount: '-23%' },
+      { id: 6, name: 'Diamond Bracelet', price: 50.00, originalPrice: 79.00, image: '/media/product/7.jpg', hoverImage: '/media/product/7-2.jpg', rating: 0, reviews: 0, label: 'sale', discount: '-37%', hasBorder: true },
+      { id: 7, name: 'Yilver And Turquoise Earrings', price: 120.00, image: '/media/product/4.jpg', hoverImage: '/media/product/4-2.jpg', rating: 0, reviews: 0 },
+      { id: 8, name: 'X Hoop Earrings', price: 180.00, originalPrice: 200.00, image: '/media/product/8.jpg', hoverImage: '/media/product/8-2.jpg', rating: 5, reviews: 3, label: 'sale', discount: '-10%', hasBorder: true },
+      { id: 9, name: 'Yintage Medallion Necklace', price: 140.00, image: '/media/product/9.jpg', hoverImage: '/media/product/9-2.jpg', rating: 4, reviews: 1, label: 'hot', hasBorder: true },
+    ];
+  }, [productsData]);
+
+  const isLoading = subcategoriesLoading || productsLoading;
 
   const shapes = ['Round', 'Princess', 'Oval', 'Cushio', 'Radiant'];
   const carats = ['2', '3', '4', '5', '6', '7', '8'];
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div id="site-main" className="site-main">
+        <div className="section-padding">
+          <div className="section-container p-l-r text-center">
+            <p>Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (subcategoriesError || productsError) {
+    return (
+      <div id="site-main" className="site-main">
+        <div className="section-padding">
+          <div className="section-container p-l-r text-center">
+            <p>Error loading data. Please try again later.</p>
+            {subcategoriesError && <p className="text-danger">Subcategories Error: {subcategoriesError.message}</p>}
+            {productsError && <p className="text-danger">Products Error: {productsError.message}</p>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+console.log("subcategories===>",subcategories);
   return (
     <div id="site-main" className="site-main">
       <div id="main-content" className="main-content">
         <div id="primary" className="content-area">
           <div id="content" className="site-content" role="main">
-            {/* Page Title Section */}
+            {/* title for category  */}
             <div id="title" className="page-title">
               <div className="section-container">
                 <div className="content-title-heading">
@@ -51,7 +164,7 @@ function Wedding() {
               </div>
             </div>
 
-            {/* Category Slider Section */}
+            {/* subcategories Slider Section */}
             <section className="section section-padding">
               <div className="section-container">
                 <div className="block block-product-cats slider layout-4">
@@ -60,24 +173,38 @@ function Wedding() {
                       <div className="col-md-12">
                         <div className="product-cats-list slick-wrap">
                           <div className="slick-sliders content-category" data-slidestoscroll="true" data-dots="false" data-nav="1" data-columns4="1" data-columns3="2" data-columns2="2" data-columns1="3" data-columns1440="4" data-columns="4">
-                            {categories.map((category) => (
-                              <div key={category.id} className="slick-item slick-slide">
-                                <div className="item item-product-cat">
-                                  <div className="item-product-cat-content">
-                                    <Link to="/shop">
-                                      <div className="item-image animation-horizontal">
-                                        <img width="298" height="224" src={category.image} alt={category.name} />
+                            {subcategories.length > 0 ? (
+                              subcategories.map((subcategory) => (
+                                <div key={subcategory.id} className="slick-item slick-slide">
+                                  <div className="item item-product-cat">
+                                    <div className="item-product-cat-content">
+                                      <Link to="/shop">
+                                        <div className="item-image animation-horizontal">
+                                          <img 
+                                            width="298" 
+                                            height="224" 
+                                            src={subcategory.image} 
+                                            alt={subcategory.name}
+                                            onError={(e) => {
+                                              e.target.src = `/media/product/cat-6-1.jpg`;
+                                            }}
+                                          />
+                                        </div>
+                                      </Link>
+                                      <div className="product-cat-content-info">
+                                        <h2 className="item-title">
+                                          <Link to="/shop">{subcategory.name}</Link>
+                                        </h2>
                                       </div>
-                                    </Link>
-                                    <div className="product-cat-content-info">
-                                      <h2 className="item-title">
-                                        <Link to="/shop">{category.name}</Link>
-                                      </h2>
                                     </div>
                                   </div>
                                 </div>
+                              ))
+                            ) : (
+                              <div className="text-center p-4">
+                                <p>No subcategories available</p>
                               </div>
-                            ))}
+                            )}
                           </div>
                         </div>
                       </div>
@@ -86,6 +213,7 @@ function Wedding() {
                 </div>
               </div>
             </section>
+
 
             {/* Products Section */}
             <div className="section-padding">
@@ -268,7 +396,7 @@ function Wedding() {
                                         </div>
                                       )}
                                       <div className={`product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
-                                        <Link to="/details">
+                                        <Link to={`/details?productId=${product.id}`}>
                                           <img width="600" height="600" src={product.image} className="post-image" alt={product.name} />
                                           <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
                                         </Link>
@@ -294,7 +422,7 @@ function Wedding() {
                                           <div className={`star star-${product.rating}`}></div>
                                           <span className="count">({product.reviews} review{product.reviews !== 1 ? 's' : ''})</span>
                                         </div>
-                                        <h3 className="product-title"><Link to="/details">{product.name}</Link></h3>
+                                        <h3 className="product-title"><Link to={`/details?productId=${product.id}`}>{product.name}</Link></h3>
                                         <span className="price">
                                           {product.originalPrice ? (
                                             <>
@@ -389,7 +517,7 @@ function Wedding() {
                                         </div>
                                       )}
                                       <div className="product-thumb-hover">
-                                        <Link to="/details">
+                                        <Link to={`/details?productId=${product.id}`}>
                                           <img width="600" height="600" src={product.image} className="post-image" alt={product.name} />
                                           <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
                                         </Link>
@@ -401,7 +529,7 @@ function Wedding() {
                                   </div>
                                   <div className="col-md-8">
                                     <div className="products-content">
-                                      <h3 className="product-title"><Link to="/details">{product.name}</Link></h3>
+                                      <h3 className="product-title"><Link to={`/details?productId=${product.id}`}>{product.name}</Link></h3>
                                       <span className="price">
                                         {product.originalPrice ? (
                                           <>

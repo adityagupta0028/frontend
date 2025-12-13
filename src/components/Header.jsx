@@ -294,14 +294,14 @@ function Header() {
                           <h3 className="border-bottom pb-2 fw-bold">DESIGN STUDIO</h3>
                           <div className="row">
                             <div className="col-12">
-                              <img src="/media/site-headdder.jpg" alt="image" className="w-100" />
+                              <img src="/media/site-headdder.jpg" alt="image" className="w-100" style={{height:'200px',objectFit:'cover'}} />
                             </div>
                             <div className="col-md-12 d-flex">
                               <div className="intro-btn mt-4 me-4">
-                                <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with Setting</Link>
+                                <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center text-nowrap">Start with Setting</Link>
                               </div>
                               <div className="intro-btn mt-4">
-                                <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with a Diamond</Link>
+                                <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center text-nowrap">Start with a Diamond</Link>
                               </div>
                             </div>
                             <div className="col-md-6">
@@ -333,6 +333,7 @@ function Header() {
                       </div>
                     </ul>
                   </li>
+                  {/* {category list here} */}
                   <li className="level-0 menu-item menu-item-has-children">
                     <Link to="/engagement-rings"><span className="menu-item-text">Engagement</span></Link>
                     <ul className="sub-menu">
@@ -545,6 +546,7 @@ function Header() {
                       </div>
                     </ul>
                   </li>
+                  {/* {category list ends here} */}
                   <li className="level-0 menu-item">
                     <Link to="/contact"><span className="menu-item-text">Contact</span></Link>
                   </li>
