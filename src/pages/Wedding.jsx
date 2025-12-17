@@ -4,6 +4,8 @@ import { useGetSubCategoryQuery } from '../Services/CategoryApi';
 import { useGetProductQuery } from '../Services/ProductApi';
 import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
+import ProductSlider from '../components/home/productSlider';
+import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 
 // Wedding Category ID
 const WEDDING_CATEGORY_ID = '6939a0978c7aaa4fcdf5940c';
@@ -97,7 +99,7 @@ function Wedding() {
     }
     // Fallback to default products if API data is not available
     return [
-      { id: 1, name: 'Medium Flat Hoops', price: 150.00, image: '/media/product/1.jpg', hoverImage: '/media/product/1-2.jpg', rating: 0, reviews: 0, label: 'hot', hasFilters: true },
+      { id: "6942ee63771a596bb3308cd1", name: 'Medium Flat Hoops', price: 150.00, image: '/media/product/1.jpg', hoverImage: '/media/product/1-2.jpg', rating: 0, reviews: 0, label: 'hot', hasFilters: true },
       { id: 2, name: 'Yilver And Turquoise Earrings', price: 100.00, originalPrice: 150.00, image: '/media/product/5.jpg', hoverImage: '/media/product/5-2.jpg', rating: 5, reviews: 1, label: 'sale', discount: '-33%', hasBorder: true },
       { id: 3, name: 'Bold Pearl Hoop Earrings', price: 150.00, image: '/media/product/2.jpg', hoverImage: '/media/product/2-2.jpg', rating: 0, reviews: 0 },
       { id: 4, name: 'Bora Armchair', price: 100.00, originalPrice: 150.00, image: '/media/product/6.jpg', hoverImage: '/media/product/6-2.jpg', rating: 4, reviews: 2, label: 'both', discount: '-33%', hasBorder: true },
@@ -165,54 +167,7 @@ console.log("subcategories===>",subcategories);
             </div>
 
             {/* subcategories Slider Section */}
-            <section className="section section-padding">
-              <div className="section-container">
-                <div className="block block-product-cats slider layout-4">
-                  <div className="block-widget-wrap">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <div className="product-cats-list slick-wrap">
-                          <div className="slick-sliders content-category" data-slidestoscroll="true" data-dots="false" data-nav="1" data-columns4="1" data-columns3="2" data-columns2="2" data-columns1="3" data-columns1440="4" data-columns="4">
-                            {subcategories.length > 0 ? (
-                              subcategories.map((subcategory) => (
-                                <div key={subcategory.id} className="slick-item slick-slide">
-                                  <div className="item item-product-cat">
-                                    <div className="item-product-cat-content">
-                                      <Link to="/shop">
-                                        <div className="item-image animation-horizontal">
-                                          <img 
-                                            width="298" 
-                                            height="224" 
-                                            src={subcategory.image} 
-                                            alt={subcategory.name}
-                                            onError={(e) => {
-                                              e.target.src = `/media/product/cat-6-1.jpg`;
-                                            }}
-                                          />
-                                        </div>
-                                      </Link>
-                                      <div className="product-cat-content-info">
-                                        <h2 className="item-title">
-                                          <Link to="/shop">{subcategory.name}</Link>
-                                        </h2>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))
-                            ) : (
-                              <div className="text-center p-4">
-                                <p>No subcategories available</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
+            <SubCategoryCarousel />
 
 
             {/* Products Section */}
