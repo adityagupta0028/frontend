@@ -10,7 +10,7 @@ function Header() {
   return (
     <>
       <div className="bg-brown py-2">
-        <p className="text-white text-center mb-0">Free Shipping and Free Return</p>
+        <p className="text-white text-center mb-0">Free Shipping and Free Returns</p>
       </div>
       <header id="site-header" className="site-header header-v3 small-padding">
         <div className="header-mobile">
