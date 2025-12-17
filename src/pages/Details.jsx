@@ -23,8 +23,6 @@ function Details() {
     error 
   } = useGetSingleProductQuery(id || '');
 
-console.log(productData);
-
 
 
 
@@ -42,14 +40,21 @@ console.log(productData);
       const sizes = p.variants?.map(v => v.size).filter(Boolean) || [];
       const colors = p.variants?.map(v => v.color).filter(Boolean) || [];
       
-      // Process metal types
-      const metalTypes = Array.isArray(p.metal_type) ? p.metal_type.filter(Boolean) : [];
+      // Process metal types - combine from both product and variants
+      //const metalTypesFromProduct = Array.isArray(p.metal_type) ? p.metal_type.filter(Boolean) : [];
+      const metalTypesFromVariants = p.variants?.map(v => v.metal_type).filter(Boolean) || [];
+      // Combine and remove duplicates
+      const metalTypes = [...new Set([ ...metalTypesFromVariants])];
       
-      // Process carat weights
-      const caratWeights = Array.isArray(p.carat_weight) ? p.carat_weight.filter(Boolean) : [];
+      // Process carat weights - combine from both product and variants
+      const caratWeightsFromProduct = Array.isArray(p.carat_weight) ? p.carat_weight.filter(Boolean) : [];
+      const caratWeightsFromVariants = p.variants?.map(v => v.carat_weight).filter(Boolean) || [];
+      const caratWeights = [...new Set([...caratWeightsFromProduct, ...caratWeightsFromVariants])];
       
-      // Process diamond quality
-      const diamondQualities = Array.isArray(p.diamond_quality) ? p.diamond_quality.filter(Boolean) : [];
+      // Process diamond quality - combine from both product and variants
+      const diamondQualitiesFromProduct = Array.isArray(p.diamond_quality) ? p.diamond_quality.filter(Boolean) : [];
+      const diamondQualitiesFromVariants = p.variants?.map(v => v.diamond_quality).filter(Boolean) || [];
+      let diamondQualities = [...new Set([...diamondQualitiesFromProduct, ...diamondQualitiesFromVariants])];
       // If diamond_quality is empty, try to construct from color and clarity grades
       if (diamondQualities.length === 0 && (p.diamond_color_grade || p.diamond_clarity_grade)) {
         const qualityStr = `${p.diamond_color_grade || ''}${p.diamond_clarity_grade ? ', ' + p.diamond_clarity_grade : ''}`.trim();
@@ -58,8 +63,10 @@ console.log(productData);
         }
       }
       
-      // Process ring sizes
-      const ringSizes = Array.isArray(p.ring_size) ? p.ring_size.filter(Boolean) : [];
+      // Process ring sizes - combine from both product and variants
+      const ringSizesFromProduct = Array.isArray(p.ring_size) ? p.ring_size.filter(Boolean) : [];
+      const ringSizesFromVariants = p.variants?.map(v => v.ring_size).filter(Boolean) || [];
+      const ringSizes = [...new Set([...ringSizesFromProduct, ...ringSizesFromVariants])];
 
       return {
         id: p._id || p.product_id,
@@ -83,7 +90,10 @@ console.log(productData);
         ringSizes: ringSizes,
         inStock: p.in_stock !== false,
         additionalInfo: p.additional_information || {},
-        reviews: p.reviews || []
+        reviews: p.reviews || [],
+        variants:p.variants || []
+
+
       };
     }
     return null;
@@ -156,6 +166,62 @@ console.log(productData);
 
   const { start: thumbnailStart, thumbnails } = getVisibleThumbnails();
 
+  // Find matching variant and calculate price based on selected options
+  const currentVariantPrice = useMemo(() => {
+    if (!product || !product.variants || product.variants.length === 0) {
+      return {
+        price: product?.price || 0,
+        originalPrice: product?.originalPrice || null
+      };
+    }
+
+    // Find matching variant based on selected options
+    const matchingVariant = product.variants.find(variant => {
+      // Match all selected attributes
+      const sizeMatch = !selectedSize || !variant.size || variant.size === selectedSize;
+      const colorMatch = !selectedColor || !variant.color || variant.color === selectedColor;
+      const metalTypeMatch = !selectedMetalType || !variant.metal_type || 
+        String(variant.metal_type).toLowerCase() === String(selectedMetalType).toLowerCase();
+      const caratWeightMatch = !selectedCaratWeight || !variant.carat_weight || 
+        String(variant.carat_weight) === String(selectedCaratWeight);
+      const diamondQualityMatch = !selectedDiamondQuality || !variant.diamond_quality || 
+        String(variant.diamond_quality) === String(selectedDiamondQuality);
+      const ringSizeMatch = !selectedRingSize || !variant.ring_size || 
+        String(variant.ring_size) === String(selectedRingSize);
+
+      return sizeMatch && colorMatch && metalTypeMatch && caratWeightMatch && 
+             diamondQualityMatch && ringSizeMatch;
+    });
+
+    // If exact match found, use variant price
+    if (matchingVariant) {
+      return {
+        price: matchingVariant.discounted_price || matchingVariant.price || matchingVariant.original_price || product.price || 0,
+        originalPrice: matchingVariant.original_price || (matchingVariant.discounted_price && matchingVariant.price ? matchingVariant.price : null) || product.originalPrice || null
+      };
+    }
+
+    // Try to find partial match (prioritize metal type if selected)
+    if (selectedMetalType && product.variants.length > 0) {
+      const metalTypeVariant = product.variants.find(v => 
+        v.metal_type && String(v.metal_type).toLowerCase() === String(selectedMetalType).toLowerCase()
+      );
+      
+      if (metalTypeVariant) {
+        return {
+          price: metalTypeVariant.discounted_price || metalTypeVariant.price || metalTypeVariant.original_price || product.price || 0,
+          originalPrice: metalTypeVariant.original_price || (metalTypeVariant.discounted_price && metalTypeVariant.price ? metalTypeVariant.price : null) || product.originalPrice || null
+        };
+      }
+    }
+
+    // Fallback to base product price
+    return {
+      price: product.price || 0,
+      originalPrice: product.originalPrice || null
+    };
+  }, [product, selectedSize, selectedColor, selectedMetalType, selectedCaratWeight, selectedDiamondQuality, selectedRingSize]);
+
   // Loading state
   if (isLoading) {
     return (
@@ -193,16 +259,21 @@ console.log(productData);
 
   // Render star rating
   const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    // Ensure rating is a valid number between 0 and 5
+    const validRating = Math.max(0, Math.min(5, rating || 0));
+    const roundedRating = Math.round(validRating);
     
+    // Always show rating, even if 0 (will show empty stars)
     return (
-      <div className="rating">
-        <div className={`star star-${Math.round(rating)}`}></div>
-        {product.reviewCount > 0 && (
-          <div className="review-count">
+      <div className="rating" style={{ display: 'inline-block', marginBottom: '10px' }}>
+        <div className={`star star-${roundedRating}`} style={{ display: 'inline-block' }}></div>
+        {product.reviewCount > 0 ? (
+          <div className="review-count" style={{ display: 'inline-block', marginLeft: '7.5pt' }}>
             ({product.reviewCount}<span> reviews</span>)
+          </div>
+        ) : (
+          <div className="review-count" style={{ display: 'inline-block', marginLeft: '7.5pt', opacity: 0.6 }}>
+            (No reviews yet)
           </div>
         )}
       </div>
@@ -343,16 +414,16 @@ console.log(productData);
                       <div className="product-info col-lg-5 col-md-12 col-12">
                         <h1 className="title">{product.name}</h1>
                         <span className="price">
-                          {product.originalPrice && product.originalPrice > product.price ? (
+                          {currentVariantPrice.originalPrice && currentVariantPrice.originalPrice > currentVariantPrice.price ? (
                             <>
-                              <del aria-hidden="true"><span>${product.originalPrice.toFixed(2)}</span></del>
-                              <ins><span>${product.price.toFixed(2)}</span></ins>
+                              <del aria-hidden="true"><span>${currentVariantPrice.originalPrice.toFixed(2)}</span></del>
+                              <ins><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
                             </>
                           ) : (
-                            <ins><span>${product.price.toFixed(2)}</span></ins>
+                            <ins><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
                           )}
                         </span>
-                        {renderStars(product.rating)}
+                        {product && renderStars(product.rating)}
                         <div className="description">
                           <p>{product.shortDescription || product.description || 'No description available.'}</p>
                         </div>
