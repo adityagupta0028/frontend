@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { loginApi } from "./Services/LoginApi";
 
 import { categoryApi } from "./Services/CategoryApi";
-import { privacyPolicyApi } from "./Services/PrivacyPolicy";
+// import { privacyPolicyApi } from "./Services/PrivacyPolicy";
 import { termConditionApi } from "./Services/TermCondition";
 //import { aboutUsApi } from "./Services/AboutUsApi";
 import { faqApi } from "./Services/FaqApi";
@@ -13,7 +13,7 @@ export const store = configureStore({
   reducer: {
     [loginApi.reducerPath]: loginApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
-    [privacyPolicyApi.reducerPath]: privacyPolicyApi.reducer,
+    // [privacyPolicyApi.reducerPath]: privacyPolicyApi.reducer,
     [termConditionApi.reducerPath]: termConditionApi.reducer,
     // [aboutUsApi.reducerPath]: aboutUsApi.reducer,
     [faqApi.reducerPath]: faqApi.reducer,
@@ -24,7 +24,7 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       loginApi.middleware,
       categoryApi.middleware,
-      privacyPolicyApi.middleware,
+      // privacyPolicyApi.middleware,
       termConditionApi.middleware,
       // aboutUsApi.middleware,
       faqApi.middleware,
