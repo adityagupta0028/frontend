@@ -396,7 +396,7 @@ console.log("subcategories===>",subcategories);
                                         </div>
                                       )}
                                       <div className={`product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
-                                        <Link to={`/details?productId=${product.id}`}>
+                                        <Link to={`/product/details/${product.id}`}>
                                           <img width="600" height="600" src={product.image} className="post-image" alt={product.name} />
                                           <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
                                         </Link>
@@ -422,7 +422,7 @@ console.log("subcategories===>",subcategories);
                                           <div className={`star star-${product.rating}`}></div>
                                           <span className="count">({product.reviews} review{product.reviews !== 1 ? 's' : ''})</span>
                                         </div>
-                                        <h3 className="product-title"><Link to={`/details?productId=${product.id}`}>{product.name}</Link></h3>
+                                        <h3 className="product-title"><Link to={`/product/details/${product.id}`}>{product.name}</Link></h3>
                                         <span className="price">
                                           {product.originalPrice ? (
                                             <>
@@ -517,7 +517,7 @@ console.log("subcategories===>",subcategories);
                                         </div>
                                       )}
                                       <div className="product-thumb-hover">
-                                        <Link to={`/details?productId=${product.id}`}>
+                                        <Link to={`/product/details/${product.id}`}>
                                           <img width="600" height="600" src={product.image} className="post-image" alt={product.name} />
                                           <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
                                         </Link>
@@ -529,7 +529,7 @@ console.log("subcategories===>",subcategories);
                                   </div>
                                   <div className="col-md-8">
                                     <div className="products-content">
-                                      <h3 className="product-title"><Link to={`/details?productId=${product.id}`}>{product.name}</Link></h3>
+                                      <h3 className="product-title"><Link to={`/product/details/${product.id}`}>{product.name}</Link></h3>
                                       <span className="price">
                                         {product.originalPrice ? (
                                           <>

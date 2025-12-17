@@ -1,0 +1,332 @@
+/* React Image Slider Styles */
+.react-thumbnail-slider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.react-thumbnail-slider .thumbnail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.react-thumbnail-slider .img-item {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.react-thumbnail-slider .img-item.active,
+.react-thumbnail-slider .img-item.slick-current {
+  opacity: 1;
+  border: 2px solid #f9b61e;
+}
+
+.react-thumbnail-slider .img-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.thumbnail-nav-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.thumbnail-nav-btn:hover {
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.thumbnail-nav-up {
+  top: -15px;
+}
+
+.thumbnail-nav-down {
+  bottom: -15px;
+}
+
+.thumbnail-nav-btn i {
+  font-size: 12px;
+  color: #333;
+}
+
+/* Main Image Slider Styles */
+.react-image-slider {
+  position: relative;
+  width: 100%;
+}
+
+.react-image-slider .main-image-container {
+  position: relative;
+  width: 100%;
+}
+
+.react-image-slider .main-image-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.image-nav-btn:hover {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.image-nav-prev {
+  left: 15px;
+}
+
+.image-nav-next {
+  right: 15px;
+}
+
+.image-nav-btn i {
+  font-size: 16px;
+  color: #333;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .react-thumbnail-slider {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .react-thumbnail-slider .thumbnail-list {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .thumbnail-nav-btn {
+    display: none;
+  }
+
+  .image-nav-btn {
+    width: 35px;
+    height: 35px;
+  }
+
+  .image-nav-btn i {
+    font-size: 14px;
+  }
+}
+
+/* Ensure thumbnail images are properly sized */
+.content-thumbnail-scroll .img-thumbnail-scroll {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.content-thumbnail-scroll .img-thumbnail-scroll img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Product Variation Fields Styles */
+.variations {
+  margin-bottom: 15px;
+}
+
+.variations table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.variations .label {
+  padding: 10px 0;
+  font-weight: 600;
+  vertical-align: top;
+  width: 150px;
+}
+
+.variations .attributes {
+  padding: 10px 0;
+}
+
+.variations .attributes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.variations .attributes ul.text li span {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  transition: all 0.3s ease;
+  min-width: 50px;
+  text-align: center;
+}
+
+.variations .attributes ul.text li span:hover {
+  border-color: #f9b61e;
+  background: #fff9e6;
+}
+
+.variations .attributes ul.text li span.selected {
+  border-color: #f9b61e;
+  background: #f9b61e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Metal Type with Color Swatches */
+.variations .attributes ul.metals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.variations .attributes ul.metals li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.variations .attributes ul.metals li span {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.variations .attributes ul.metals li span:hover {
+  border-color: #f9b61e;
+  transform: scale(1.1);
+}
+
+.variations .attributes ul.metals li span.selected {
+  border-color: #f9b61e;
+  border-width: 3px;
+  box-shadow: 0 0 0 2px rgba(249, 182, 30, 0.3);
+}
+
+.variations .attributes ul.metals li > div {
+  font-size: 11px;
+  color: #666;
+  text-align: center;
+  max-width: 60px;
+  word-wrap: break-word;
+  line-height: 1.2;
+}
+
+/* Metal type color swatches */
+.variations .attributes ul.metals li span.metal-white-gold,
+.variations .attributes ul.metals li span.metal-platinum {
+  background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
+}
+
+.variations .attributes ul.metals li span.metal-yellow-gold {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+}
+
+.variations .attributes ul.metals li span.metal-rose-gold {
+  background: linear-gradient(135deg, #e8b4a0 0%, #d4a574 100%);
+}
+
+/* Carat Weight Selection */
+.variations .attributes ul.text li span[data-carat] {
+  font-weight: 500;
+}
+
+/* Diamond Quality Selection */
+.variations .attributes ul.text li span[data-quality] {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+/* Ring Size Selector */
+.variations select {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+}
+
+.variations select:hover {
+  border-color: #f9b61e;
+}
+
+.variations select:focus {
+  outline: none;
+  border-color: #f9b61e;
+  box-shadow: 0 0 0 2px rgba(249, 182, 30, 0.2);
+}
+
+/* Info Icon */
+.variations .label .fa-info-circle {
+  color: #999;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.variations .label .fa-info-circle:hover {
+  color: #f9b61e;
+}
+
+/* Find Ring Size Link */
+.variations .label a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.variations .label a:hover {
+  text-decoration: underline;
+}
+
