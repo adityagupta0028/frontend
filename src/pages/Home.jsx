@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import ProductSlider from '../components/home/productSlider';
 
 function Home() {
   return (
@@ -55,7 +56,7 @@ function Home() {
               <div className="block block-intro">
                 <div className="row">
                   <div className="col-md-12">
-                    <div className="intro-wrap px-0 w-100 text-center" style={{maxWidth: '75%'}}>
+                    <div className="intro-wrap px-0 w-100 text-center" style={{ maxWidth: '75%' }}>
                       <h2 className="intro-title mb-3">Handcrafted &amp; Ethically Sourced</h2>
                       <div className="intro-item text-center">
                         <div className="content">
@@ -222,79 +223,13 @@ function Home() {
                 </div>
               </div>
             </section>
-            <section className="section section-padding top-border p-t-50">
-              <div className="section-container">
-                <div className="block block-posts slider">
-                  <div className="block-widget-wrap">
-                    <div className="block-title text-center">
-                      <h2 className="t-brown">Lorem Gifts Lorem</h2>
-                    </div>
-                    <div className="block-content">
-                      <div className="posts-wrap slick-wrap">
-                        <div className="slick-sliders" data-slidestoscroll="true" data-dots="0" data-nav="1" data-columns4="1" data-columns3="1" data-columns2="2" data-columns1="3" data-columns="3">
-                          <div className="post-grid post">
-                            <div className="post-inner">
-                              <div className="post-image">
-                                <Link className="post-thumbnail" to="/shop">
-                                  <img width="720" height="484" src="/media/blog/1.jpg" alt="Bridial Fair Collections 2023" />
-                                </Link>
-                              </div>
-                              <div className="post-content">
-                                <h2 className="post-title">
-                                  <Link to="/shop">Lorem Ipsum</Link>
-                                </h2>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="post-grid post">
-                            <div className="post-inner">
-                              <div className="post-image">
-                                <Link className="post-thumbnail" to="/shop">
-                                  <img width="720" height="484" src="/media/blog/2.jpg" alt="Our Sterling Silver" />
-                                </Link>
-                              </div>
-                              <div className="post-content">
-                                <h2 className="post-title">
-                                  <Link to="/shop">Lorem Ipsum</Link>
-                                </h2>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="post-grid post">
-                            <div className="post-inner">
-                              <div className="post-image">
-                                <Link className="post-thumbnail" to="/shop">
-                                  <img width="720" height="484" src="/media/blog/3.jpg" alt="New Season Modern Gold Earrings" />
-                                </Link>
-                              </div>
-                              <div className="post-content">
-                                <h2 className="post-title">
-                                  <Link to="/shop">Lorem Ipsum</Link>
-                                </h2>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="post-grid post">
-                            <div className="post-inner">
-                              <div className="post-image">
-                                <Link className="post-thumbnail" to="/shop">
-                                  <img width="720" height="484" src="/media/blog/4.jpg" alt="Glossary of Jewelry Terms" />
-                                </Link>
-                              </div>
-                              <div className="post-content">
-                                <h2 className="post-title">
-                                  <Link to="/shop">Lorem Ipsum</Link>
-                                </h2>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
+
+
+
+            <ProductSlider />
+
+
+
             <section className="section section-padding top-border p-t-50 m-b-50">
               <div className="section-container">
                 <div className="block block-banners layout-5 banners-effect">
@@ -613,7 +548,7 @@ function Home() {
                         <div className="box">
                           <div className="box-icon animation-horizontal">
                             <span>
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.998 511.998" style={{enableBackground: 'new 0 0 511.998 511.998'}}>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.998 511.998" style={{ enableBackground: 'new 0 0 511.998 511.998' }}>
                                 <g>
                                   <g>
                                     <path d="M256.013,59.844c-108.193,0-196.218,88.025-196.218,196.218c0,108.201,88.025,196.218,196.218,196.218S452.23,364.263,452.23,256.061C452.23,147.869,364.206,59.844,256.013,59.844z M256.013,435.217c-98.791,0-179.155-80.372-179.155-179.155c0-98.791,80.364-179.155,179.155-179.155s179.155,80.364,179.155,179.155C435.168,354.844,354.804,435.217,256.013,435.217z"></path>
@@ -632,7 +567,7 @@ function Home() {
                         <div className="box">
                           <div className="box-icon icon-2 animation-horizontal">
                             <span>
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 508 508" style={{enableBackground: 'new 0 0 508 508'}}>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 508 508" style={{ enableBackground: 'new 0 0 508 508' }}>
                                 <g>
                                   <g>
                                     <path d="M254,0C128.3,0,26.1,102.2,26.1,227.9c0,122.9,97.9,223.4,219.8,227.7V508l60.3-60.3l-60.3-60.3v52c-113-4.4-203.5-97.5-203.5-211.5c0-116.7,94.9-211.6,211.6-211.6s211.6,94.9,211.6,211.6h16.3C481.9,102.2,379.7,0,254,0z M262.1,426.6l21,21l-21,21V426.6z"></path>
@@ -651,7 +586,7 @@ function Home() {
                         <div className="box">
                           <div className="box-icon icon-3 animation-horizontal">
                             <span>
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{enableBackground: 'new 0 0 512 512'}}>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ enableBackground: 'new 0 0 512 512' }}>
                                 <g>
                                   <g>
                                     <path d="M457.987,31.531c-2.688-6.997-13.013-8.533-17.749-3.499c-21.44,18.88-48.939,29.248-77.547,29.248c-39.424,0-75.989-19.627-97.771-52.501C262.937,1.792,259.609,0,256.025,0c-3.563,0-6.912,1.792-8.875,4.757c-21.845,32.875-58.411,52.501-97.835,52.501c-28.928,0-56.704-10.603-78.208-29.867c-3.136-2.816-7.616-3.499-11.477-1.792c-3.84,1.707-6.315,5.525-6.315,9.728v231.317c0,133.205,189.44,239.552,197.504,244.011c1.6,0.896,3.392,1.344,5.163,1.344c1.771,0,3.563-0.448,5.163-1.301c8.064-4.459,197.504-110.827,197.504-244.011v-230.4C458.777,34.688,458.563,33.067,457.987,31.531z"></path>
@@ -670,7 +605,7 @@ function Home() {
                         <div className="box">
                           <div className="box-icon animation-horizontal">
                             <span>
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.998 511.998" style={{enableBackground: 'new 0 0 511.998 511.998'}}>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.998 511.998" style={{ enableBackground: 'new 0 0 511.998 511.998' }}>
                                 <g>
                                   <g>
                                     <path d="M256.013,59.844c-108.193,0-196.218,88.025-196.218,196.218c0,108.201,88.025,196.218,196.218,196.218S452.23,364.263,452.23,256.061C452.23,147.869,364.206,59.844,256.013,59.844z M256.013,435.217c-98.791,0-179.155-80.372-179.155-179.155c0-98.791,80.364-179.155,179.155-179.155s179.155,80.364,179.155,179.155C435.168,354.844,354.804,435.217,256.013,435.217z"></path>

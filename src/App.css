@@ -25,3 +25,63 @@
 .site-content {
   width: 100%;
 }
+
+/* Disable default swiper arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  display: none !important;
+}
+
+/* Custom buttons */
+.swiper-btn {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  z-index: 1;
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.prev-btn {
+  left: 0;
+  transition:all 0.2s ease-in-out;
+}
+
+.next-btn {
+  right: 0;
+  transition:all 0.2s ease-in-out;
+}
+
+.swiper-btn svg {
+  font-size: 16px;
+  color: #333;
+}
+
+.relative{
+  position:relative;
+}
+
+.slider_container1:hover .prev-btn{
+  left: -35px;
+  opacity: 1;
+}
+
+.slider_container1:hover .next-btn{
+  right: -35px;
+  opacity: 1;
+}
+
+.swiper-btn.swiper-button-disabled{
+  opacity:0.2!important;
+  cursor:auto!important
+}
+
+
