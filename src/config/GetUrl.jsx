@@ -3,3 +3,5 @@ export const GetUrl = {
   IMAGE_URL:process.env.VITE_IMAGE_URL,
   //REACT_APP_MERCHANDISE_ID:process.env.REACT_APP_MERCHANDISE_ID
 };
+
+console.log("API URL:", GetUrl.API_URL);
