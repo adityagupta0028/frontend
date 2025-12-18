@@ -4,6 +4,7 @@ import { Navigation } from "swiper/modules";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import "swiper/css";
+import { useEffect } from "react";
 
 const sliderData = [
   {
@@ -36,13 +37,19 @@ const sliderData = [
   },
 ];
 
-export default function SubCategoryCarousel() {
+export default function SubCategoryCarousel({ data }) {
+
+  useEffect(() => {
+    console.log('data products', data)
+  }, [data])
+
+
   return (
     <section className="section section-padding top-border p-t-50">
       <div className="section-container">
         <div className="block block-posts slider">
           <div className="block-widget-wrap">
-            <div className="block-title text-center">
+            <div className="block-title text-center mb-6">
               <h2 className="t-brown">Lorem Gifts Lorem1</h2>
             </div>
 
@@ -62,35 +69,35 @@ export default function SubCategoryCarousel() {
                   prevEl: ".prev-btn",
                   nextEl: ".next-btn",
                 }}
-                spaceBetween={24}
-                slidesPerView={3}
+                spaceBetween={36}
+                slidesPerView={8}
                 breakpoints={{
-                  0: { slidesPerView: 1 },
-                  768: { slidesPerView: 2 },
-                  1024: { slidesPerView: 3 },
+                  0: { slidesPerView: 3 },
+                  768: { slidesPerView: 5 },
+                  1024: { slidesPerView: 6 },
                 }}
                 className="swiper-sliders"
               >
-                {sliderData.map((item) => (
+                {data.map((item) => (
                   <SwiperSlide key={item.id}>
                     <div className="post-grid post">
                       <div className="post-inner">
-                        <div className="post-image">
-                          <Link className="post-thumbnail" to={item.href}>
+                        <Link className="post-thumbnail" to={item.href}>
+                          <div className="post-image mb-2">
                             <img
                               width="720"
                               height="484"
-                              src={item.img}
-                              alt={item.alt}
+                              src={item.imgUrl}
+                              alt={item.name}
                             />
-                          </Link>
-                        </div>
+                          </div>
 
-                        <div className="post-content">
-                          <h2 className="post-title">
-                            <Link to={item.href}>{item.title}</Link>
-                          </h2>
-                        </div>
+                          <div className="post-content">
+                            <h6 className="post-title !text-[18px] text-center !leading-[20px]">
+                              {item.name}
+                            </h6>
+                          </div>
+                        </Link>
                       </div>
                     </div>
                   </SwiperSlide>
