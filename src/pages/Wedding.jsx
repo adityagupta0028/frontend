@@ -8,7 +8,7 @@ import ProductSlider from '../components/home/productSlider';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 
 // Wedding Category ID
-const WEDDING_CATEGORY_ID = '6939a0978c7aaa4fcdf5940c';
+const WEDDING_CATEGORY_ID = '6942e3b741e766bf37919b9c';
 
 const subCategoryData = [
   {
