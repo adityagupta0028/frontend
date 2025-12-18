@@ -4,7 +4,7 @@ import { GetUrl } from "../config/GetUrl";
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: GetUrl.API_URL,
+    baseUrl: GetUrl.API_URL+"/api/v1/Customer",
   }),
   endpoints: (builder) => ({
     GetCategory: builder.query({

@@ -6,7 +6,7 @@ import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
 
 // Wedding Category ID
-const WEDDING_CATEGORY_ID = '6939a0978c7aaa4fcdf5940c';
+const WEDDING_CATEGORY_ID = '6942e3b741e766bf37919b9c';
 
 function Wedding() {
   const [layoutView, setLayoutView] = useState('grid');
