@@ -6,6 +6,7 @@ import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
 import ProductSlider from '../components/home/productSlider';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
+import ProductsGrid from '../components/products/ProductsGrid';
 
 // Wedding Category ID
 const WEDDING_CATEGORY_ID = '6942e3b741e766bf37919b9c';
@@ -16,10 +17,10 @@ function Wedding() {
   const [layoutView, setLayoutView] = useState('grid');
 
   // Fetch subcategories for Wedding category
-  const { 
-    data: subcategoriesData, 
+  const {
+    data: subcategoriesData,
     isLoading: subcategoriesLoading,
-    error: subcategoriesError 
+    error: subcategoriesError
   } = useGetSubCategoryQuery(WEDDING_CATEGORY_ID);
   // Transform subcategories from API
   const subcategories = useMemo(() => {
@@ -27,10 +28,10 @@ function Wedding() {
       return subcategoriesData.data.subcategories.map((sub, index) => ({
         id: sub._id || index + 1,
         name: sub.title || sub.subCategoryName || 'Subcategory',
-        image: sub.image 
-          ? (sub.image.startsWith('http') 
-              ? sub.image 
-              : `${GetUrl.IMAGE_URL}${sub.image}`)
+        image: sub.image
+          ? (sub.image.startsWith('http')
+            ? sub.image
+            : `${GetUrl.IMAGE_URL}${sub.image}`)
           : `/media/product/cat-6-${(index % 6) + 1}.jpg`,
       }));
     }
@@ -46,10 +47,10 @@ function Wedding() {
   }, [subcategoriesData]);
 
   // Fetch products for Wedding category
-  const { 
-    data: productsData, 
+  const {
+    data: productsData,
     isLoading: productsLoading,
-    error: productsError 
+    error: productsError
   } = useGetProductQuery({
     categoryId: WEDDING_CATEGORY_ID,
     limit: 20,
@@ -61,27 +62,33 @@ function Wedding() {
     if (productsData?.data?.products && productsData.data.products.length > 0) {
       return productsData.data.products.map((product) => {
         const images = product.images || [];
-        const mainImage = images[0] 
-          ? (images[0].startsWith('http') 
-              ? images[0] 
-              : `${GetUrl.IMAGE_URL}/${images[0]}`)
+        const mainImage = images[0]
+          ? (images[0].startsWith('http')
+            ? images[0]
+            : `${GetUrl.IMAGE_URL}/${images[0]}`)
           : '/media/product/1.jpg';
-        const hoverImage = images[1] 
-          ? (images[1].startsWith('http') 
-              ? images[1] 
-              : `${GetUrl.IMAGE_URL}/${images[1]}`)
+        const hoverImage = images[1]
+          ? (images[1].startsWith('http')
+            ? images[1]
+            : `${GetUrl.IMAGE_URL}/${images[1]}`)
           : mainImage;
-        
+
         const originalPrice = product.original_price || 0;
         const discountedPrice = product.discounted_price || originalPrice;
         const discount = originalPrice && discountedPrice < originalPrice
           ? Math.round(((originalPrice - discountedPrice) / originalPrice) * 100)
           : null;
-        
+
         let label = null;
         if (product.promotion_label) label = 'hot';
         if (product.discount_label || discount) label = label ? 'both' : 'sale';
-        
+
+        // Check if product has variants with metal type or carat weight
+        const hasVariants = product.variants && product.variants.length > 0;
+        const hasMetalTypes = hasVariants && product.variants.some(v => v.metal_type);
+        const hasCaratWeights = hasVariants && product.variants.some(v => v.carat_weight);
+        const hasFilters = hasMetalTypes || hasCaratWeights;
+
         return {
           id: product._id || product.product_id,
           name: product.product_name || 'Product',
@@ -93,23 +100,13 @@ function Wedding() {
           reviews: product.review_count || 0,
           label: label,
           discount: discount ? `-${discount}%` : null,
-          hasFilters: false,
+          hasFilters: hasFilters,
           hasBorder: false,
+          variants: product.variants || [],
         };
       });
     }
-    // Fallback to default products if API data is not available
-    return [
-      { id: "6942ee63771a596bb3308cd1", name: 'Medium Flat Hoops', price: 150.00, image: '/media/product/1.jpg', hoverImage: '/media/product/1-2.jpg', rating: 0, reviews: 0, label: 'hot', hasFilters: true },
-      { id: 2, name: 'Yilver And Turquoise Earrings', price: 100.00, originalPrice: 150.00, image: '/media/product/5.jpg', hoverImage: '/media/product/5-2.jpg', rating: 5, reviews: 1, label: 'sale', discount: '-33%', hasBorder: true },
-      { id: 3, name: 'Bold Pearl Hoop Earrings', price: 150.00, image: '/media/product/2.jpg', hoverImage: '/media/product/2-2.jpg', rating: 0, reviews: 0 },
-      { id: 4, name: 'Bora Armchair', price: 100.00, originalPrice: 150.00, image: '/media/product/6.jpg', hoverImage: '/media/product/6-2.jpg', rating: 4, reviews: 2, label: 'both', discount: '-33%', hasBorder: true },
-      { id: 5, name: 'Twin Hoops', price: 90.00, originalPrice: 100.00, image: '/media/product/3.jpg', hoverImage: '/media/product/3-2.jpg', rating: 5, reviews: 5, label: 'both', discount: '-23%' },
-      { id: 6, name: 'Diamond Bracelet', price: 50.00, originalPrice: 79.00, image: '/media/product/7.jpg', hoverImage: '/media/product/7-2.jpg', rating: 0, reviews: 0, label: 'sale', discount: '-37%', hasBorder: true },
-      { id: 7, name: 'Yilver And Turquoise Earrings', price: 120.00, image: '/media/product/4.jpg', hoverImage: '/media/product/4-2.jpg', rating: 0, reviews: 0 },
-      { id: 8, name: 'X Hoop Earrings', price: 180.00, originalPrice: 200.00, image: '/media/product/8.jpg', hoverImage: '/media/product/8-2.jpg', rating: 5, reviews: 3, label: 'sale', discount: '-10%', hasBorder: true },
-      { id: 9, name: 'Yintage Medallion Necklace', price: 140.00, image: '/media/product/9.jpg', hoverImage: '/media/product/9-2.jpg', rating: 4, reviews: 1, label: 'hot', hasBorder: true },
-    ];
+   
   }, [productsData]);
 
   const isLoading = subcategoriesLoading || productsLoading;
@@ -305,7 +302,7 @@ function Wedding() {
                         </div>
                         <ul className="layout-toggle nav nav-tabs">
                           <li className="nav-item">
-                            <a 
+                            <a
                               className={`layout-grid nav-link ${layoutView === 'grid' ? 'active' : ''}`}
                               onClick={(e) => { e.preventDefault(); setLayoutView('grid'); }}
                               role="tab"
@@ -318,7 +315,7 @@ function Wedding() {
                             </a>
                           </li>
                           <li className="nav-item">
-                            <a 
+                            <a
                               className={`layout-list nav-link ${layoutView === 'list' ? 'active' : ''}`}
                               onClick={(e) => { e.preventDefault(); setLayoutView('list'); }}
                               role="tab"
@@ -335,193 +332,7 @@ function Wedding() {
                     </div>
 
                     {/* Products Grid/List View */}
-                    <div className="tab-content">
-                      {layoutView === 'grid' ? (
-                        <div className="tab-pane fade show active" id="layout-grid" role="tabpanel">
-                          <div className="products-list grid">
-                            <div className="row">
-                              {products.map((product) => (
-                                <div key={product.id} className="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                                  <div className="products-entry clearfix product-wapper">
-                                    <div className="products-thumb">
-                                      {product.label && (
-                                        <div className="product-lable">
-                                          {product.discount && <div className="onsale">{product.discount}</div>}
-                                          {(product.label === 'hot' || product.label === 'both') && <div className="hot">Hot</div>}
-                                        </div>
-                                      )}
-                                      <div className={`product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
-                                        <Link to={`/product/details/${product.id}`}>
-                                          <img width="600" height="600" src={product.image} className="post-image" alt={product.name} />
-                                          <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
-                                        </Link>
-                                      </div>
-                                      <div className="product-button">
-                                        <div className="btn-add-to-cart" data-title="Add to cart">
-                                          <a rel="nofollow" href="#" className="product-btn button">Add to cart</a>
-                                        </div>
-                                        <div className="btn-wishlist" data-title="Wishlist">
-                                          <button className="product-btn">Add to wishlist</button>
-                                        </div>
-                                        <div className="btn-compare" data-title="Compare">
-                                          <button className="product-btn">Compare</button>
-                                        </div>
-                                        <span className="product-quickview" data-title="Quick View">
-                                          <a href="#" className="quickview quickview-button">Quick View <i className="icon-search"></i></a>
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div className="products-content">
-                                      <div className="contents text-center">
-                                        <div className="rating">
-                                          <div className={`star star-${product.rating}`}></div>
-                                          <span className="count">({product.reviews} review{product.reviews !== 1 ? 's' : ''})</span>
-                                        </div>
-                                        <h3 className="product-title"><Link to={`/product/details/${product.id}`}>{product.name}</Link></h3>
-                                        <span className="price">
-                                          {product.originalPrice ? (
-                                            <>
-                                              <del aria-hidden="true"><span>${product.originalPrice.toFixed(2)}</span></del>
-                                              <ins><span>${product.price.toFixed(2)}</span></ins>
-                                            </>
-                                          ) : (
-                                            `$${product.price.toFixed(2)}`
-                                          )}
-                                        </span>
-                                      </div>
-
-                                      {product.hasFilters && (
-                                        <>
-                                          <div className="d-flex align-items-center position-relative mb-3">
-                                            <p className="pe-3 mb-0 sstyle">Shape:</p>
-                                            <button 
-                                              className="scroll-arrow left"
-                                              onClick={(e) => {
-                                                const ul = e.target.nextElementSibling;
-                                                if (ul) ul.scrollBy({ left: -150, behavior: 'smooth' });
-                                              }}
-                                            >
-                                              &#10094;
-                                            </button>
-                                            <ul className="shape-scroll d-flex flex-nowrap list-unstyled overflow-auto mb-0">
-                                              {shapes.map((shape, idx) => (
-                                                <li key={idx} className={idx === 0 ? "level-1 menu-item px-2" : "px-2"}>
-                                                  <Link to="/shop"><span className="menu-item-text">{shape}</span></Link>
-                                                </li>
-                                              ))}
-                                            </ul>
-                                            <button 
-                                              className="scroll-arrow right"
-                                              onClick={(e) => {
-                                                const ul = e.target.previousElementSibling;
-                                                if (ul) ul.scrollBy({ left: 150, behavior: 'smooth' });
-                                              }}
-                                            >
-                                              &#10095;
-                                            </button>
-                                          </div>
-
-                                          <div className="d-flex align-items-center position-relative">
-                                            <p className="pe-3 mb-0 sstyle">Caret:</p>
-                                            <button 
-                                              className="scroll-arrow left"
-                                              onClick={(e) => {
-                                                const ul = e.target.nextElementSibling;
-                                                if (ul) ul.scrollBy({ left: -150, behavior: 'smooth' });
-                                              }}
-                                            >
-                                              &#10094;
-                                            </button>
-                                            <ul className="shape-scroll d-flex flex-nowrap list-unstyled overflow-auto mb-0">
-                                              {carats.map((carat, idx) => (
-                                                <li key={idx} className={idx === 0 ? "level-1 menu-item px-3 border" : "px-3 border ms-3"}>
-                                                  <Link to="/shop"><span className="menu-item-text">{carat}</span></Link>
-                                                </li>
-                                              ))}
-                                            </ul>
-                                            <button 
-                                              className="scroll-arrow right"
-                                              onClick={(e) => {
-                                                const ul = e.target.previousElementSibling;
-                                                if (ul) ul.scrollBy({ left: 150, behavior: 'smooth' });
-                                              }}
-                                            >
-                                              &#10095;
-                                            </button>
-                                          </div>
-                                        </>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="tab-pane fade show active" id="layout-list" role="tabpanel">
-                          <div className="products-list list">
-                            {products.slice(0, 5).map((product) => (
-                              <div key={product.id} className="products-entry clearfix product-wapper">
-                                <div className="row">
-                                  <div className="col-md-4">
-                                    <div className="products-thumb">
-                                      {product.label && (
-                                        <div className="product-lable">
-                                          {(product.label === 'hot' || product.label === 'both') && <div className="hot">Hot</div>}
-                                        </div>
-                                      )}
-                                      <div className="product-thumb-hover">
-                                        <Link to={`/product/details/${product.id}`}>
-                                          <img width="600" height="600" src={product.image} className="post-image" alt={product.name} />
-                                          <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
-                                        </Link>
-                                      </div>
-                                      <span className="product-quickview" data-title="Quick View">
-                                        <a href="#" className="quickview quickview-button">Quick View <i className="icon-search"></i></a>
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="col-md-8">
-                                    <div className="products-content">
-                                      <h3 className="product-title"><Link to={`/product/details/${product.id}`}>{product.name}</Link></h3>
-                                      <span className="price">
-                                        {product.originalPrice ? (
-                                          <>
-                                            <del aria-hidden="true"><span>${product.originalPrice.toFixed(2)}</span></del>
-                                            <ins><span>${product.price.toFixed(2)}</span></ins>
-                                          </>
-                                        ) : (
-                                          `$${product.price.toFixed(2)}`
-                                        )}
-                                      </span>
-                                      <div className="rating">
-                                        <div className={`star star-${product.rating}`}></div>
-                                        <div className="review-count">
-                                          ({product.reviews}<span> review{product.reviews !== 1 ? 's' : ''}</span>)
-                                        </div>
-                                      </div>
-                                      <div className="product-button">
-                                        <div className="btn-add-to-cart" data-title="Add to cart">
-                                          <a rel="nofollow" href="#" className="product-btn button">Add to cart</a>
-                                        </div>
-                                        <div className="btn-wishlist" data-title="Wishlist">
-                                          <button className="product-btn">Add to wishlist</button>
-                                        </div>
-                                        <div className="btn-compare" data-title="Compare">
-                                          <button className="product-btn">Compare</button>
-                                        </div>
-                                      </div>
-                                      <div className="product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis…</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    <ProductsGrid products={products} layoutView={layoutView} />
                   </div>
                 </div>
               </div>
