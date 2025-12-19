@@ -10,69 +10,326 @@ const menusData = [
   {
     menu:"Shop",
     href:'/',
-    rings:{
-      title:"Curated Rings",
-      styles:[
-        {
-          name:'Solitaire',
-          link:'Solitaire'
-        },
-        {
-          name:'Side Stone',
-          link:'side-stone'
-        },
-        {
-          name:'Halo',
-          link:'halo'
-        },
-        {
-          name:'Vintage',
-          link:'vintage'
-        },
-        {
-          name:'Botanical',
-          link:'botanical'
-        },
-      ],
-      shapes:[
-        {
-          name:'Round',
-          link:'round'
-        },
-        {
-          name:'Princess',
-          link:'princess'
-        },
-        {
-          name:'Oval',
-          link:'oval'
-        },
-        {
-          name:'Cushio',
-          link:'cushio'
-        },
-        {
-          name:'Radiant',
-          link:'radiant'
-        },
-        {
-          name:'Pear',
-          link:'pear'
-        },
-        {
-          name:'Assher',
-          link:'Assher'
-        },
-        {
-          name:'Heart',
-          link:'Heart'
-        },
-        {
-          name:'Vintage Cuts',
-          link:'Vintage Cuts'
-        },
-      ],
+    subMenus:{
+      rings:{
+        title:"Curated Rings",
+        styles:[
+          {
+            name:'Solitaire',
+            link:'Solitaire'
+          },
+          {
+            name:'Side Stone',
+            link:'side-stone'
+          },
+          {
+            name:'Halo',
+            link:'halo'
+          },
+          {
+            name:'Vintage',
+            link:'vintage'
+          },
+          {
+            name:'Botanical',
+            link:'botanical'
+          },
+        ],
+        shapes:[
+          {
+            name:'Round',
+            link:'round'
+          },
+          {
+            name:'Princess',
+            link:'princess'
+          },
+          {
+            name:'Oval',
+            link:'oval'
+          },
+          {
+            name:'Cushio',
+            link:'cushio'
+          },
+          {
+            name:'Radiant',
+            link:'radiant'
+          },
+          {
+            name:'Pear',
+            link:'pear'
+          },
+          {
+            name:'Assher',
+            link:'Assher'
+          },
+          {
+            name:'Heart',
+            link:'Heart'
+          },
+          {
+            name:'Vintage Cuts',
+            link:'Vintage Cuts'
+          },
+        ],
+      },
+      studio:{
+        title:"Design Studio",
+        gallery:{
+            imgSrc:"/media/site-headdder.jpg",
+            alt:"gallery image"
+          },
+        diamond:[
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+        ],
+        jewellery:[
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+        ],
+      }
     },
+    
+  },
+  {
+    menu:"Engagement",
+    href:'/',
+    subMenus:{
+      rings:{
+        title:"Curated Rings",
+        styles:[
+          {
+            name:'Solitaire',
+            link:'Solitaire'
+          },
+          {
+            name:'Side Stone',
+            link:'side-stone'
+          },
+          {
+            name:'Halo',
+            link:'halo'
+          },
+          {
+            name:'Vintage',
+            link:'vintage'
+          },
+          {
+            name:'Botanical',
+            link:'botanical'
+          },
+        ],
+        shapes:[
+          {
+            name:'Round',
+            link:'round'
+          },
+          {
+            name:'Princess',
+            link:'princess'
+          },
+          {
+            name:'Oval',
+            link:'oval'
+          },
+          {
+            name:'Cushio',
+            link:'cushio'
+          },
+          {
+            name:'Radiant',
+            link:'radiant'
+          },
+          {
+            name:'Pear',
+            link:'pear'
+          },
+          {
+            name:'Assher',
+            link:'Assher'
+          },
+          {
+            name:'Heart',
+            link:'Heart'
+          },
+          {
+            name:'Vintage Cuts',
+            link:'Vintage Cuts'
+          },
+        ],
+      },
+      studio:{
+        title:"Design Studio",
+        gallery:{
+            imgSrc:"/media/site-headdder.jpg",
+            alt:"gallery image"
+          },
+        diamond:[
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+        ],
+        jewellery:[
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+        ],
+      }
+    },
+    
+  },
+  {
+    menu:"Wedding",
+    href:'/',
+    subMenus:{
+      rings:{
+        title:"Curated Rings",
+        styles:[
+          {
+            name:'Solitaire',
+            link:'Solitaire'
+          },
+          {
+            name:'Side Stone',
+            link:'side-stone'
+          },
+          {
+            name:'Halo',
+            link:'halo'
+          },
+          {
+            name:'Vintage',
+            link:'vintage'
+          },
+          {
+            name:'Botanical',
+            link:'botanical'
+          },
+        ],
+        shapes:[
+          {
+            name:'Round',
+            link:'round'
+          },
+          {
+            name:'Princess',
+            link:'princess'
+          },
+          {
+            name:'Oval',
+            link:'oval'
+          },
+          {
+            name:'Cushio',
+            link:'cushio'
+          },
+          {
+            name:'Radiant',
+            link:'radiant'
+          },
+          {
+            name:'Pear',
+            link:'pear'
+          },
+          {
+            name:'Assher',
+            link:'Assher'
+          },
+          {
+            name:'Heart',
+            link:'Heart'
+          },
+          {
+            name:'Vintage Cuts',
+            link:'Vintage Cuts'
+          },
+        ],
+      },
+      studio:{
+        title:"Design Studio",
+        gallery:{
+            imgSrc:"/media/site-headdder.jpg",
+            alt:"gallery image"
+          },
+        diamond:[
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+        ],
+        jewellery:[
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+          {
+            title:'Lorem Ipsum 1',
+            url:"",
+          },
+        ],
+      }
+    },
+    
+  },
+  {
+    menu:"Contact",
+    href:'/',
+    subMenus:null,
+  },
+  {
+    menu:"About Us",
+    href:'/',
     subMenus:null,
   },
 ];
@@ -294,352 +551,131 @@ function Header() {
           </div>
 
 
+          {/* dynamic menus */}
+
           <div className="header-middle text-center bg-white no-padding">
             <div className="site-navigation">
               <nav id="main-navigation">
                 <ul id="menu-main-menu" className="menu">
-                  <li className="level-0 menu-item">
-                    <Link to="/"><span className="menu-item-text">Home</span></Link>
-                  </li>
-                  <li className="level-0 menu-item menu-item-has-children">
-                    <Link to="/shop"><span className="menu-item-text">Shop</span></Link>
-                    <ul className="sub-menu">
-                      <div className="container row mx-auto">
-                        <div className="col-md-6">
-                          <h3 className="border-bottom pb-2 fw-bold">CURATED RINGS</h3>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <p>Shop by Style</p>
-                              <li className="level-1 menu-item px-0">
-                                <Link to="/shop"><span className="menu-item-text">Solitaire</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/shop"><span className="menu-item-text">Side Stone</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/shop"><span className="menu-item-text">Halo</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/shop"><span className="menu-item-text">Vintage</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/shop"><span className="menu-item-text">Botanical</span></Link>
-                              </li>
-                            </div>
-                            <div className="col-md-6">
-                              <p>Shop by Shape</p>
-                              <div className="row">
-                                <div className="col-6">
-                                  <li className="level-1 menu-item px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Round</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Princess</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Oval</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Cushio</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Radiant</span></Link>
-                                  </li>
-                                </div>
-                                <div className="col-6">
-                                  <li className="level-1 menu-item px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Pear</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Enerald</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Assher</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Heart</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/shop"><span className="menu-item-text">Vintage Cuts</span></Link>
-                                  </li>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="intro-btn w-100 mt-4">
-                            <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center">View all</Link>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <h3 className="border-bottom pb-2 fw-bold">DESIGN STUDIO</h3>
-                          <div className="row">
-                            <div className="col-12">
-                              <img src="/media/site-headdder.jpg" alt="image" className="w-100" style={{ height: '200px', objectFit: 'cover' }} />
-                            </div>
-                            <div className="col-md-12 d-flex">
-                              <div className="intro-btn mt-4 me-4">
-                                <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center text-nowrap">Start with Setting</Link>
-                              </div>
-                              <div className="intro-btn mt-4">
-                                <Link to="/shop" className="w-100 button button-black button-arrow animation-horizontal text-center text-nowrap">Start with a Diamond</Link>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <p className="fw-bold border-bottom mt-3 pb-2">Diamond Education</p>
-                              <li className="level-1 menu-item px-0">
-                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 1</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 2</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 3</span></Link>
-                              </li>
-                            </div>
-                            <div className="col-md-6">
-                              <p className="fw-bold border-bottom mt-3 pb-2">Jewelry Guide</p>
-                              <li className="level-1 menu-item px-0">
-                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 1</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 2</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/shop"><span className="menu-item-text">Lorem Ipsum 3</span></Link>
-                              </li>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </ul>
-                  </li>
-                  {/* {category list here} */}
-                  <li className="level-0 menu-item menu-item-has-children">
-                    <Link to="/engagement-rings"><span className="menu-item-text">Engagement</span></Link>
-                    <ul className="sub-menu">
-                      <div className="container row mx-auto">
-                        <div className="col-md-6">
-                          <h3 className="border-bottom pb-2 fw-bold">ENGAGEMENT RINGS</h3>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <p>Shop by Style</p>
-                              <li className="level-1 menu-item px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Classic</span></Link>
-                              </li>
-                              <li className="px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Modern</span></Link>
-                              </li>
-                              <li className="px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Vintage</span></Link>
-                              </li>
-                              <li className="px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Custom</span></Link>
-                              </li>
-                              <li className="px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Halo</span></Link>
-                              </li>
-                            </div>
-                            <div className="col-md-6">
-                              <p>Shop by Shape</p>
-                              <div className="row">
-                                <div className="col-6">
-                                  <li className="level-1 menu-item px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Round</span></Link>
-                                  </li>
-                                  <li className="px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Princess</span></Link>
-                                  </li>
-                                  <li className="px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Oval</span></Link>
-                                  </li>
-                                  <li className="px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Cushion</span></Link>
-                                  </li>
-                                  <li className="px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Radiant</span></Link>
-                                  </li>
-                                </div>
-                                <div className="col-6">
-                                  <li className="level-1 menu-item px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Pear</span></Link>
-                                  </li>
-                                  <li className="px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Emerald</span></Link>
-                                  </li>
-                                  <li className="px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Asscher</span></Link>
-                                  </li>
-                                  <li className="px-0 mb-0">
-                                    <Link to="/engagement-rings"><span className="menu-item-text">Heart</span></Link>
-                                  </li>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="intro-btn w-100 mt-4">
-                            <Link to="/engagement-rings" className="w-100 button button-black button-arrow animation-horizontal text-center">View all</Link>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <h3 className="border-bottom pb-2 fw-bold">DESIGN STUDIO</h3>
-                          <div className="">
-                            <div className="">
-                              <img src="/media/product/cat-1.jpg" alt="image" className="w-100 !h-[150px] object-cover" />
-                            </div>
-                            <div className="flex gap-[20px] justify-center">
-                              <Link to="/engagement-rings" className="button w-[250px] button-arrow animation-horizontal text-center bg-transparent text-black py-0 !text-[12px] !tracking-[1px] !px-[30px] !border-[1px] hover:!bg-[#000] hover:!text-white">Start with Setting</Link>
-                              <Link to="/engagement-rings" className="button w-[250px] button-arrow animation-horizontal text-center bg-transparent text-black py-0 !text-[12px] !tracking-[1px] !px-[30px] !border-[1px] hover:!bg-[#000] hover:!text-white">Start with a Diamond</Link>
-                            </div>
+                    {
+                      menusData.map((menu, idx)=>(
+                        <li className={`level-0 menu-item ${menu.subMenus ? 'menu-item-has-children' : ''}`}>
+                          <Link to="/"><span className="menu-item-text">{menu.menu}</span></Link>
+                          {menu?.subMenus && (
+                            <ul className="sub-menu !top-[38px]">
+                              <div className="container row mx-auto">
+                                <div className="col-md-6">
+                                  <h3 className="border-bottom pb-2 fw-bold">{menu.subMenus.rings.title}</h3>
+                                  <div className="row">
+                                    <div className="col-md-6">
+                                      <p>Shop by Style</p>
+                                      {menu.subMenus.rings.styles.map((item, itemIdx)=>(
+                                        <li className="level-1 menu-item px-0">
+                                          <Link to="/shop"><span className="menu-item-text">{item.name}</span></Link>
+                                        </li>
+                                      ))}
+                                      
+                                    </div>
+                                    <div className="col-md-6">
+                                      <p>Shop by Shape</p>
+                                      <div className="row">
+                                        <div className="col-6 px-0">
+                                          {menu.subMenus.rings.shapes.map((item, itemIdx)=>{
+                                            if(itemIdx < 5){
+                                              return (
+                                                <li className="level-1 menu-item px-0">
+                                                  <Link to="/shop">
+                                                    <span className="menu-item-text flex">
+                                                      <span class="thumb-icon mr-[10px] flex items-center">
+                                                        <img src="https://images.grownbrilliance.com/images/menu/round.svg" loading="lazy" width="20" height="20" alt="" class="lz-img-custom !w-[20px] !h-[20px] mb-0" />
+                                                      </span>
+                                                      {item.name}
+                                                    </span>
+                                                  </Link>
+                                                </li>
+                                              )
+                                            }
+                                          }
+                                          )}
+                                        </div>
 
 
-
-                            <div className='flex mt-3 gap-[30px]'>
-                              <div className="flex-1">
-                              <p className="fw-bold mt-3 pb-2 uppercase tracking-[0.5px] border-b">Diamond Education</p>
-                              <li className="level-1 menu-item px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">The 4 C's</span></Link>
-                              </li>
-                              <li className="px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Diamond Shapes</span></Link>
-                              </li>
-                              <li className="px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Ring Settings</span></Link>
-                              </li>
-                            </div>
-
-                            <div className="flex-1">
-                              <p className="fw-bold mt-3 pb-2 uppercase tracking-[0.5px] border-b">Jewelry Guide</p>
-                              <li className="level-1 menu-item px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Ring Sizing</span></Link>
-                              </li>
-                              <li className="px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Care & Maintenance</span></Link>
-                              </li>
-                              <li className="px-0 mb-0">
-                                <Link to="/engagement-rings"><span className="menu-item-text">Custom Design</span></Link>
-                              </li>
-                            </div>
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-                    </ul>
-                  </li>
-                  <li className="level-0 menu-item menu-item-has-children">
-                    <Link to="/wedding"><span className="menu-item-text">Wedding</span></Link>
-                    <ul className="sub-menu">
-                      <div className="container row mx-auto">
-                        <div className="col-md-6">
-                          <h3 className="border-bottom pb-2 fw-bold">WEDDING BANDS</h3>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <p>Shop by Style</p>
-                              <li className="level-1 menu-item px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Classic</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Eternity</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Vintage</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Modern</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Matching Sets</span></Link>
-                              </li>
-                            </div>
-                            <div className="col-md-6">
-                              <p>Shop by Material</p>
-                              <div className="row">
-                                <div className="col-6">
-                                  <li className="level-1 menu-item px-0">
-                                    <Link to="/wedding"><span className="menu-item-text">Gold</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/wedding"><span className="menu-item-text">Platinum</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/wedding"><span className="menu-item-text">Rose Gold</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/wedding"><span className="menu-item-text">White Gold</span></Link>
-                                  </li>
+                                        <div className="col-6">
+                                          {menu.subMenus.rings.shapes.map((item, itemIdx)=>{
+                                            if(itemIdx >= 5){
+                                              return (
+                                                <li className="level-1 menu-item px-0">
+                                                  <Link to="/shop">
+                                                    <span className="menu-item-text flex">
+                                                      <span class="thumb-icon mr-[10px] flex items-center">
+                                                        <img src="https://images.grownbrilliance.com/images/menu/round.svg" loading="lazy" width="20" height="20" alt="" class="lz-img-custom !w-[20px] !h-[20px] mb-0" />
+                                                      </span>
+                                                      {item.name}
+                                                    </span>
+                                                  </Link>
+                                                </li>
+                                              )
+                                            }
+                                          }
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="intro-btn w-100 mt-4">
+                                    <Link to="/shop" className="w-100 button button-arrow animation-horizontal text-center !p-0">View all</Link>
+                                  </div>
                                 </div>
-                                <div className="col-6">
-                                  <li className="level-1 menu-item px-0">
-                                    <Link to="/wedding"><span className="menu-item-text">Diamond</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/wedding"><span className="menu-item-text">Plain</span></Link>
-                                  </li>
-                                  <li className="px-0">
-                                    <Link to="/wedding"><span className="menu-item-text">Engraved</span></Link>
-                                  </li>
+
+                                <div className="col-md-6">
+                                  <h3 className="border-bottom pb-2 fw-bold">{menu.subMenus.studio.title}</h3>
+                                  <div className="row">
+                                    <div className="col-12">
+                                      <img src={menu.subMenus.studio.gallery.imgSrc} alt="image" className="w-100" style={{ height: '200px', objectFit: 'cover' }} />
+                                    </div>
+
+
+                                    <div className="flex gap-[20px] justify-center">
+                                      <Link to="/engagement-rings" className="button w-[250px] button-arrow animation-horizontal text-center bg-transparent text-black py-0 !text-[12px] !tracking-[1px] !px-[30px] !border-[1px] hover:!bg-[#000] hover:!text-white">Start with Setting</Link>
+                                      <Link to="/engagement-rings" className="button w-[250px] button-arrow animation-horizontal text-center bg-transparent text-black py-0 !text-[12px] !tracking-[1px] !px-[30px] !border-[1px] hover:!bg-[#000] hover:!text-white">Start with a Diamond</Link>
+                                    </div>
+
+                                      <div className='flex mt-3 gap-[30px]'>
+                                        <div className="flex-1">
+                                        <p className="fw-bold mt-3 pb-2 uppercase tracking-[0.5px] border-b">Diamond Education</p>
+                                        {menu.subMenus.studio.diamond.map((diamondItem, diamondIdx)=>(
+                                          <li className="level-1 menu-item px-0 mb-0">
+                                            <Link to="/shop"><span className="menu-item-text">{diamondItem.title}</span></Link>
+                                          </li>
+                                        ))}
+                                        
+                                      </div>
+
+                                      <div className="flex-1">
+                                        <p className="fw-bold mt-3 pb-2 uppercase tracking-[0.5px] border-b">Jewelry Guide</p>
+                                        {menu.subMenus.studio.jewellery.map((jwlItem, jwlIdx)=>(
+                                          <li className="level-1 menu-item px-0 mb-0">
+                                            <Link to="/shop"><span className="menu-item-text">{jwlItem.title}</span></Link>
+                                          </li>
+                                        ))}
+                                      </div>
+                                      </div>
+
+                                  </div>
                                 </div>
+
                               </div>
-                            </div>
-                          </div>
-                          <div className="intro-btn w-100 mt-4">
-                            <Link to="/wedding" className="w-100 button button-black button-arrow animation-horizontal text-center">View all</Link>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <h3 className="border-bottom pb-2 fw-bold">DESIGN STUDIO</h3>
-                          <div className="row">
-                            <div className="col-12">
-                              <img src="/media/product/cat-6-1.jpg" alt="image" className="w-100" />
-                            </div>
-                            <div className="col-md-12 d-flex">
-                              <div className="intro-btn mt-4 me-4">
-                                <Link to="/wedding" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with Setting</Link>
-                              </div>
-                              <div className="intro-btn mt-4">
-                                <Link to="/wedding" className="w-100 button button-black button-arrow animation-horizontal text-center">Start with a Diamond</Link>
-                              </div>
-                            </div>
-                            <div className="col-md-6">
-                              <p className="fw-bold border-bottom mt-3 pb-2">Wedding Guide</p>
-                              <li className="level-1 menu-item px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Ring Sizing</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Matching Sets</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Care & Maintenance</span></Link>
-                              </li>
-                            </div>
-                            <div className="col-md-6">
-                              <p className="fw-bold border-bottom mt-3 pb-2">Anniversary Bands</p>
-                              <li className="level-1 menu-item px-0">
-                                <Link to="/wedding"><span className="menu-item-text">5 Year</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/wedding"><span className="menu-item-text">10 Year</span></Link>
-                              </li>
-                              <li className="px-0">
-                                <Link to="/wedding"><span className="menu-item-text">Custom</span></Link>
-                              </li>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </ul>
-                  </li>
-                  {/* {category list ends here} */}
-                  <li className="level-0 menu-item">
-                    <Link to="/contact"><span className="menu-item-text">Contact</span></Link>
-                  </li>
-                  <li className="level-0 menu-item">
-                    <Link to="/about"><span className="menu-item-text">About us</span></Link>
-                  </li>
+                            </ul>
+                          )}
+                        </li>
+                      ))
+                    }
                 </ul>
               </nav>
             </div>
           </div>
+
+
 
 
         </div>
