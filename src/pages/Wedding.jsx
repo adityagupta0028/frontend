@@ -10,44 +10,7 @@ import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 // Wedding Category ID
 const WEDDING_CATEGORY_ID = '6942e3b741e766bf37919b9c';
 
-const subCategoryData = [
-  {
-    imgUrl:'/media/product/1.jpg',
-    name:'Wedding & Anniversary Rings'
-  },
-  {
-    imgUrl:'/media/product/2.jpg',
-    name:'Eternity Rings'
-  },
-  {
-    imgUrl:'/media/product/3.jpg',
-    name:'Three Quarter Eternity Rings'
-  },
-  {
-    imgUrl:'/media/product/1.jpg',
-    name:'Wedding & Anniversary Rings'
-  },
-  {
-    imgUrl:'/media/product/2.jpg',
-    name:'Eternity Rings'
-  },
-  {
-    imgUrl:'/media/product/3.jpg',
-    name:'Three Quarter Eternity Rings'
-  },
-  {
-    imgUrl:'/media/product/1.jpg',
-    name:'Wedding & Anniversary Rings'
-  },
-  {
-    imgUrl:'/media/product/2.jpg',
-    name:'Eternity Rings'
-  },
-  {
-    imgUrl:'/media/product/3.jpg',
-    name:'Three Quarter Eternity Rings'
-  },
-];
+
 
 function Wedding() {
   const [layoutView, setLayoutView] = useState('grid');
@@ -182,7 +145,6 @@ function Wedding() {
       </div>
     );
   }
-console.log("subcategories===>",subcategories);
   return (
     <div id="site-main" className="site-main">
       <div id="main-content" className="main-content">
@@ -206,7 +168,7 @@ console.log("subcategories===>",subcategories);
             </div>
 
             {/* subcategories Slider Section */}
-            <SubCategoryCarousel data={subCategoryData} />
+            <SubCategoryCarousel data={subcategories} />
 
 
             {/* Products Section */}
