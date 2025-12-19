@@ -6,41 +6,12 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "swiper/css";
 import { useEffect } from "react";
 
-const sliderData = [
-  {
-    id: 1,
-    title: "Lorem Ipsum",
-    href: "/shop",
-    img: "/media/blog/1.jpg",
-    alt: "Bridal Fair Collections 2023",
-  },
-  {
-    id: 2,
-    title: "Lorem Ipsum",
-    href: "/shop",
-    img: "/media/blog/2.jpg",
-    alt: "Our Sterling Silver",
-  },
-  {
-    id: 3,
-    title: "Lorem Ipsum",
-    href: "/shop",
-    img: "/media/blog/3.jpg",
-    alt: "Modern Gold Earrings",
-  },
-  {
-    id: 4,
-    title: "Lorem Ipsum",
-    href: "/shop",
-    img: "/media/blog/4.jpg",
-    alt: "Glossary of Jewelry Terms",
-  },
-];
+
 
 export default function SubCategoryCarousel({ data }) {
 
   useEffect(() => {
-    console.log('data products', data)
+    console.log('data products====>', data)
   }, [data])
 
 
@@ -49,9 +20,9 @@ export default function SubCategoryCarousel({ data }) {
       <div className="section-container">
         <div className="block block-posts slider">
           <div className="block-widget-wrap">
-            <div className="block-title text-center mb-6">
+            {/* <div className="block-title text-center mb-6">
               <h2 className="t-brown">Lorem Gifts Lorem1</h2>
-            </div>
+            </div> */}
 
             <div className="block-content slider_container1 relative">
               {/* Custom navigation buttons */}
@@ -87,7 +58,7 @@ export default function SubCategoryCarousel({ data }) {
                             <img
                               width="720"
                               height="484"
-                              src={item.imgUrl}
+                              src={item.image}
                               alt={item.name}
                             />
                           </div>
