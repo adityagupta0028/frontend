@@ -219,7 +219,7 @@ const menusData = [
   },
   {
     menu:"Wedding",
-    href:'/',
+    href:'/wedding',
     subMenus:{
       rings:{
         title:"Curated Rings",
@@ -559,8 +559,8 @@ function Header() {
                 <ul id="menu-main-menu" className="menu">
                     {
                       menusData.map((menu, idx)=>(
-                        <li className={`level-0 menu-item ${menu.subMenus ? 'menu-item-has-children' : ''}`}>
-                          <Link to="/"><span className="menu-item-text">{menu.menu}</span></Link>
+                        <li className={`level-0 menu-item ${menu.subMenus ? 'menu-item-has-children' : ''}`} key={idx}>
+                          <Link to={menu.href}><span className="menu-item-text">{menu.menu}</span></Link>
                           {menu?.subMenus && (
                             <ul className="sub-menu !top-[38px]">
                               <div className="container row mx-auto">
