@@ -21,7 +21,6 @@ function Wedding() {
     isLoading: subcategoriesLoading,
     error: subcategoriesError 
   } = useGetSubCategoryQuery(WEDDING_CATEGORY_ID);
-
   // Transform subcategories from API
   const subcategories = useMemo(() => {
     if (subcategoriesData?.data?.subcategories && subcategoriesData.data.subcategories.length > 0) {
