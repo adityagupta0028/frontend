@@ -11,7 +11,7 @@ import { useEffect } from "react";
 export default function SubCategoryCarousel({ data }) {
 
   useEffect(() => {
-    console.log('data products====>', data)
+  
   }, [data])
 
 

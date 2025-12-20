@@ -114,7 +114,7 @@ const menusData = [
   },
   {
     menu:"Engagement",
-    href:'/',
+    href:'/engagement-rings',
     subMenus:{
       rings:{
         title:"Curated Rings",
