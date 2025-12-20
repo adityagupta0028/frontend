@@ -4,7 +4,6 @@ import { useGetSubCategoryQuery } from '../Services/CategoryApi';
 import { useGetProductQuery } from '../Services/ProductApi';
 import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
-import ProductSlider from '../components/home/productSlider';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 import ProductsGrid from '../components/products/ProductsGrid';
 
@@ -31,7 +30,7 @@ function Wedding() {
         image: sub.image
           ? (sub.image.startsWith('http')
             ? sub.image
-            : `${GetUrl.IMAGE_URL}${sub.image}`)
+            : `${GetUrl.API_URL}${sub.image}`)
           : `/media/product/cat-6-${(index % 6) + 1}.jpg`,
       }));
     }
@@ -65,12 +64,12 @@ function Wedding() {
         const mainImage = images[0]
           ? (images[0].startsWith('http')
             ? images[0]
-            : `${GetUrl.IMAGE_URL}/${images[0]}`)
+            : `${GetUrl.API_URL}/${images[0]}`)
           : '/media/product/1.jpg';
         const hoverImage = images[1]
           ? (images[1].startsWith('http')
             ? images[1]
-            : `${GetUrl.IMAGE_URL}/${images[1]}`)
+            : `${GetUrl.API_URL}/${images[1]}`)
           : mainImage;
 
         const originalPrice = product.original_price || 0;
