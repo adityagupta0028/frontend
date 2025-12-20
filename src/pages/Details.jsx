@@ -265,7 +265,7 @@ function Details() {
     
     // Always show rating, even if 0 (will show empty stars)
     return (
-      <div className="rating" style={{ display: 'inline-block', marginBottom: '10px' }}>
+      <div className="rating mt-1" style={{ display: 'inline-block'}}>
         <div className={`star star-${roundedRating}`} style={{ display: 'inline-block' }}></div>
         {product.reviewCount > 0 ? (
           <div className="review-count" style={{ display: 'inline-block', marginLeft: '7.5pt' }}>
@@ -413,18 +413,18 @@ function Details() {
                       {/* Product Info */}
                       <div className="product-info col-lg-5 col-md-12 col-12">
                         <h1 className="title">{product.name}</h1>
-                        <span className="price">
+                        <span className="price mb-0">
                           {currentVariantPrice.originalPrice && currentVariantPrice.originalPrice > currentVariantPrice.price ? (
                             <>
-                              <del aria-hidden="true"><span>${currentVariantPrice.originalPrice.toFixed(2)}</span></del>
-                              <ins><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
+                              <del aria-hidden="true" className='!mr-[10px] !text-[16px]'><span>${currentVariantPrice.originalPrice.toFixed(2)}</span></del>
+                              <ins className='font-bold'><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
                             </>
                           ) : (
                             <ins><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
                           )}
                         </span>
                         {product && renderStars(product.rating)}
-                        <div className="description">
+                        <div className="description !border-t border-black">
                           <p>{product.shortDescription || product.description || 'No description available.'}</p>
                         </div>
                         
@@ -480,10 +480,10 @@ function Details() {
                           <div className="variations" style={{ marginTop: '20px' }}>
                             <table cellSpacing="0">
                               <tbody>
-                                <tr>
-                                  <td className="label">Metal Type</td>
+                                <tr className='!block'>
+                                  <td className="label block !w-full !tracking-[1px] !font-bold mb-1">Metal Type</td>
                                   <td className="attributes">
-                                    <ul className="metals">
+                                    <ul className="metals !px-[5px]">
                                       {product.metalTypes.map((metal) => {
                                         // Determine metal class based on metal type
                                         const metalLower = metal.toLowerCase();
@@ -499,7 +499,7 @@ function Details() {
                                         return (
                                           <li key={metal} title={metal}>
                                             <span 
-                                              className={`${metalClass} ${selectedMetalType === metal ? 'selected' : ''}`}
+                                              className={`!rounded-none !h-[25px] ${metalClass} ${selectedMetalType === metal ? 'outline outline-offset-[3px]' : ''}`}
                                               onClick={() => setSelectedMetalType(metal)}
                                               style={{ cursor: 'pointer' }}
                                             ></span>
@@ -523,7 +523,7 @@ function Details() {
                             <table cellSpacing="0">
                               <tbody>
                                 <tr>
-                                  <td className="label">
+                                  <td className="label block !w-full !tracking-[1px] !font-bold mb-1">
                                     Carat Weight
                                     <i className="fa fa-info-circle" style={{ marginLeft: '5px', cursor: 'help' }} title="Select the carat weight for your diamond"></i>
                                   </td>
@@ -537,7 +537,7 @@ function Details() {
                                         return (
                                           <li key={carat}>
                                             <span 
-                                              className={isSelected ? 'selected' : ''}
+                                              className={`!rounded-none !outline !outline-offset-[3px] !h-[35px] !w-[90px] !flex items-center justify-center p-0 ${isSelected ? 'selected' : ''}`}
                                               onClick={() => setSelectedCaratWeight(carat)}
                                               style={{ cursor: 'pointer' }}
                                             >{displayValue}</span>
@@ -558,7 +558,7 @@ function Details() {
                             <table cellSpacing="0">
                               <tbody>
                                 <tr>
-                                  <td className="label">
+                                  <td className="label block !w-full !tracking-[1px] !font-bold mb-1">
                                     Diamond Quality
                                     <i className="fa fa-info-circle" style={{ marginLeft: '5px', cursor: 'help' }} title="Select the diamond quality grade"></i>
                                   </td>
@@ -567,7 +567,7 @@ function Details() {
                                       {product.diamondQualities.map((quality, index) => (
                                         <li key={quality || index}>
                                           <span 
-                                            className={selectedDiamondQuality === quality ? 'selected' : ''}
+                                            className={`!rounded-none  !h-[35px] !w-[90px] !flex items-center justify-center p-0 ${ selectedDiamondQuality === quality ? 'selected' : ''}`}
                                             onClick={() => setSelectedDiamondQuality(quality)}
                                             style={{ cursor: 'pointer' }}
                                           >{quality}</span>
@@ -587,7 +587,7 @@ function Details() {
                             <table cellSpacing="0">
                               <tbody>
                                 <tr>
-                                  <td className="label">
+                                  <td className="label block !w-full !tracking-[1px] !font-bold mb-1">
                                     Ring Size
                                     <a href="#" onClick={(e) => { e.preventDefault(); }} style={{ marginLeft: '10px', fontSize: '12px', textDecoration: 'underline' }}>Find Ring Size</a>
                                   </td>

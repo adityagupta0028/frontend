@@ -215,18 +215,18 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                           </span>
                         </div>
                       </div>
-                      <div className="products-content">
-                        <div className="contents text-center">
-                          <div className="rating">
+                      <div className="products-content mt-0 !text-left">
+                        <div className="contents">
+                          <h3 className="product-title text-left mb-0"><Link className="text-[14px]" to={`/product/details/${product.id}`}>{product.name}</Link></h3>
+                          <div className="rating text-left">
                             <div className={`star star-${product.rating}`}></div>
                             <span className="count">({product.reviews} review{product.reviews !== 1 ? 's' : ''})</span>
                           </div>
-                          <h3 className="product-title"><Link to={`/product/details/${product.id}`}>{product.name}</Link></h3>
-                          <span className="price">
+                          <span className="price mt-3">
                             {variantPrice.originalPrice && variantPrice.originalPrice > variantPrice.price ? (
                               <>
-                                <del aria-hidden="true"><span>${variantPrice.originalPrice?.toFixed(2)}</span></del>
-                                <ins><span>${variantPrice.price.toFixed(2)}</span></ins>
+                                <ins><span className='text-[20px] font-bold mr-3'>${variantPrice.price.toFixed(2)}</span></ins>
+                                <del aria-hidden="true"><span>${variantPrice.originalPrice.toFixed(2)}</span></del>
                               </>
                             ) : (
                               <ins><span>${variantPrice.price.toFixed(2)}</span></ins>
@@ -236,8 +236,8 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
 
                         {/* Metal Type Selection */}
                         {metalTypes.length > 0 && (
-                          <div className="d-flex align-items-center position-relative mb-3 mt-3" style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <p className="pe-3 mb-0 sstyle" style={{ fontSize: '14px', fontWeight: '500', width: '100%', textAlign: 'center', marginBottom: '8px' }}>Metal:</p>
+                          <div className="flex !justify-start items-center position-relative mb-3 mt-3" style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <p className="pe-3 mb-0 sstyle" >Metal:</p>
                             <div className="d-flex align-items-center gap-2" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
                               {metalTypes.map((metal, index) => {
                                 const metalClass = getMetalClass(metal);
@@ -246,21 +246,21 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                                 return (
                                   <div key={`${metal}-${index}`} className="d-flex flex-column align-items-center" style={{ gap: '5px' }}>
                                     <span
-                                      className={`${metalClass} ${isSelected ? 'selected' : ''}`}
+                                      className={`${metalClass} ${isSelected ? 'selected' : ''} !flex items-center justify-center`}
                                       onClick={() => handleSelectionChange(product.id, 'metal', metal)}
                                       style={{
-                                        width: '35px',
-                                        height: '35px',
-                                        borderRadius: '50%',
-                                        border: isSelected ? '3px solid #f9b61e' : '2px solid #ddd',
+                                        width: '50px',
+                                        height: '25px',
+                                        border: isSelected ? '2px solid #f9b61e' : '2px solid #ddd',
                                         cursor: 'pointer',
                                         display: 'inline-block',
                                         transition: 'all 0.3s ease',
-                                        boxShadow: isSelected ? '0 0 0 2px rgba(249, 182, 30, 0.3)' : 'none'
+                                        // boxShadow: isSelected ? '0 0 0 2px rgba(249, 182, 30, 0.3)' : 'none'
                                       }}
                                       title={metal}
-                                    ></span>
-                                    <span style={{ fontSize: '11px', color: '#666', textAlign: 'center', maxWidth: '50px' }}>{metalLabel}</span>
+                                    >
+                                    <span className='text-[11px] text-[#666] text-center font-bold'>{metalLabel}</span>
+                                    </span>
                                   </div>
                                 );
                               })}
@@ -270,9 +270,9 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
 
                         {/* Carat Weight Selection */}
                         {caratWeights.length > 0 && (
-                          <div className="d-flex align-items-center position-relative mt-2" style={{ justifyContent: 'center' }}>
+                          <div className="flex justify-start items-center relative mt-2">
                             <p className="pe-3 mb-0 sstyle" style={{ fontSize: '14px', fontWeight: '500' }}>Carat:</p>
-                            <button
+                            {/* <button
                               className="scroll-arrow left"
                               onClick={(e) => {
                                 const ul = e.target.nextElementSibling;
@@ -281,17 +281,16 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                               style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', padding: '0 5px' }}
                             >
                               &#10094;
-                            </button>
+                            </button> */}
                             <ul className="shape-scroll d-flex flex-nowrap list-unstyled overflow-auto mb-0" style={{ maxWidth: '150px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                               {caratWeights.map((carat, idx) => {
                                 const isSelected = selectedCarat && String(selectedCarat) === String(carat);
                                 return (
                                   <li
                                     key={idx}
-                                    className={isSelected ? "level-1 menu-item px-3 border" : "px-3 border ms-3"}
+                                    className={`w-[60px] h-[30px] ${isSelected ? "level-1 menu-item px-3" : "px-3 ms-3"}`}
                                     style={{
                                       border: isSelected ? '2px solid #f9b61e' : '1px solid #ddd',
-                                      borderRadius: '4px',
                                       background: isSelected ? '#f9b61e' : '#fff',
                                       color: isSelected ? '#fff' : '#333',
                                       cursor: 'pointer',
@@ -305,7 +304,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                                 );
                               })}
                             </ul>
-                            <button
+                            {/* <button
                               className="scroll-arrow right"
                               onClick={(e) => {
                                 const ul = e.target.previousElementSibling;
@@ -314,7 +313,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                               style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', padding: '0 5px' }}
                             >
                               &#10095;
-                            </button>
+                            </button> */}
                           </div>
                         )}
                       </div>
@@ -435,7 +434,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         {caratWeights.length > 0 && (
                           <div className="d-flex align-items-center mt-2 mb-3">
                             <p className="pe-3 mb-0" style={{ fontSize: '14px', fontWeight: '500' }}>Carat:</p>
-                            <button
+                            {/* <button
                               className="scroll-arrow left"
                               onClick={(e) => {
                                 const ul = e.target.nextElementSibling;
@@ -444,14 +443,14 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                               style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', padding: '0 5px' }}
                             >
                               &#10094;
-                            </button>
+                            </button> */}
                             <ul className="shape-scroll d-flex flex-nowrap list-unstyled overflow-auto mb-0" style={{ maxWidth: '200px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                               {caratWeights.map((carat, idx) => {
                                 const isSelected = selectedCarat && String(selectedCarat) === String(carat);
                                 return (
                                   <li
                                     key={idx}
-                                    className={isSelected ? "level-1 menu-item px-3 border" : "px-3 border ms-3"}
+                                    className={`!w-[50px] ${isSelected ? "level-1 menu-item px-3 border" : "px-3 border ms-3"}`}
                                     style={{
                                       border: isSelected ? '2px solid #f9b61e' : '1px solid #ddd',
                                       borderRadius: '4px',
