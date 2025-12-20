@@ -5,6 +5,21 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
   // State to track selected metal and carat for each product
   const [productSelections, setProductSelections] = useState({});
 
+  // Helper function to get valid image URL with fallback
+  const getImageUrl = (imageUrl, fallback = '/media/product/1.jpg') => {
+    if (!imageUrl || imageUrl === 'undefined' || imageUrl === 'null') {
+      return fallback;
+    }
+    return imageUrl;
+  };
+
+  // Handle image load error
+  const handleImageError = (e, fallback = '/media/product/1.jpg') => {
+    if (e.target.src !== fallback) {
+      e.target.src = fallback;
+    }
+  };
+
   // Helper function to get metal types from variants
   const getMetalTypes = (variants) => {
     if (!variants || variants.length === 0) return [];
@@ -125,6 +140,29 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
     }
   };
 
+  // Debug: Log products and images (remove in production)
+  if (products.length > 0 && process.env.NODE_ENV === 'development') {
+    console.log('ProductsGrid - Products:', products);
+    console.log('ProductsGrid - First product image:', products[0]?.image);
+    console.log('ProductsGrid - First product hoverImage:', products[0]?.hoverImage);
+  }
+
+  if (!products || products.length === 0) {
+    return (
+      <div className="tab-content">
+        <div className="tab-pane fade show active" id="layout-grid" role="tabpanel">
+          <div className="products-list grid">
+            <div className="row">
+              <div className="col-12 text-center p-5">
+                <p>No products found.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="tab-content">
       {layoutView === 'grid' ? (
@@ -157,8 +195,22 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         )}
                         <div className={`product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
                           <Link to={`/product/details/${product.id}`}>
-                            <img width="600" height="600" src={product.image} className="post-image" alt={product.name} />
-                            <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
+                            <img 
+                              width="600" 
+                              height="600" 
+                              src={getImageUrl(product.image)} 
+                              className="post-image" 
+                              alt={product.name || 'Product'} 
+                              onError={(e) => handleImageError(e)}
+                            />
+                            <img 
+                              width="600" 
+                              height="600" 
+                              src={getImageUrl(product.hoverImage, getImageUrl(product.image))} 
+                              className="hover-image back" 
+                              alt={product.name || 'Product'} 
+                              onError={(e) => handleImageError(e, getImageUrl(product.image))}
+                            />
                           </Link>
                         </div>
                         <div className="product-button">
@@ -186,7 +238,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                           <span className="price">
                             {variantPrice.originalPrice && variantPrice.originalPrice > variantPrice.price ? (
                               <>
-                                <del aria-hidden="true"><span>${variantPrice.originalPrice.toFixed(2)}</span></del>
+                                <del aria-hidden="true"><span>${variantPrice.originalPrice?.toFixed(2)}</span></del>
                                 <ins><span>${variantPrice.price.toFixed(2)}</span></ins>
                               </>
                             ) : (
@@ -315,8 +367,22 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         )}
                         <div className="product-thumb-hover">
                           <Link to={`/product/details/${product.id}`}>
-                            <img width="600" height="600" src={product.image} className="post-image" alt={product.name} />
-                            <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
+                            <img 
+                              width="600" 
+                              height="600" 
+                              src={getImageUrl(product.image)} 
+                              className="post-image" 
+                              alt={product.name || 'Product'} 
+                              onError={(e) => handleImageError(e)}
+                            />
+                            <img 
+                              width="600" 
+                              height="600" 
+                              src={getImageUrl(product.hoverImage, getImageUrl(product.image))} 
+                              className="hover-image back" 
+                              alt={product.name || 'Product'} 
+                              onError={(e) => handleImageError(e, getImageUrl(product.image))}
+                            />
                           </Link>
                         </div>
                         <span className="product-quickview" data-title="Quick View">

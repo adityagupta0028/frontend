@@ -61,16 +61,18 @@ function Engagement() {
     if (productsData?.data?.products && productsData.data.products.length > 0) {
       return productsData.data.products.map((product) => {
         const images = product.images || [];
-        const mainImage = images[0]
-          ? (images[0].startsWith('http')
-            ? images[0]
-            : `${GetUrl.IMAGE_URL}/${images[0]}`)
-          : '/media/product/1.jpg';
-        const hoverImage = images[1]
-          ? (images[1].startsWith('http')
-            ? images[1]
-            : `${GetUrl.IMAGE_URL}/${images[1]}`)
-          : mainImage;
+        const buildImageUrl = (imgPath) => {
+          if (!imgPath) return '/media/product/1.jpg';
+          if (imgPath.startsWith('http')) return imgPath;
+          // Handle both cases: path with or without leading slash
+          const cleanPath = imgPath.startsWith('/') ? imgPath : `/${imgPath}`;
+          const baseUrl = GetUrl.IMAGE_URL?.endsWith('/') 
+            ? GetUrl.IMAGE_URL.slice(0, -1) 
+            : GetUrl.IMAGE_URL;
+          return `${baseUrl}${cleanPath}`;
+        };
+        const mainImage = buildImageUrl(images[0]);
+        const hoverImage = images[1] ? buildImageUrl(images[1]) : mainImage;
 
         const originalPrice = product.original_price || 0;
         const discountedPrice = product.discounted_price || originalPrice;
@@ -105,7 +107,7 @@ function Engagement() {
         };
       });
     }
-   
+    return [];
   }, [productsData]);
 
   const isLoading = subcategoriesLoading || productsLoading;
