@@ -170,6 +170,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
           <div className="products-list grid">
             <div className="row">
               {products.map((product) => {
+                console.log('productproduct',product);
                 // Initialize selections if product has variants
                 if (product.variants && product.variants.length > 0 && !productSelections[product.id]) {
                   initializeSelections(product);
@@ -186,31 +187,17 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                 return (
                   <div key={product.id} className="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                     <div className="products-entry clearfix product-wapper">
-                      <div className="products-thumb">
+                      <div className="products-thumb mb-0">
                         {product.label && (
                           <div className="product-lable">
                             {product.discount && <div className="onsale">{product.discount}</div>}
                             {(product.label === 'hot' || product.label === 'both') && <div className="hot">Hot</div>}
                           </div>
                         )}
-                        <div className={`product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
+                        <div className={`relative product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
                           <Link to={`/product/details/${product.id}`}>
-                            <img 
-                              width="600" 
-                              height="600" 
-                              src={getImageUrl(product.image)} 
-                              className="post-image" 
-                              alt={product.name || 'Product'} 
-                              onError={(e) => handleImageError(e)}
-                            />
-                            <img 
-                              width="600" 
-                              height="600" 
-                              src={getImageUrl(product.hoverImage, getImageUrl(product.image))} 
-                              className="hover-image back" 
-                              alt={product.name || 'Product'} 
-                              onError={(e) => handleImageError(e, getImageUrl(product.image))}
-                            />
+                            <img width="600" height="600" src={product.image} className="!relative post-image" alt={product.name} />
+                            <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
                           </Link>
                         </div>
                         <div className="product-button">
