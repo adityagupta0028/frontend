@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 
 function ProductsGrid({ products = [], layoutView = 'grid' }) {
   // State to track selected metal and carat for each product
+  console.log('ProductsGrid products',products);
   const [productSelections, setProductSelections] = useState({});
 
   // Helper function to get valid image URL with fallback

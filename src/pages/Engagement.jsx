@@ -56,6 +56,7 @@ function Engagement() {
     page: 1,
   });
 
+  console.log('GetUrl.IMAGE_URL Data:', GetUrl.IMAGE_URL);
   // Transform products from API
   const products = useMemo(() => {
     if (productsData?.data?.products && productsData.data.products.length > 0) {
@@ -69,6 +70,7 @@ function Engagement() {
           const baseUrl = GetUrl.IMAGE_URL?.endsWith('/') 
             ? GetUrl.IMAGE_URL.slice(0, -1) 
             : GetUrl.IMAGE_URL;
+            console.log('Built Image URL:', `${baseUrl}${cleanPath}`);
           return `${baseUrl}${cleanPath}`;
         };
         const mainImage = buildImageUrl(images[0]);
