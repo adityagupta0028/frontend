@@ -8,11 +8,11 @@ import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 import ProductsGrid from '../components/products/ProductsGrid';
 
 // Wedding Category ID
-const WEDDING_CATEGORY_ID = '6945ae7225a47dcbe1667cb5';
+const WEDDING_CATEGORY_ID = '69468b5a25a47dcbe1667e35';
 
 
 
-function Wedding() {
+function Jewelry() {
   const [layoutView, setLayoutView] = useState('grid');
 
   // Fetch subcategories for Wedding category
@@ -30,7 +30,7 @@ function Wedding() {
         image: sub.image
           ? (sub.image.startsWith('http')
             ? sub.image
-            : `${GetUrl.API_URL}${sub.image}`)
+            : `${GetUrl.IMAGE_URL}${sub.image}`)
           : `/media/product/cat-6-${(index % 6) + 1}.jpg`,
       }));
     }
@@ -420,5 +420,11 @@ function Wedding() {
   );
 }
 
-export default Wedding;
 
+
+
+
+
+
+
+export default Jewelry
