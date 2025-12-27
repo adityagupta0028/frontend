@@ -8,6 +8,7 @@ import { termConditionApi } from "./Services/TermCondition";
 import { faqApi } from "./Services/FaqApi";
 import { orderApi } from "./Services/OrderApi";
 import {ProductApi} from "./Services/ProductApi";
+import {customerApi} from "./Services/CustomerApi";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     [faqApi.reducerPath]: faqApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [ProductApi.reducerPath]: ProductApi.reducer,
+    [customerApi.reducerPath]: customerApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -30,5 +32,6 @@ export const store = configureStore({
       faqApi.middleware,
       orderApi.middleware,
       ProductApi.middleware,
+      customerApi.middleware,
     ),
 });
