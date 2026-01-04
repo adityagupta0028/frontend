@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLoginMutation, useSignupMutation, useGoogleLoginMutation, useFacebookLoginMutation } from '../Services/CustomerApi';
+import { useLoginMutation, useSignupMutation, useGoogleLoginMutation, useFacebookLoginMutation, useSyncCartMutation } from '../Services/CustomerApi';
+import { syncLocalCartToDatabase } from '../utils/cartService';
 import './Login.css';
 
 function Login() {
@@ -12,6 +13,7 @@ function Login() {
   const [signup] = useSignupMutation();
   const [googleLogin] = useGoogleLoginMutation();
   const [facebookLogin] = useFacebookLoginMutation();
+  const [syncCart] = useSyncCartMutation();
 
   // Load Google Identity Services
   useEffect(() => {
@@ -50,8 +52,17 @@ function Login() {
       if ((result.status === 1 || result.success) && result.data && result.data.accessToken) {
         localStorage.setItem('customerToken', result.data.accessToken);
         localStorage.setItem('customerData', JSON.stringify(result.data));
-        navigate('/');
-        window.location.reload();
+        
+        // Sync localStorage cart to database if items exist
+        try {
+          await syncLocalCartToDatabase(syncCart);
+        } catch (syncError) {
+          console.error('Error syncing cart:', syncError);
+          // Continue even if cart sync fails
+        }
+        
+        navigate(-1);
+       // window.location.reload();
       } else {
         setError(result.message || 'Login failed');
       }
@@ -105,7 +116,16 @@ function Login() {
           localStorage.setItem('customerToken', result.data.accessToken);
         }
         localStorage.setItem('customerData', JSON.stringify(result.data));
-        navigate('/');
+        
+        // Sync localStorage cart to database if items exist
+        try {
+          await syncLocalCartToDatabase(syncCart);
+        } catch (syncError) {
+          console.error('Error syncing cart:', syncError);
+          // Continue even if cart sync fails
+        }
+        
+        navigate(-1);
         window.location.reload();
       } else {
         setError(result.message || 'Signup failed');
@@ -147,7 +167,15 @@ function Login() {
             if ((result.status === 1 || result.success) && result.data && result.data.accessToken) {
               localStorage.setItem('customerToken', result.data.accessToken);
               localStorage.setItem('customerData', JSON.stringify(result.data));
-              navigate('/');
+              
+              // Sync localStorage cart to database if items exist
+              try {
+                await syncLocalCartToDatabase(syncCart);
+              } catch (syncError) {
+                console.error('Error syncing cart:', syncError);
+              }
+              
+              navigate(-1);
               window.location.reload();
             } else {
               setError(result.message || 'Google login failed');
@@ -174,7 +202,19 @@ function Login() {
                 if ((result.status === 1 || result.success) && result.data && result.data.accessToken) {
                   localStorage.setItem('customerToken', result.data.accessToken);
                   localStorage.setItem('customerData', JSON.stringify(result.data));
-                  navigate('/');
+                  
+                  // Sync localStorage cart to database if items exist
+                  const localCartItems = getLocalCart();
+                  if (localCartItems && localCartItems.length > 0) {
+                    try {
+                      await syncCart({ items: localCartItems }).unwrap();
+                      clearLocalCart(); // Clear localStorage after successful sync
+                    } catch (syncError) {
+                      console.error('Error syncing cart:', syncError);
+                    }
+                  }
+                  
+                  navigate(-1);
                   window.location.reload();
                 } else {
                   setError(result.message || 'Google login failed');
@@ -216,7 +256,15 @@ function Login() {
               if ((result.status === 1 || result.success) && result.data && result.data.accessToken) {
                 localStorage.setItem('customerToken', result.data.accessToken);
                 localStorage.setItem('customerData', JSON.stringify(result.data));
-                navigate('/');
+                
+                // Sync localStorage cart to database if items exist
+                try {
+                  await syncLocalCartToDatabase(syncCart);
+                } catch (syncError) {
+                  console.error('Error syncing cart:', syncError);
+                }
+                
+                navigate(-1);
                 window.location.reload();
               } else {
                 setError(result.message || 'Facebook login failed');

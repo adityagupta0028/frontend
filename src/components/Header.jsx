@@ -1,4 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useMemo } from 'react';
+import { useGetCartQuery } from '../Services/CustomerApi';
+import { getLocalCart, getCartItemCount } from '../utils/cartService';
+import { GetUrl } from '../config/GetUrl';
 import './Header.css';
 
 const menusData = [
@@ -440,6 +444,68 @@ const menusData = [
 ];
 
 function Header() {
+  // Check if user is logged in
+  const isLoggedIn = !!localStorage.getItem('customerToken');
+  
+  // Fetch cart from API if logged in
+  const { data: cartData } = useGetCartQuery(undefined, {
+    skip: !isLoggedIn,
+    pollingInterval: 30000, // Poll every 30 seconds to keep count updated
+  });
+  
+  // Get cart count
+  const cartCount = useMemo(() => {
+    if (isLoggedIn && cartData?.data?.items) {
+      return cartData.data.items.reduce((total, item) => total + (item.quantity || 1), 0);
+    } else if (!isLoggedIn) {
+      const localCart = getLocalCart();
+      return localCart.reduce((total, item) => total + (item.quantity || 1), 0);
+    }
+    return 0;
+  }, [isLoggedIn, cartData]);
+  
+  // Get cart items for mini cart dropdown
+  const cartItems = useMemo(() => {
+    if (isLoggedIn && cartData?.data?.items) {
+      return cartData.data.items.slice(0, 3); // Show max 3 items in dropdown
+    } else if (!isLoggedIn) {
+      return getLocalCart().slice(0, 3);
+    }
+    return [];
+  }, [isLoggedIn, cartData]);
+  
+  // Calculate cart total
+  const cartTotal = useMemo(() => {
+    const items = isLoggedIn && cartData?.data?.items ? cartData.data.items : (!isLoggedIn ? getLocalCart() : []);
+    return items.reduce((total, item) => {
+      const price = item.discountedPrice || item.price || 0;
+      return total + (price * (item.quantity || 1));
+    }, 0);
+  }, [isLoggedIn, cartData]);
+  
+  // Get product image
+  const getProductImage = (item) => {
+    if (item.productId?.images && item.productId.images.length > 0) {
+      const image = item.productId.images[0];
+      return image.startsWith('http') ? image : `${GetUrl.IMAGE_URL}${image}`;
+    }
+    return '/media/product/1.jpg';
+  };
+  
+  // Get product name
+  const getProductName = (item) => {
+    return item.productId?.product_name || 'Product';
+  };
+  
+  // Listen for cart updates
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      // Force re-render by updating a state or refetching
+      window.location.reload();
+    };
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+  }, []);
   const navigate = useNavigate();
 
   const handleUserIconClick = () => {
@@ -474,49 +540,64 @@ function Header() {
                     <div className="dropdown mini-cart top-cart">
                       <div className="remove-cart-shadow"></div>
                       <a className="dropdown-toggle cart-icon" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">2</span></div>
+                        <div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{cartCount || 0}</span></div>
                       </a>
                       <div className="dropdown-menu cart-popup">
-                        <div className="cart-empty-wrap">
-                          <ul className="cart-list">
-                            <li className="empty">
-                              <span>No products in the cart.</span>
-                              <Link className="go-shop" to="/shop">GO TO SHOP<i aria-hidden="true" className="arrow_right"></i></Link>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="cart-list-wrap">
-                          <ul className="cart-list ">
-                            <li className="mini-cart-item">
-                              <a href="#" className="remove" title="Remove this item"><i className="icon_close"></i></a>
-                              <Link to="/details" className="product-image"><img width="600" height="600" src="/media/product/3.jpg" alt=""></img></Link>
-                              <Link to="/details" className="product-name">Twin Hoops</Link>
-                              <div className="quantity">Qty: 1</div>
-                              <div className="price">$150.00</div>
-                            </li>
-                            <li className="mini-cart-item">
-                              <a href="#" className="remove" title="Remove this item"><i className="icon_close"></i></a>
-                              <Link to="/details" className="product-image"><img width="600" height="600" src="/media/product/1.jpg" alt=""></img></Link>
-                              <Link to="/details" className="product-name">Medium Flat Hoops</Link>
-                              <div className="quantity">Qty: 1</div>
-                              <div className="price">$100.00</div>
-                            </li>
-                          </ul>
-                          <div className="total-cart">
-                            <div className="title-total">Total: </div>
-                            <div className="total-price"><span>$250.00</span></div>
+                        {cartItems.length === 0 ? (
+                          <div className="cart-empty-wrap">
+                            <ul className="cart-list">
+                              <li className="empty">
+                                <span>No products in the cart.</span>
+                                <Link className="go-shop" to="/shop">GO TO SHOP<i aria-hidden="true" className="arrow_right"></i></Link>
+                              </li>
+                            </ul>
                           </div>
-                          <div className="free-ship">
-                            <div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-                            <div className="total-percent">
-                              <div className="percent" style={{ width: '20%' }}></div>
+                        ) : (
+                          <div className="cart-list-wrap">
+                            <ul className="cart-list">
+                              {cartItems.map((item, index) => {
+                                const itemId = item._id || item.tempId || index;
+                                const productImage = getProductImage(item);
+                                const productName = getProductName(item);
+                                const itemPrice = (item.discountedPrice || item.price || 0) * (item.quantity || 1);
+                                const productId = item.productId?._id || item.productId;
+                                
+                                return (
+                                  <li key={itemId} className="mini-cart-item">
+                                    <Link 
+                                      to={`/product/details/${productId}`} 
+                                      className="product-image"
+                                    >
+                                      <img width="600" height="600" src={productImage} alt={productName} />
+                                    </Link>
+                                    <Link 
+                                      to={`/product/details/${productId}`} 
+                                      className="product-name"
+                                    >
+                                      {productName}
+                                    </Link>
+                                    <div className="quantity">Qty: {item.quantity || 1}</div>
+                                    <div className="price">${itemPrice.toFixed(2)}</div>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                            <div className="total-cart">
+                              <div className="title-total">Total: </div>
+                              <div className="total-price"><span>${cartTotal.toFixed(2)}</span></div>
+                            </div>
+                            <div className="free-ship">
+                              <div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
+                              <div className="total-percent">
+                                <div className="percent" style={{ width: '20%' }}></div>
+                              </div>
+                            </div>
+                            <div className="buttons">
+                              <Link to="/cart" className="button btn view-cart btn-primary">View cart</Link>
+                              <Link to="/checkout" className="button btn checkout btn-default">Check out</Link>
                             </div>
                           </div>
-                          <div className="buttons">
-                            <Link to="/cart" className="button btn view-cart btn-primary">View cart</Link>
-                            <Link to="/checkout" className="button btn checkout btn-default">Check out</Link>
-                          </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -601,50 +682,65 @@ function Header() {
                       <div className="topcart dropdown light">
                         <div className="dropdown mini-cart top-cart">
                           <div className="remove-cart-shadow"></div>
-                          <a className="dropdown-toggle cart-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">2</span></div>
-                          </a>
+                          <Link className="dropdown-toggle cart-icon" to="/cart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{cartCount || 0}</span></div>
+                          </Link>
                           <div className="dropdown-menu cart-popup">
-                            <div className="cart-empty-wrap">
-                              <ul className="cart-list">
-                                <li className="empty">
-                                  <span>No products in the cart.</span>
-                                  <Link className="go-shop" to="/shop">GO TO SHOP<i aria-hidden="true" className="arrow_right"></i></Link>
-                                </li>
-                              </ul>
-                            </div>
-                            <div className="cart-list-wrap">
-                              <ul className="cart-list ">
-                                <li className="mini-cart-item">
-                                  <a href="#" className="remove" title="Remove this item"><i className="icon_close"></i></a>
-                                  <Link to="/details" className="product-image"><img width="600" height="600" src="/media/product/3.jpg" alt=""></img></Link>
-                                  <Link to="/details" className="product-name">Twin Hoops</Link>
-                                  <div className="quantity">Qty: 1</div>
-                                  <div className="price">$150.00</div>
-                                </li>
-                                <li className="mini-cart-item">
-                                  <a href="#" className="remove" title="Remove this item"><i className="icon_close"></i></a>
-                                  <Link to="/details" className="product-image"><img width="600" height="600" src="/media/product/1.jpg" alt=""></img></Link>
-                                  <Link to="/details" className="product-name">Medium Flat Hoops</Link>
-                                  <div className="quantity">Qty: 1</div>
-                                  <div className="price">$100.00</div>
-                                </li>
-                              </ul>
-                              <div className="total-cart">
-                                <div className="title-total">Total: </div>
-                                <div className="total-price"><span>$250.00</span></div>
+                            {cartItems.length === 0 ? (
+                              <div className="cart-empty-wrap">
+                                <ul className="cart-list">
+                                  <li className="empty">
+                                    <span>No products in the cart.</span>
+                                    <Link className="go-shop" to="/shop">GO TO SHOP<i aria-hidden="true" className="arrow_right"></i></Link>
+                                  </li>
+                                </ul>
                               </div>
-                              <div className="free-ship">
-                                <div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-                                <div className="total-percent">
-                                  <div className="percent" style={{ width: '20%' }}></div>
+                            ) : (
+                              <div className="cart-list-wrap">
+                                <ul className="cart-list">
+                                  {cartItems.map((item, index) => {
+                                    const itemId = item._id || item.tempId || index;
+                                    const productImage = getProductImage(item);
+                                    const productName = getProductName(item);
+                                    const itemPrice = (item.discountedPrice || item.price || 0) * (item.quantity || 1);
+                                    const productId = item.productId?._id || item.productId;
+                                    
+                                    return (
+                                      <li key={itemId} className="mini-cart-item">
+                                        <Link 
+                                          to={`/product/details/${productId}`} 
+                                          className="product-image"
+                                        >
+                                          <img width="600" height="600" src={productImage} alt={productName} />
+                                        </Link>
+                                        <Link 
+                                          to={`/product/details/${productId}`} 
+                                          className="product-name"
+                                        >
+                                          {productName}
+                                        </Link>
+                                        <div className="quantity">Qty: {item.quantity || 1}</div>
+                                        <div className="price">${itemPrice.toFixed(2)}</div>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                                <div className="total-cart">
+                                  <div className="title-total">Total: </div>
+                                  <div className="total-price"><span>${cartTotal.toFixed(2)}</span></div>
+                                </div>
+                                <div className="free-ship">
+                                  <div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
+                                  <div className="total-percent">
+                                    <div className="percent" style={{ width: '20%' }}></div>
+                                  </div>
+                                </div>
+                                <div className="buttons">
+                                  <Link to="/cart" className="button btn view-cart btn-primary">View cart</Link>
+                                  <Link to="/checkout" className="button btn checkout btn-default">Check out</Link>
                                 </div>
                               </div>
-                              <div className="buttons">
-                                <Link to="/cart" className="button btn view-cart btn-primary">View cart</Link>
-                                <Link to="/checkout" className="button btn checkout btn-default">Check out</Link>
-                              </div>
-                            </div>
+                            )}
                           </div>
                         </div>
                       </div>

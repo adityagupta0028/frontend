@@ -1,7 +1,10 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useMemo, useEffect } from 'react';
 import { useGetSingleProductQuery } from '../Services/ProductApi';
+import { useAddToCartMutation } from '../Services/CustomerApi';
+import { addToCart } from '../utils/cartService';
 import { GetUrl } from '../config/GetUrl';
+import AddToCartModal from '../components/AddToCartModal';
 import './Details.css';
 
 function Details() {
@@ -15,6 +18,12 @@ function Details() {
   const [selectedRingSize, setSelectedRingSize] = useState('');
   const [activeTab, setActiveTab] = useState('description');
   const [selectedImage, setSelectedImage] = useState(0);
+  const [showAddToCartModal, setShowAddToCartModal] = useState(false);
+  const [addToCartLoading, setAddToCartLoading] = useState(false);
+  const [addToCartError, setAddToCartError] = useState('');
+
+  // Cart API hook
+  const [addToCartApi] = useAddToCartMutation();
 
   // Fetch product details from API
   const { 
@@ -153,6 +162,57 @@ function Details() {
     const newQuantity = quantity + change;
     if (newQuantity >= 1) {
       setQuantity(newQuantity);
+    }
+  };
+
+  // Handle add to cart
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    setAddToCartError('');
+    setAddToCartLoading(true);
+
+    if (!product || !product.id) {
+      setAddToCartError('Product information is missing');
+      setAddToCartLoading(false);
+      return;
+    }
+
+    try {
+      // Prepare selected variant object
+      const selectedVariant = {
+        ...(selectedSize && { size: selectedSize }),
+        ...(selectedColor && { color: selectedColor }),
+        ...(selectedMetalType && { metal_type: selectedMetalType }),
+        ...(selectedCaratWeight && { carat_weight: selectedCaratWeight }),
+        ...(selectedDiamondQuality && { diamond_quality: selectedDiamondQuality }),
+        ...(selectedRingSize && { ring_size: selectedRingSize }),
+      };
+
+      // Prepare product data for cart
+      const productData = {
+        productId: product.id,
+        product_id: product.sku || product.id,
+        quantity: quantity,
+        selectedVariant: selectedVariant,
+        price: currentVariantPrice.originalPrice || currentVariantPrice.price || 0,
+        discountedPrice: currentVariantPrice.originalPrice ? currentVariantPrice.price : null,
+        engraving_text: '' // Can be added later if needed
+      };
+
+      // Use cart service to add item
+      const result = await addToCart(productData, addToCartApi);
+      
+      if (result.success) {
+        // Show success modal
+        setShowAddToCartModal(true);
+      } else {
+        setAddToCartError('Failed to add item to cart');
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      setAddToCartError(error.data?.message || error.message || 'Failed to add item to cart. Please try again.');
+    } finally {
+      setAddToCartLoading(false);
     }
   };
 
@@ -647,25 +707,29 @@ function Details() {
                               >-</button>
                             </div>
                             <div className="btn-add-to-cart">
+                              {addToCartError && (
+                                <div style={{
+                                  color: '#c33',
+                                  fontSize: '14px',
+                                  marginBottom: '10px',
+                                  padding: '8px',
+                                  backgroundColor: '#fee',
+                                  borderRadius: '4px'
+                                }}>
+                                  {addToCartError}
+                                </div>
+                              )}
                               <a 
                                 href="#" 
                                 tabIndex="0"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  // TODO: Implement add to cart functionality
-                                  console.log('Add to cart:', { 
-                                    productId: product.id, 
-                                    quantity, 
-                                    size: selectedSize, 
-                                    color: selectedColor,
-                                    metalType: selectedMetalType,
-                                    caratWeight: selectedCaratWeight,
-                                    diamondQuality: selectedDiamondQuality,
-                                    ringSize: selectedRingSize
-                                  });
+                                onClick={handleAddToCart}
+                                style={{
+                                  opacity: addToCartLoading ? 0.6 : 1,
+                                  pointerEvents: addToCartLoading ? 'none' : 'auto',
+                                  cursor: addToCartLoading ? 'wait' : 'pointer'
                                 }}
                               >
-                                Add to cart
+                                {addToCartLoading ? 'Adding...' : 'Add to cart'}
                               </a>
                             </div>
                           </div>
@@ -968,6 +1032,20 @@ function Details() {
           </div>
         </div>
       </div>
+
+      {/* Add to Cart Modal */}
+      <AddToCartModal
+        show={showAddToCartModal}
+        onHide={() => setShowAddToCartModal(false)}
+        product={{
+          name: product.name,
+          price: currentVariantPrice.price,
+          images: product.images
+        }}
+        quantity={quantity}
+        cartTotal={(currentVariantPrice.price * quantity) + 7900} // Example: current item + existing cart items
+        cartItemCount={8} // TODO: Get from cart state/context
+      />
     </div>
   );
 }

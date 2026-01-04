@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import './MyAccount.css';
 
 function MyAccount() {
+  const navigate = useNavigate();
   return (
     <div id="site-main" className="site-main">
       <div id="main-content" className="main-content">
@@ -40,7 +41,7 @@ function MyAccount() {
                 <Link to="/refer" className="nav-link">
                   Refer a Friend
                 </Link>
-                <Link to="/login" className="nav-link">
+                <Link  className="nav-link" onClick={() => {localStorage.removeItem('customerToken');localStorage.removeItem('customerData'); navigate("/login");}}>
                   Sign Out
                 </Link>
               </nav>

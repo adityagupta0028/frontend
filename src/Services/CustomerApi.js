@@ -78,6 +78,73 @@ export const customerApi = createApi({
         },
       }),
     }),
+
+    // Cart Endpoints
+    getCart: builder.query({
+      query: () => ({
+        url: "/getCart",
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    addToCart: builder.mutation({
+      query: (data) => ({
+        url: "/addToCart",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    syncCart: builder.mutation({
+      query: (data) => ({
+        url: "/syncCart",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    updateCartItem: builder.mutation({
+      query: ({ itemId, quantity }) => ({
+        url: `/updateCartItem/${itemId}`,
+        method: "POST",
+        body: { quantity },
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    removeFromCart: builder.mutation({
+      query: ({ itemId }) => ({
+        url: `/removeFromCart/${itemId}`,
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    clearCart: builder.mutation({
+      query: () => ({
+        url: "/clearCart",
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -88,5 +155,11 @@ export const {
   useFacebookLoginMutation,
   useGetProfileQuery,
   useLogoutMutation,
+  useGetCartQuery,
+  useAddToCartMutation,
+  useSyncCartMutation,
+  useUpdateCartItemMutation,
+  useRemoveFromCartMutation,
+  useClearCartMutation,
 } = customerApi;
 
