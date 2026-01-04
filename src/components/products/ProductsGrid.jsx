@@ -197,8 +197,8 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         )}
                         <div className={`relative product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
                           <Link to={`/product/details/${product.id}`}>
-                            <img width="600" height="600" src={product.image} className="!relative post-image" alt={product.name} />
-                            <img width="600" height="600" src={product.hoverImage} className="hover-image back" alt={product.name} />
+                            <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="!relative post-image" alt={product.name} /> {/*{product.image}*/}
+                            <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547412/ring1_jwhika.png" className="hover-image back" alt={product.name} /> {/*{product.hoverImage}*/}
                           </Link>
                         </div>
                         <div className="product-button">
