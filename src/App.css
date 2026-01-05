@@ -85,3 +85,19 @@
 }
 
 
+/* sandeep */
+
+.product-thumb-hover:hover .default-image{
+  opacity:0;
+  visibility:hidden;
+}
+
+.product-thumb-hover:hover .product-slider{
+  opacity:1!important;
+  visibility: visible!important;
+}
+
+.product-thumb-hover:hover .swiper-custom-button{
+  opacity:1!important;
+  visibility: visible!important;
+}

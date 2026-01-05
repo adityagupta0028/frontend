@@ -90,6 +90,9 @@ function Wedding() {
         const hasCaratWeights = hasVariants && product.variants.some(v => v.carat_weight);
         const hasFilters = hasMetalTypes || hasCaratWeights;
 
+        // Build all images array
+        const allImages = images.map(img => buildImageUrl(img));
+
         return {
           id: product._id || product.product_id,
           name: product.product_name || 'Product',
@@ -97,6 +100,7 @@ function Wedding() {
           originalPrice: originalPrice,
           image: mainImage,
           hoverImage: hoverImage,
+          images: allImages, // Pass full images array for slider
           rating: product.average_rating || 0,
           reviews: product.review_count || 0,
           label: label,

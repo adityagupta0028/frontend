@@ -1,10 +1,18 @@
 import { Link } from 'react-router-dom';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { GoHeart, GoHeartFill  } from "react-icons/go";
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 function ProductsGrid({ products = [], layoutView = 'grid' }) {
   // State to track selected metal and carat for each product
-  console.log('ProductsGrid products',products);
+  const [likedProducts, setLikedProducts] = useState({});
   const [productSelections, setProductSelections] = useState({});
+  // Refs to store swiper instances for each product
+  const swiperRefs = useRef({});
 
   // Helper function to get valid image URL with fallback
   const getImageUrl = (imageUrl, fallback = '/media/product/1.jpg') => {
@@ -79,9 +87,9 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
 
     // Find matching variant
     const matchingVariant = product.variants.find(variant => {
-      const metalMatch = !selectedMetal || !variant.metal_type || 
+      const metalMatch = !selectedMetal || !variant.metal_type ||
         String(variant.metal_type).toLowerCase() === String(selectedMetal).toLowerCase();
-      const caratMatch = !selectedCarat || !variant.carat_weight || 
+      const caratMatch = !selectedCarat || !variant.carat_weight ||
         String(variant.carat_weight) === String(selectedCarat);
       return metalMatch && caratMatch;
     });
@@ -95,7 +103,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
 
     // Try partial match with metal type
     if (selectedMetal) {
-      const metalVariant = product.variants.find(v => 
+      const metalVariant = product.variants.find(v =>
         v.metal_type && String(v.metal_type).toLowerCase() === String(selectedMetal).toLowerCase()
       );
       if (metalVariant) {
@@ -128,7 +136,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
     if (!productSelections[product.id]) {
       const metalTypes = getMetalTypes(product.variants);
       const caratWeights = getCaratWeights(product.variants);
-      
+
       if (metalTypes.length > 0 || caratWeights.length > 0) {
         setProductSelections(prev => ({
           ...prev,
@@ -139,6 +147,14 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
         }));
       }
     }
+  };
+
+  // Toggle the heart state for the clicked product
+  const handleHeartClick = (productId) => {
+    setLikedProducts(prev => ({
+      ...prev,
+      [productId]: !prev[productId], // Toggle the liked state
+    }));
   };
 
   // Debug: Log products and images (remove in production)
@@ -171,7 +187,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
           <div className="products-list grid">
             <div className="row">
               {products.map((product) => {
-                console.log('productproduct',product);
+                console.log('productproduct', product);
                 // Initialize selections if product has variants
                 if (product.variants && product.variants.length > 0 && !productSelections[product.id]) {
                   initializeSelections(product);
@@ -197,11 +213,123 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         )}
                         <div className={`relative product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
                           <Link to={`/product/details/${product.id}`}>
-                            <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="!relative post-image" alt={product.name} /> {/*{product.image}*/}
-                            <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547412/ring1_jwhika.png" className="hover-image back" alt={product.name} /> {/*{product.hoverImage}*/}
+                            <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="!relative default-image" alt={product.name} /> {/*{product.image}*/}
+                            <Swiper
+                              modules={[Navigation]}
+                              spaceBetween={0} // space between slides
+                              slidesPerView={1} // number of slides visible at once
+                              loop={true} // makes the slider loop infinitely
+                              pagination={{
+                                clickable: true, // clickable pagination
+                              }}
+                              navigation={{
+                                prevEl: `.swiper-button-prev-${product.id}`,
+                                nextEl: `.swiper-button-next-${product.id}`,
+                              }}
+                              onSwiper={(swiper) => {
+                                swiperRefs.current[product.id] = swiper;
+                              }}
+                              className='!absolute top-0 left-0 w-full h-full product-slider opacity-0 visibility-hidden'
+                            >
+                              <SwiperSlide>
+                                <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547412/ring1_jwhika.png" className="swiper-image  back" alt={product.name} /> {/*{product.hoverImage}*/}
+                              </SwiperSlide>
+
+                              <SwiperSlide>
+                                <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="swiper-image " alt={product.name} /> {/*{product.image}*/}
+                              </SwiperSlide>
+
+                              <SwiperSlide>
+                                <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547412/ring1_jwhika.png" className="swiper-image  back" alt={product.name} /> {/*{product.hoverImage}*/}
+                              </SwiperSlide>
+
+                              <SwiperSlide>
+                                <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="swiper-image " alt={product.name} /> {/*{product.image}*/}
+                              </SwiperSlide>
+
+                            </Swiper>
                           </Link>
+                          {/* Custom Navigation Buttons */}
+                          <button
+                            className={`swiper-button-prev-${product.id} swiper-custom-button swiper-custom-button-prev opacity-0 visibility-hidden`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              swiperRefs.current[product.id]?.slidePrev();
+                            }}
+                            aria-label="Previous slide"
+                            style={{
+                              position: 'absolute',
+                              left: '10px',
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                              zIndex: 10,
+                              width: '30px',
+                              height: '30px',
+                              borderRadius: '50%',
+                              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                              border: 'none',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                              color: '#333',
+                              fontSize: '12px'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                              e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.25)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                              e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+                            }}
+                          >
+                            <FaChevronLeft />
+                          </button>
+                          <button
+                            className={`swiper-button-next-${product.id} swiper-custom-button swiper-custom-button-next opacity-0 visibility-hidden`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              swiperRefs.current[product.id]?.slideNext();
+                            }}
+                            aria-label="Next slide"
+                            style={{
+                              position: 'absolute',
+                              right: '10px',
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                              zIndex: 10,
+                              width: '30px',
+                              height: '30px',
+                              borderRadius: '50%',
+                              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                              border: 'none',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                              transition: 'all 0.3s ease',
+                              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                              color: '#333',
+                              fontSize: '12px'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+                              e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.25)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                              e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+                            }}
+                          >
+                            <FaChevronRight />
+                          </button>
                         </div>
-                        <div className="product-button">
+                        {/* <div className="product-button">
                           <div className="btn-add-to-cart" data-title="Add to cart">
                             <a rel="nofollow" href="#" className="product-btn button">Add to cart</a>
                           </div>
@@ -214,7 +342,17 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                           <span className="product-quickview" data-title="Quick View">
                             <a href="#" className="quickview quickview-button">Quick View <i className="icon-search"></i></a>
                           </span>
+                        </div> */}
+
+
+                        <div className="btn-add-to-cart absolute top-0 right-0 z-10 cursor-pointer" data-title="Add to cart" onClick={() => handleHeartClick(product.id)}>
+                          {likedProducts[product.id] ? (
+                            <GoHeartFill size={22} />
+                          ) : (
+                            <GoHeart size={22} />
+                          )}
                         </div>
+
                       </div>
                       <div className="products-content mt-0 !text-left">
                         <div className="contents">
@@ -260,7 +398,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                                       }}
                                       title={metal}
                                     >
-                                    <span className='text-[11px] text-[#666] text-center font-bold'>{metalLabel}</span>
+                                      <span className='text-[11px] text-[#666] text-center font-bold'>{metalLabel}</span>
                                     </span>
                                   </div>
                                 );
@@ -354,20 +492,20 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         )}
                         <div className="product-thumb-hover">
                           <Link to={`/product/details/${product.id}`}>
-                            <img 
-                              width="600" 
-                              height="600" 
-                              src={getImageUrl(product.image)} 
-                              className="post-image" 
-                              alt={product.name || 'Product'} 
+                            <img
+                              width="600"
+                              height="600"
+                              src={getImageUrl(product.image)}
+                              className="post-image"
+                              alt={product.name || 'Product'}
                               onError={(e) => handleImageError(e)}
                             />
-                            <img 
-                              width="600" 
-                              height="600" 
-                              src={getImageUrl(product.hoverImage, getImageUrl(product.image))} 
-                              className="hover-image back" 
-                              alt={product.name || 'Product'} 
+                            <img
+                              width="600"
+                              height="600"
+                              src={getImageUrl(product.hoverImage, getImageUrl(product.image))}
+                              className="hover-image back"
+                              alt={product.name || 'Product'}
                               onError={(e) => handleImageError(e, getImageUrl(product.image))}
                             />
                           </Link>
