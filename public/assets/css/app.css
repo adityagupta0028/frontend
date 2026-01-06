@@ -187,7 +187,7 @@ html{font-size:14px;}.tab-content > .tab-pane,[class~=custom-radio] li input{dis
   line-height: 33px;
   text-transform: capitalize;
   cursor: pointer;
-  float: right;
+  /* float: right; */
 }
 .products-topbar .products-sort .sort-toggle {
   position: relative;

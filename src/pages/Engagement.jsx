@@ -6,6 +6,7 @@ import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 import ProductsGrid from '../components/products/ProductsGrid';
+import { SlEqualizer } from "react-icons/sl";
 
 // Wedding Category ID
 const WEDDING_CATEGORY_ID = '6942e3b741e766bf37919b9c';
@@ -260,10 +261,11 @@ function Engagement() {
                   <div className="col-xl-12 col-lg-12 col-md-12 col-12">
                     {/* Products Topbar */}
 
-                    <div className="products-topbar clearfix">
-                      <div className="products-topbar-left">
-                        <div className="d-flex gap-3 align-items-baseline">
-                              <button className="filter-open-btn" onClick={() => setIsFilterOpen(true)}>Filter</button>
+                    <div className="products-topbar clearfix bg-gray-100 px-[10px] py-[5px]">
+                      <div className="products-topbar-left flex items-center gap-[15px]">
+                        <button className="filter-open-btn flex items-center gap-[5px] !text-[15px] !font-medium bg-transparent border rounded-0 !border-[#cb8161] !text-[#cb8161] " onClick={() => setIsFilterOpen(true)}> <SlEqualizer size={18} /> Filter</button>
+                        <div className='result'>680 Results</div>
+                        {/* <div className="d-flex gap-3 align-items-baseline">
                           <div className="products-count">Filter By</div>
 
                           <div className="products-sort dropdown">
@@ -373,10 +375,21 @@ function Engagement() {
                               <li><a href="#">Sort by price: high to low</a></li>
                             </ul>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
 
-                      <div className="products-topbar-right">
+                      <div className="products-topbar-right flex justify-end items-center gap-[10px]">
+                        <div className='custom_btn'>
+                          <button>View</button>
+                          <div className='dropdown'>
+                            <ul className="dropdown-menu">
+                              <li><a href="#">Angled View</a></li>
+                              <li><a href="#">Top View</a></li>
+                              <li><a href="#">Side View</a></li>
+                            </ul>
+                          </div>
+                        </div>
+
                         <div className="products-sort dropdown">
                           <span className="sort-toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true">Default sorting</span>
                           <ul className="sort-list dropdown-menu">
@@ -388,6 +401,8 @@ function Engagement() {
                             <li><a href="#">Sort by price: high to low</a></li>
                           </ul>
                         </div>
+
+
                         <ul className="layout-toggle nav nav-tabs">
                           <li className="nav-item">
                             <a
