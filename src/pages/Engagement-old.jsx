@@ -14,7 +14,6 @@ const WEDDING_CATEGORY_ID = '6942e3b741e766bf37919b9c';
 
 function Engagement() {
   const [layoutView, setLayoutView] = useState('grid');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Fetch subcategories for Wedding category
   const {
@@ -119,51 +118,8 @@ function Engagement() {
 
   const isLoading = subcategoriesLoading || productsLoading;
 
-  const filterSections = useMemo(() => ([
-    {
-      key: 'ringStyle',
-      title: 'Ring Style',
-      items: [
-        { title: 'Classic', image: '/media/product/cat-6-1.jpg' },
-        { title: 'Vintage', image: '/media/product/cat-6-2.jpg' },
-        { title: 'Halo', image: '/media/product/cat-6-3.jpg' },
-        { title: 'Solitaire', image: '/media/product/cat-6-4.jpg' },
-        { title: 'Three-Stone', image: '/media/product/cat-6-5.jpg' },
-        { title: 'Pavé', image: '/media/product/cat-6-6.jpg' },
-      ],
-    },
-    {
-      key: 'diamondShape',
-      title: 'Diamond Shape',
-      items: [
-        { title: 'Round', image: '/media/product/cat-6-1.jpg' },
-        { title: 'Princess', image: '/media/product/cat-6-2.jpg' },
-        { title: 'Oval', image: '/media/product/cat-6-3.jpg' },
-        { title: 'Cushion', image: '/media/product/cat-6-4.jpg' },
-        { title: 'Radiant', image: '/media/product/cat-6-5.jpg' },
-        { title: 'Pear', image: '/media/product/cat-6-6.jpg' },
-      ],
-    },
-    {
-      key: 'metal',
-      title: 'Metal',
-      items: [
-        { title: 'Platinum', image: '/media/product/cat-6-1.jpg' },
-        { title: 'White Gold', image: '/media/product/cat-6-2.jpg' },
-        { title: 'Yellow Gold', image: '/media/product/cat-6-3.jpg' },
-        { title: 'Rose Gold', image: '/media/product/cat-6-4.jpg' },
-        { title: 'Mixed Metal', image: '/media/product/cat-6-5.jpg' },
-        { title: 'Sterling Silver', image: '/media/product/cat-6-6.jpg' },
-      ],
-    },
-  ]), []);
-
-  const [accordionState, setAccordionState] = useState(() => filterSections
-    .reduce((acc, section) => ({ ...acc, [section.key]: true }), {}));
-
-  const toggleAccordion = (key) => {
-    setAccordionState((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  const shapes = ['Round', 'Princess', 'Oval', 'Cushio', 'Radiant'];
+  const carats = ['2', '3', '4', '5', '6', '7', '8'];
 
   // Show loading state
   if (isLoading) {
@@ -194,41 +150,6 @@ function Engagement() {
   }
   return (
     <div id="site-main" className="site-main">
-      {isFilterOpen && <div className="filter-overlay" onClick={() => setIsFilterOpen(false)}></div>}
-      <div className={`filter-sidebar ${isFilterOpen ? 'open' : ''}`}>
-        <div className="filter-sidebar-header d-flex justify-content-between align-items-center">
-          <h3 className="mb-0">Filters</h3>
-          <button className="filter-close-btn" aria-label="Close filters" onClick={() => setIsFilterOpen(false)}>×</button>
-        </div>
-        <div className="filter-sidebar-body">
-          {filterSections.map((section) => (
-            <div key={section.key} className="filter-accordion">
-              <button
-                className="filter-accordion-toggle d-flex justify-content-between align-items-center w-100"
-                onClick={() => toggleAccordion(section.key)}
-              >
-                <span>{section.title}</span>
-                <span className="toggle-indicator">{accordionState[section.key] ? '−' : '+'}</span>
-              </button>
-              {accordionState[section.key] && (
-                <div className="filter-accordion-content">
-                  <div className="filter-items">
-                    {section.items.map((item, idx) => (
-                      <div key={`${section.key}-${idx}`} className="filter-item">
-                        <div className="filter-item-thumb">
-                          <img src={item.image} alt={item.title} />
-                        </div>
-                        <div className="filter-item-title">{item.title}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div id="main-content" className="main-content">
         <div id="primary" className="content-area">
           <div id="content" className="site-content" role="main">
@@ -259,11 +180,9 @@ function Engagement() {
                 <div className="row">
                   <div className="col-xl-12 col-lg-12 col-md-12 col-12">
                     {/* Products Topbar */}
-
                     <div className="products-topbar clearfix">
                       <div className="products-topbar-left">
                         <div className="d-flex gap-3 align-items-baseline">
-                              <button className="filter-open-btn" onClick={() => setIsFilterOpen(true)}>Filter</button>
                           <div className="products-count">Filter By</div>
 
                           <div className="products-sort dropdown">
@@ -418,7 +337,6 @@ function Engagement() {
                         </ul>
                       </div>
                     </div>
-
 
                     {/* Products Grid/List View */}
                     <ProductsGrid products={products} layoutView={layoutView} />
