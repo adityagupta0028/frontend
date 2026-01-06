@@ -203,7 +203,8 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
 
                 return (
                   <div key={product.id} className="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                    <div className="products-entry clearfix product-wapper">
+                    <Link to={`/product/details/${product.id}`} className='block border !border-transparent hover:!border-gray-300'>
+                    <div className="products-entry clearfix product-wapper mb-0">
                       <div className="products-thumb mb-0">
                         {product.label && (
                           <div className="product-lable">
@@ -211,8 +212,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                             {(product.label === 'hot' || product.label === 'both') && <div className="hot">Hot</div>}
                           </div>
                         )}
-                        <div className={`relative product-thumb-hover ${product.hasBorder ? 'border' : ''}`}>
-                          <Link to={`/product/details/${product.id}`}>
+                        <div className={`relative product-thumb-hover bg-[#f6f5f3] ${product.hasBorder ? 'border' : ''}`}>
                             <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="!relative default-image" alt={product.name} /> {/*{product.image}*/}
                             <Swiper
                               modules={[Navigation]}
@@ -248,7 +248,6 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                               </SwiperSlide>
 
                             </Swiper>
-                          </Link>
                           {/* Custom Navigation Buttons */}
                           <button
                             className={`swiper-button-prev-${product.id} swiper-custom-button swiper-custom-button-prev opacity-0 visibility-hidden`}
@@ -345,7 +344,11 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         </div> */}
 
 
-                        <div className="btn-add-to-cart absolute top-0 right-0 z-10 cursor-pointer" data-title="Add to cart" onClick={() => handleHeartClick(product.id)}>
+                        <div className="btn-add-to-cart absolute top-3 right-3 z-[9999] cursor-pointer mt-0" data-title="Add to cart" onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleHeartClick(product.id);
+                        }}>
                           {likedProducts[product.id] ? (
                             <GoHeartFill size={22} />
                           ) : (
@@ -356,41 +359,43 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                       </div>
                       <div className="products-content mt-0 !text-left">
                         <div className="contents">
-                          <h3 className="product-title text-left mb-0"><Link className="text-[14px]" to={`/product/details/${product.id}`}>{product.name}</Link></h3>
-                          <div className="rating text-left">
+                          <h3 className="product-title text-center mb-0 text-capitalize"><Link className="text-[14px]" to={`/product/details/${product.id}`}>{product.name}</Link></h3>
+                          {/* <div className="rating text-left">
                             <div className={`star star-${product.rating}`}></div>
                             <span className="count">({product.reviews} review{product.reviews !== 1 ? 's' : ''})</span>
-                          </div>
-                          <span className="price mt-3">
+                          </div> */}
+                          <span className="price mt-2 text-center w-full text-[14px] font-light">
                             {variantPrice.originalPrice && variantPrice.originalPrice > variantPrice.price ? (
                               <>
-                                <ins><span className='text-[20px] font-bold mr-3'>${variantPrice.price.toFixed(2)}</span></ins>
-                                <del aria-hidden="true"><span>${variantPrice.originalPrice.toFixed(2)}</span></del>
+                                <ins className='text-center'><span className=''>${variantPrice.price.toFixed(2)}</span></ins>
+                                {/* <del aria-hidden="true"><span>${variantPrice.originalPrice.toFixed(2)}</span></del> */}
                               </>
                             ) : (
-                              <ins><span>${variantPrice.price.toFixed(2)}</span></ins>
+                              <ins className='text-center'><span>${variantPrice.price.toFixed(2)}</span></ins>
                             )}
                           </span>
                         </div>
 
                         {/* Metal Type Selection */}
                         {metalTypes.length > 0 && (
-                          <div className="flex !justify-start items-center position-relative mb-3 mt-3" style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <p className="pe-3 mb-0 sstyle" >Metal:</p>
-                            <div className="d-flex align-items-center gap-2" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
+                          <div className="flex items-center position-relative mb-3 mt-3" style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
+                            {/* <p className="pe-3 mb-0 sstyle" >Metal:</p> */}
+                            <div className="d-flex align-items-center gap-[15px]" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
                               {metalTypes.map((metal, index) => {
                                 const metalClass = getMetalClass(metal);
                                 const metalLabel = getMetalLabel(metal);
                                 const isSelected = selectedMetal && String(selectedMetal).toLowerCase() === String(metal).toLowerCase();
                                 return (
-                                  <div key={`${metal}-${index}`} className="d-flex flex-column align-items-center" style={{ gap: '5px' }}>
+                                  <div key={`${metal}-${index}`} className="d-flex flex-column align-items-center">
                                     <span
                                       className={`${metalClass} ${isSelected ? 'selected' : ''} !flex items-center justify-center`}
                                       onClick={() => handleSelectionChange(product.id, 'metal', metal)}
                                       style={{
-                                        width: '50px',
-                                        height: '25px',
-                                        border: isSelected ? '2px solid #f9b61e' : '2px solid #ddd',
+                                        // width: '50px',
+                                        // height: '25px',
+                                        padding: '2px',
+                                        borderRadius: '50%',
+                                        border: isSelected ? '1px solid #f9b61e' : '',
                                         cursor: 'pointer',
                                         display: 'inline-block',
                                         transition: 'all 0.3s ease',
@@ -398,7 +403,10 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                                       }}
                                       title={metal}
                                     >
-                                      <span className='text-[11px] text-[#666] text-center font-bold'>{metalLabel}</span>
+                                      {metal?.toLowerCase().includes('yellow') && <img src="/assets/img/golds/yellow-gold.webp" alt={metalLabel} width={13} height={13} />}
+                                      {metal?.toLowerCase().includes('rose') && <img src="/assets/img/golds/rose-gold.webp" alt={metalLabel} width={13} height={13} />}
+                                      {metal?.toLowerCase().includes('white') && <img src="/assets/img/golds/white-gold.webp" alt={metalLabel} width={13} height={13} />}
+                                      {/* <span className='text-[11px] text-[#666] text-center font-bold'>{metalLabel}</span> */}
                                     </span>
                                   </div>
                                 );
@@ -408,19 +416,10 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         )}
 
                         {/* Carat Weight Selection */}
-                        {caratWeights.length > 0 && (
+                        {/* {caratWeights.length > 0 && (
                           <div className="flex justify-start items-center relative mt-2">
                             <p className="pe-3 mb-0 sstyle" style={{ fontSize: '14px', fontWeight: '500' }}>Carat:</p>
-                            {/* <button
-                              className="scroll-arrow left"
-                              onClick={(e) => {
-                                const ul = e.target.nextElementSibling;
-                                if (ul) ul.scrollBy({ left: -100, behavior: 'smooth' });
-                              }}
-                              style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', padding: '0 5px' }}
-                            >
-                              &#10094;
-                            </button> */}
+                           
                             <ul className="shape-scroll d-flex flex-nowrap list-unstyled overflow-auto mb-0" style={{ maxWidth: '150px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                               {caratWeights.map((carat, idx) => {
                                 const isSelected = selectedCarat && String(selectedCarat) === String(carat);
@@ -443,20 +442,12 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                                 );
                               })}
                             </ul>
-                            {/* <button
-                              className="scroll-arrow right"
-                              onClick={(e) => {
-                                const ul = e.target.previousElementSibling;
-                                if (ul) ul.scrollBy({ left: 100, behavior: 'smooth' });
-                              }}
-                              style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', padding: '0 5px' }}
-                            >
-                              &#10095;
-                            </button> */}
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
+                    </Link>
+                    
                   </div>
                 );
               })}
