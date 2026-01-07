@@ -6,6 +6,7 @@ import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 import ProductsGrid from '../components/products/ProductsGrid';
+import CustomDropdown from '../components/CustomDropdown';
 import { SlEqualizer } from "react-icons/sl";
 
 // Wedding Category ID
@@ -16,6 +17,12 @@ const WEDDING_CATEGORY_ID = '6942e3b741e766bf37919b9c';
 function Engagement() {
   const [layoutView, setLayoutView] = useState('grid');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedView, setSelectedView] = useState({ 
+    label: 'Angled View', 
+    value: 'Angled View',
+    image: '/assets/img/rings/angled.png' 
+  });
+  const [selectedSort, setSelectedSort] = useState('Featured');
 
   // Fetch subcategories for Wedding category
   const {
@@ -166,6 +173,61 @@ function Engagement() {
     setAccordionState((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // View dropdown options with images
+  const viewOptions = [
+    { 
+      label: 'Angled View', 
+      value: 'Angled View',
+      image: '/assets/img/rings/angled.png' 
+    },
+    { 
+      label: 'Top View', 
+      value: 'Top View',
+      image: '/assets/img/rings/top.png' 
+    },
+    { 
+      label: 'Side View', 
+      value: 'Side View',
+      image: '/assets/img/rings/side.png' 
+    }
+  ];
+
+  const sortOptions = [
+    { 
+      label: 'Featured', 
+      value: 'Featured',
+    },
+    { 
+      label: 'Price: High to Low', 
+      value: 'Price: High to Low',
+    },
+    { 
+      label: 'Price: Low to High', 
+      value: 'Price: Low to High',
+    }
+  ];
+
+  const handleViewSelect = (view) => {
+    // Handle both string and object formats
+    if (typeof view === 'string') {
+      // If string, find the matching option object
+      const foundOption = viewOptions.find(opt => opt.value === view || opt.label === view);
+      setSelectedView(foundOption || view);
+    } else {
+      setSelectedView(view);
+    }
+  };
+
+  const handleSortSelect = (sort) => {
+    // Handle both string and object formats
+    if (typeof sort === 'string') {
+      setSelectedSort(sort);
+    } else {
+      const sortValue = sort?.value || sort?.label || 'Featured';
+      setSelectedSort(sortValue);
+    }
+  };
+
   // Show loading state
   if (isLoading) {
     return (
@@ -261,7 +323,7 @@ function Engagement() {
                   <div className="col-xl-12 col-lg-12 col-md-12 col-12">
                     {/* Products Topbar */}
 
-                    <div className="products-topbar clearfix bg-gray-100 px-[10px] py-[5px]">
+                    <div className="products-topbar bg-gray-100 px-[10px] py-[5px] flex items-center justify-between border border-[#e1e1e1] rounded-[2px]">
                       <div className="products-topbar-left flex items-center gap-[15px]">
                         <button className="filter-open-btn flex items-center gap-[5px] !text-[15px] !font-medium bg-transparent border rounded-0 !border-[#cb8161] !text-[#cb8161] " onClick={() => setIsFilterOpen(true)}> <SlEqualizer size={18} /> Filter</button>
                         <div className='result'>680 Results</div>
@@ -378,19 +440,24 @@ function Engagement() {
                         </div> */}
                       </div>
 
-                      <div className="products-topbar-right flex justify-end items-center gap-[10px]">
-                        <div className='custom_btn'>
-                          <button>View</button>
-                          <div className='dropdown'>
-                            <ul className="dropdown-menu">
-                              <li><a href="#">Angled View</a></li>
-                              <li><a href="#">Top View</a></li>
-                              <li><a href="#">Side View</a></li>
-                            </ul>
-                          </div>
-                        </div>
+                      <div className="products-topbar-right flex justify-end items-center gap-[30px]">
+                        <CustomDropdown
+                          options={viewOptions}
+                          selectedValue={selectedView}
+                          onSelect={handleViewSelect}
+                          chevronSize={10}
+                        />
 
-                        <div className="products-sort dropdown">
+                        <CustomDropdown
+                          options={sortOptions}
+                          selectedValue={selectedSort}
+                          onSelect={handleSortSelect}
+                          chevronSize={10}
+                          type="sort"
+                          staticText="Sort"
+                        />
+
+                        {/* <div className="products-sort dropdown">
                           <span className="sort-toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true">Default sorting</span>
                           <ul className="sort-list dropdown-menu">
                             <li className="active"><a href="#">Default sorting</a></li>
@@ -400,10 +467,10 @@ function Engagement() {
                             <li><a href="#">Sort by price: low to high</a></li>
                             <li><a href="#">Sort by price: high to low</a></li>
                           </ul>
-                        </div>
+                        </div> */}
 
 
-                        <ul className="layout-toggle nav nav-tabs">
+                        {/* <ul className="layout-toggle nav nav-tabs">
                           <li className="nav-item">
                             <a
                               className={`layout-grid nav-link ${layoutView === 'grid' ? 'active' : ''}`}
@@ -430,7 +497,7 @@ function Engagement() {
                               </span>
                             </a>
                           </li>
-                        </ul>
+                        </ul> */}
                       </div>
                     </div>
 

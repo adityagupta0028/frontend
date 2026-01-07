@@ -344,7 +344,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         </div> */}
 
 
-                        <div className="btn-add-to-cart absolute top-3 right-3 z-[9999] cursor-pointer mt-0" data-title="Add to cart" onClick={(e) => {
+                        <div className="btn-add-to-cart absolute top-3 right-3 z-[9] cursor-pointer mt-0" data-title="Add to cart" onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           handleHeartClick(product.id);
