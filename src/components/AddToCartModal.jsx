@@ -29,7 +29,7 @@ function AddToCartModal({ show, onHide, product, quantity, cartTotal, cartItemCo
       {/* Modal */}
       <div className={`cart-modal ${show ? 'active' : ''}`}>
         {/* Modal Header */}
-        <div className="modal-header">
+        <div className="modal-header !border-none !px-[20px]">
           <div className="header-title">
             <svg 
               className="checkmark-icon" 
@@ -63,7 +63,7 @@ function AddToCartModal({ show, onHide, product, quantity, cartTotal, cartItemCo
         </div>
 
         {/* Modal Content */}
-        <div className="modal-content">
+        <div className="modal-content mt-0 !w-full shadow-none py-0">
           {/* Product Item */}
           <div className="cart-item purchased-item">
             <div className="item-image">
@@ -86,7 +86,7 @@ function AddToCartModal({ show, onHide, product, quantity, cartTotal, cartItemCo
             </div>
             <div className="item-details">
               <div className="item-info">
-                <p className="item-name">{product.name}</p>
+                <p className="item-name !text-left !font-normal">{product.name}</p>
                 <p className="item-price">
                   <strong>${product.price?.toFixed(2) || '0.00'}</strong>
                 </p>
@@ -100,8 +100,9 @@ function AddToCartModal({ show, onHide, product, quantity, cartTotal, cartItemCo
           {/* Secure Checkout Button */}
           <Link 
             to="/checkout" 
-            className="btn-checkout"
+            className="btn-checkout !text-[15px]"
             onClick={onHide}
+
           >
             <span>SECURE CHECKOUT<strong className="checkout-total"> ${cartTotal?.toFixed(2) || '0.00'}</strong></span>
           </Link>
@@ -109,7 +110,7 @@ function AddToCartModal({ show, onHide, product, quantity, cartTotal, cartItemCo
           {/* View Shopping Bag Link */}
           <Link 
             to="/cart" 
-            className="view-bag-link"
+            className="view-bag-link table mb-0"
             onClick={onHide}
           >
             View Shopping Bag ({cartItemCount || 0})
