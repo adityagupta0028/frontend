@@ -7,6 +7,7 @@ import './Wedding.css';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 import ProductsGrid from '../components/products/ProductsGrid';
 import CustomDropdown from '../components/CustomDropdown';
+import FilterSidebar from '../components/FilterSidebar';
 import { SlEqualizer } from "react-icons/sl";
 
 // Wedding Category ID
@@ -19,10 +20,12 @@ function Engagement() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedView, setSelectedView] = useState({ 
     label: 'Angled View', 
-    value: 'Angled View',
+    value: 'Angled view',
     image: '/assets/img/rings/angled.png' 
   });
   const [selectedSort, setSelectedSort] = useState('Featured');
+  const [selectedFilters, setSelectedFilters] = useState({});
+  const [viewAngleChanged, setViewAngleChanged] = useState(false);
 
   // Fetch subcategories for Wedding category
   const {
@@ -54,16 +57,57 @@ function Engagement() {
     ];
   }, [subcategoriesData]);
 
+  // Clean up filters - remove null, undefined, and empty arrays
+  const cleanedFilters = useMemo(() => {
+    const cleaned = {};
+    Object.keys(selectedFilters).forEach(key => {
+      const value = selectedFilters[key];
+      if (value !== null && value !== undefined && value !== '') {
+        if (Array.isArray(value)) {
+          // Only include non-empty arrays
+          if (value.length > 0) {
+            cleaned[key] = value;
+          }
+        } else {
+          // Include single values (ObjectId strings)
+          cleaned[key] = value;
+        }
+      }
+    });
+    console.log('Cleaned Filters:', cleaned);
+    return cleaned;
+  }, [selectedFilters]);
+
+  // Build query parameters - only include viewAngle if user has explicitly changed it
+  const queryParams = useMemo(() => {
+    const params = {
+      categoryId: WEDDING_CATEGORY_ID,
+      limit: 20,
+      page: 1,
+      ...cleanedFilters,
+    };
+    
+    // Only add viewAngle if user has explicitly selected a view (not default)
+    if (viewAngleChanged) {
+      params.viewAngle = selectedView?.value || selectedView;
+    }
+    
+    return params;
+  }, [cleanedFilters, viewAngleChanged, selectedView]);
+
   // Fetch products for Wedding category
   const {
     data: productsData,
     isLoading: productsLoading,
-    error: productsError
-  } = useGetProductQuery({
-    categoryId: WEDDING_CATEGORY_ID,
-    limit: 20,
-    page: 1,
+    error: productsError,
+    refetch
+  } = useGetProductQuery(queryParams, {
+    // Force refetch when queryParams change
+    refetchOnMountOrArgChange: true,
   });
+
+  // Debug: Log query params
+  console.log('Query Params being sent:', queryParams);
 
   console.log('GetUrl.IMAGE_URL Data:', GetUrl.IMAGE_URL);
   // Transform products from API
@@ -127,67 +171,21 @@ function Engagement() {
 
   const isLoading = subcategoriesLoading || productsLoading;
 
-  const filterSections = useMemo(() => ([
-    {
-      key: 'ringStyle',
-      title: 'Ring Style',
-      items: [
-        { title: 'Classic', image: '/media/product/cat-6-1.jpg' },
-        { title: 'Vintage', image: '/media/product/cat-6-2.jpg' },
-        { title: 'Halo', image: '/media/product/cat-6-3.jpg' },
-        { title: 'Solitaire', image: '/media/product/cat-6-4.jpg' },
-        { title: 'Three-Stone', image: '/media/product/cat-6-5.jpg' },
-        { title: 'Pavé', image: '/media/product/cat-6-6.jpg' },
-      ],
-    },
-    {
-      key: 'diamondShape',
-      title: 'Diamond Shape',
-      items: [
-        { title: 'Round', image: '/media/product/cat-6-1.jpg' },
-        { title: 'Princess', image: '/media/product/cat-6-2.jpg' },
-        { title: 'Oval', image: '/media/product/cat-6-3.jpg' },
-        { title: 'Cushion', image: '/media/product/cat-6-4.jpg' },
-        { title: 'Radiant', image: '/media/product/cat-6-5.jpg' },
-        { title: 'Pear', image: '/media/product/cat-6-6.jpg' },
-      ],
-    },
-    {
-      key: 'metal',
-      title: 'Metal',
-      items: [
-        { title: 'Platinum', image: '/media/product/cat-6-1.jpg' },
-        { title: 'White Gold', image: '/media/product/cat-6-2.jpg' },
-        { title: 'Yellow Gold', image: '/media/product/cat-6-3.jpg' },
-        { title: 'Rose Gold', image: '/media/product/cat-6-4.jpg' },
-        { title: 'Mixed Metal', image: '/media/product/cat-6-5.jpg' },
-        { title: 'Sterling Silver', image: '/media/product/cat-6-6.jpg' },
-      ],
-    },
-  ]), []);
-
-  const [accordionState, setAccordionState] = useState(() => filterSections
-    .reduce((acc, section) => ({ ...acc, [section.key]: true }), {}));
-
-  const toggleAccordion = (key) => {
-    setAccordionState((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
   // View dropdown options with images
   const viewOptions = [
     { 
       label: 'Angled View', 
-      value: 'Angled View',
+      value: 'Angled view',
       image: '/assets/img/rings/angled.png' 
     },
     { 
       label: 'Top View', 
-      value: 'Top View',
+      value: 'Top view',
       image: '/assets/img/rings/top.png' 
     },
     { 
       label: 'Side View', 
-      value: 'Side View',
+      value: 'Side view',
       image: '/assets/img/rings/side.png' 
     }
   ];
@@ -212,10 +210,17 @@ function Engagement() {
     if (typeof view === 'string') {
       // If string, find the matching option object
       const foundOption = viewOptions.find(opt => opt.value === view || opt.label === view);
-      setSelectedView(foundOption || view);
+      setSelectedView(foundOption || { label: view, value: view });
     } else {
       setSelectedView(view);
     }
+    // Mark that view angle has been changed from default
+    setViewAngleChanged(true);
+  };
+
+  const handleFilterChange = (filters) => {
+    console.log('Filter change triggered:', filters);
+    setSelectedFilters(filters);
   };
 
   const handleSortSelect = (sort) => {
@@ -257,40 +262,12 @@ function Engagement() {
   }
   return (
     <div id="site-main" className="site-main">
-      {isFilterOpen && <div className="filter-overlay" onClick={() => setIsFilterOpen(false)}></div>}
-      <div className={`filter-sidebar ${isFilterOpen ? 'open' : ''}`}>
-        <div className="filter-sidebar-header d-flex justify-content-between align-items-center">
-          <h3 className="mb-0">Filters</h3>
-          <button className="filter-close-btn" aria-label="Close filters" onClick={() => setIsFilterOpen(false)}>×</button>
-        </div>
-        <div className="filter-sidebar-body">
-          {filterSections.map((section) => (
-            <div key={section.key} className="filter-accordion">
-              <button
-                className="filter-accordion-toggle d-flex justify-content-between align-items-center w-100"
-                onClick={() => toggleAccordion(section.key)}
-              >
-                <span>{section.title}</span>
-                <span className="toggle-indicator">{accordionState[section.key] ? '−' : '+'}</span>
-              </button>
-              {accordionState[section.key] && (
-                <div className="filter-accordion-content">
-                  <div className="filter-items">
-                    {section.items.map((item, idx) => (
-                      <div key={`${section.key}-${idx}`} className="filter-item">
-                        <div className="filter-item-thumb">
-                          <img src={item.image} alt={item.title} />
-                        </div>
-                        <div className="filter-item-title">{item.title}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+      <FilterSidebar 
+        isOpen={isFilterOpen} 
+        onClose={() => setIsFilterOpen(false)}
+        selectedFilters={selectedFilters}
+        onFilterChange={handleFilterChange}
+      />
 
       <div id="main-content" className="main-content">
         <div id="primary" className="content-area">
@@ -326,7 +303,7 @@ function Engagement() {
                     <div className="products-topbar bg-gray-100 px-[10px] py-[5px] flex items-center justify-between border border-[#e1e1e1] rounded-[2px]">
                       <div className="products-topbar-left flex items-center gap-[15px]">
                         <button className="filter-open-btn flex items-center gap-[5px] !text-[15px] !font-medium bg-transparent border rounded-0 !border-[#cb8161] !text-[#cb8161] " onClick={() => setIsFilterOpen(true)}> <SlEqualizer size={18} /> Filter</button>
-                        <div className='result'>680 Results</div>
+                        <div className='result'>{products.length} Results</div>
                         {/* <div className="d-flex gap-3 align-items-baseline">
                           <div className="products-count">Filter By</div>
 

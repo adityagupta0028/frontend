@@ -6,6 +6,9 @@ import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 import ProductsGrid from '../components/products/ProductsGrid';
+import FilterSidebar from '../components/FilterSidebar';
+import CustomDropdown from '../components/CustomDropdown';
+import { SlEqualizer } from "react-icons/sl";
 
 // Wedding Category ID
 const WEDDING_CATEGORY_ID = '6945ae7225a47dcbe1667cb5';
@@ -14,6 +17,13 @@ const WEDDING_CATEGORY_ID = '6945ae7225a47dcbe1667cb5';
 
 function Wedding() {
   const [layoutView, setLayoutView] = useState('grid');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedView, setSelectedView] = useState({ 
+    label: 'Angled View', 
+    value: 'Angled View',
+    image: '/assets/img/rings/angled.png' 
+  });
+  const [selectedSort, setSelectedSort] = useState('Featured');
 
   // Fetch subcategories for Wedding category
   const {
@@ -116,8 +126,60 @@ function Wedding() {
 
   const isLoading = subcategoriesLoading || productsLoading;
 
-  const shapes = ['Round', 'Princess', 'Oval', 'Cushio', 'Radiant'];
-  const carats = ['2', '3', '4', '5', '6', '7', '8'];
+  // View dropdown options with images
+  const viewOptions = [
+    { 
+      label: 'Angled View', 
+      value: 'Angled View',
+      image: '/assets/img/rings/angled.png' 
+    },
+    { 
+      label: 'Top View', 
+      value: 'Top View',
+      image: '/assets/img/rings/top.png' 
+    },
+    { 
+      label: 'Side View', 
+      value: 'Side View',
+      image: '/assets/img/rings/side.png' 
+    }
+  ];
+
+  const sortOptions = [
+    { 
+      label: 'Featured', 
+      value: 'Featured',
+    },
+    { 
+      label: 'Price: High to Low', 
+      value: 'Price: High to Low',
+    },
+    { 
+      label: 'Price: Low to High', 
+      value: 'Price: Low to High',
+    }
+  ];
+
+  const handleViewSelect = (view) => {
+    // Handle both string and object formats
+    if (typeof view === 'string') {
+      // If string, find the matching option object
+      const foundOption = viewOptions.find(opt => opt.value === view || opt.label === view);
+      setSelectedView(foundOption || view);
+    } else {
+      setSelectedView(view);
+    }
+  };
+
+  const handleSortSelect = (sort) => {
+    // Handle both string and object formats
+    if (typeof sort === 'string') {
+      setSelectedSort(sort);
+    } else {
+      const sortValue = sort?.value || sort?.label || 'Featured';
+      setSelectedSort(sortValue);
+    }
+  };
 
   // Show loading state
   if (isLoading) {
@@ -148,6 +210,7 @@ function Wedding() {
   }
   return (
     <div id="site-main" className="site-main">
+      <FilterSidebar isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} />
       <div id="main-content" className="main-content">
         <div id="primary" className="content-area">
           <div id="content" className="site-content" role="main">
@@ -178,161 +241,28 @@ function Wedding() {
                 <div className="row">
                   <div className="col-xl-12 col-lg-12 col-md-12 col-12">
                     {/* Products Topbar */}
-                    <div className="products-topbar clearfix">
-                      <div className="products-topbar-left">
-                        <div className="d-flex gap-3 align-items-baseline">
-                          <div className="products-count">Filter By</div>
-
-                          <div className="products-sort dropdown">
-                            <span className="sort-toggle dropdown-toggle border-0 p-2 text-muted" data-bs-toggle="dropdown" aria-expanded="true">Category</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-
-                          <div className="products-sort dropdown">
-                            <span className="sort-toggle dropdown-toggle border-0 p-2 text-muted" data-bs-toggle="dropdown" aria-expanded="true">Type</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-
-                          <div className="products-sort dropdown">
-                            <span className="border-0 p-2 sort-toggle dropdown-toggle text-muted" data-bs-toggle="dropdown" aria-expanded="true">Material</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-
-                          <div className="products-sort dropdown">
-                            <span className="border-0 p-2 sort-toggle dropdown-toggle text-muted" data-bs-toggle="dropdown" aria-expanded="true">Gemstone Color</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-
-                          <div className="products-sort dropdown">
-                            <span className="border-0 p-2 sort-toggle dropdown-toggle text-muted" data-bs-toggle="dropdown" aria-expanded="true">Chain</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-
-                          <div className="products-sort dropdown">
-                            <span className="border-0 p-2 sort-toggle dropdown-toggle text-muted" data-bs-toggle="dropdown" aria-expanded="true">Size</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-
-                          <div className="products-sort dropdown">
-                            <span className="border-0 p-2 sort-toggle dropdown-toggle text-muted" data-bs-toggle="dropdown" aria-expanded="true">Ring Size</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-
-                          <div className="products-sort dropdown">
-                            <span className="border-0 p-2 sort-toggle dropdown-toggle text-muted" data-bs-toggle="dropdown" aria-expanded="true">Carat Weight</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-
-                          <div className="products-sort dropdown">
-                            <span className="border-0 p-2 sort-toggle dropdown-toggle text-muted" data-bs-toggle="dropdown" aria-expanded="true">All Filter</span>
-                            <ul className="sort-list dropdown-menu">
-                              <li className="active"><a href="#">Default sorting</a></li>
-                              <li><a href="#">Sort by popularity</a></li>
-                              <li><a href="#">Sort by average rating</a></li>
-                              <li><a href="#">Sort by latest</a></li>
-                              <li><a href="#">Sort by price: low to high</a></li>
-                              <li><a href="#">Sort by price: high to low</a></li>
-                            </ul>
-                          </div>
-                        </div>
+                    <div className="products-topbar bg-gray-100 px-[10px] py-[5px] flex items-center justify-between border border-[#e1e1e1] rounded-[2px]">
+                      <div className="products-topbar-left flex items-center gap-[15px]">
+                        <button className="filter-open-btn flex items-center gap-[5px] !text-[15px] !font-medium bg-transparent border rounded-0 !border-[#cb8161] !text-[#cb8161] " onClick={() => setIsFilterOpen(true)}> <SlEqualizer size={18} /> Filter</button>
+                        <div className='result'>{products.length} Results</div>
                       </div>
 
-                      <div className="products-topbar-right">
-                        <div className="products-sort dropdown">
-                          <span className="sort-toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="true">Default sorting</span>
-                          <ul className="sort-list dropdown-menu">
-                            <li className="active"><a href="#">Default sorting</a></li>
-                            <li><a href="#">Sort by popularity</a></li>
-                            <li><a href="#">Sort by average rating</a></li>
-                            <li><a href="#">Sort by latest</a></li>
-                            <li><a href="#">Sort by price: low to high</a></li>
-                            <li><a href="#">Sort by price: high to low</a></li>
-                          </ul>
-                        </div>
-                        <ul className="layout-toggle nav nav-tabs">
-                          <li className="nav-item">
-                            <a
-                              className={`layout-grid nav-link ${layoutView === 'grid' ? 'active' : ''}`}
-                              onClick={(e) => { e.preventDefault(); setLayoutView('grid'); }}
-                              role="tab"
-                            >
-                              <span className="icon-column">
-                                <span className="layer first"><span></span><span></span><span></span></span>
-                                <span className="layer middle"><span></span><span></span><span></span></span>
-                                <span className="layer last"><span></span><span></span><span></span></span>
-                              </span>
-                            </a>
-                          </li>
-                          <li className="nav-item">
-                            <a
-                              className={`layout-list nav-link ${layoutView === 'list' ? 'active' : ''}`}
-                              onClick={(e) => { e.preventDefault(); setLayoutView('list'); }}
-                              role="tab"
-                            >
-                              <span className="icon-column">
-                                <span className="layer first"><span></span><span></span></span>
-                                <span className="layer middle"><span></span><span></span></span>
-                                <span className="layer last"><span></span><span></span></span>
-                              </span>
-                            </a>
-                          </li>
-                        </ul>
+                      <div className="products-topbar-right flex justify-end items-center gap-[30px]">
+                        <CustomDropdown
+                          options={viewOptions}
+                          selectedValue={selectedView}
+                          onSelect={handleViewSelect}
+                          chevronSize={10}
+                        />
+
+                        <CustomDropdown
+                          options={sortOptions}
+                          selectedValue={selectedSort}
+                          onSelect={handleSortSelect}
+                          chevronSize={10}
+                          type="sort"
+                          staticText="Sort"
+                        />
                       </div>
                     </div>
 
