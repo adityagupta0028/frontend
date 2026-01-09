@@ -28,6 +28,16 @@ export const ProductApi = createApi({
                 },
             }),
         }),
+
+        GetFilteredVisibility: builder.query({
+            query: () => ({
+                url: `/getFilteredVisibility`,
+                method: "GET",
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+                },
+            }),
+        }),
        
        
     }),
@@ -36,4 +46,5 @@ export const ProductApi = createApi({
 export const {
     useGetProductQuery,
     useGetSingleProductQuery,
+    useGetFilteredVisibilityQuery,
 } = ProductApi;
