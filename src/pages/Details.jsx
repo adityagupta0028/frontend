@@ -5,6 +5,8 @@ import { useAddToCartMutation } from '../Services/CustomerApi';
 import { addToCart } from '../utils/cartService';
 import { GetUrl } from '../config/GetUrl';
 import AddToCartModal from '../components/AddToCartModal';
+import { GoPlay } from "react-icons/go";
+
 import './Details.css';
 
 function Details() {
@@ -26,10 +28,10 @@ function Details() {
   const [addToCartApi] = useAddToCartMutation();
 
   // Fetch product details from API
-  const { 
-    data: productData, 
-    isLoading, 
-    error 
+  const {
+    data: productData,
+    isLoading,
+    error
   } = useGetSingleProductQuery(id || '');
 
 
@@ -39,27 +41,27 @@ function Details() {
   const product = useMemo(() => {
     if (productData?.data?.product) {
       const p = productData.data.product;
-      
+
       // Process images
-      const images = (p.images || []).map(img => 
+      const images = (p.images || []).map(img =>
         img.startsWith('http') ? img : `${GetUrl.IMAGE_URL}${img}`
       );
-      
+
       // Process sizes and colors from variants
       const sizes = p.variants?.map(v => v.size).filter(Boolean) || [];
       const colors = p.variants?.map(v => v.color).filter(Boolean) || [];
-      
+
       // Process metal types - combine from both product and variants
       //const metalTypesFromProduct = Array.isArray(p.metal_type) ? p.metal_type.filter(Boolean) : [];
       const metalTypesFromVariants = p.variants?.map(v => v.metal_type).filter(Boolean) || [];
       // Combine and remove duplicates
-      const metalTypes = [...new Set([ ...metalTypesFromVariants])];
-      
+      const metalTypes = [...new Set([...metalTypesFromVariants])];
+
       // Process carat weights - combine from both product and variants
       const caratWeightsFromProduct = Array.isArray(p.carat_weight) ? p.carat_weight.filter(Boolean) : [];
       const caratWeightsFromVariants = p.variants?.map(v => v.carat_weight).filter(Boolean) || [];
       const caratWeights = [...new Set([...caratWeightsFromProduct, ...caratWeightsFromVariants])];
-      
+
       // Process diamond quality - combine from both product and variants
       const diamondQualitiesFromProduct = Array.isArray(p.diamond_quality) ? p.diamond_quality.filter(Boolean) : [];
       const diamondQualitiesFromVariants = p.variants?.map(v => v.diamond_quality).filter(Boolean) || [];
@@ -71,7 +73,7 @@ function Details() {
           diamondQualities.push(qualityStr);
         }
       }
-      
+
       // Process ring sizes - combine from both product and variants
       const ringSizesFromProduct = Array.isArray(p.ring_size) ? p.ring_size.filter(Boolean) : [];
       const ringSizesFromVariants = p.variants?.map(v => v.ring_size).filter(Boolean) || [];
@@ -100,7 +102,7 @@ function Details() {
         inStock: p.in_stock !== false,
         additionalInfo: p.additional_information || {},
         reviews: p.reviews || [],
-        variants:p.variants || []
+        variants: p.variants || []
 
 
       };
@@ -201,7 +203,7 @@ function Details() {
 
       // Use cart service to add item
       const result = await addToCart(productData, addToCartApi);
-      
+
       if (result.success) {
         // Show success modal
         setShowAddToCartModal(true);
@@ -240,17 +242,17 @@ function Details() {
       // Match all selected attributes
       const sizeMatch = !selectedSize || !variant.size || variant.size === selectedSize;
       const colorMatch = !selectedColor || !variant.color || variant.color === selectedColor;
-      const metalTypeMatch = !selectedMetalType || !variant.metal_type || 
+      const metalTypeMatch = !selectedMetalType || !variant.metal_type ||
         String(variant.metal_type).toLowerCase() === String(selectedMetalType).toLowerCase();
-      const caratWeightMatch = !selectedCaratWeight || !variant.carat_weight || 
+      const caratWeightMatch = !selectedCaratWeight || !variant.carat_weight ||
         String(variant.carat_weight) === String(selectedCaratWeight);
-      const diamondQualityMatch = !selectedDiamondQuality || !variant.diamond_quality || 
+      const diamondQualityMatch = !selectedDiamondQuality || !variant.diamond_quality ||
         String(variant.diamond_quality) === String(selectedDiamondQuality);
-      const ringSizeMatch = !selectedRingSize || !variant.ring_size || 
+      const ringSizeMatch = !selectedRingSize || !variant.ring_size ||
         String(variant.ring_size) === String(selectedRingSize);
 
-      return sizeMatch && colorMatch && metalTypeMatch && caratWeightMatch && 
-             diamondQualityMatch && ringSizeMatch;
+      return sizeMatch && colorMatch && metalTypeMatch && caratWeightMatch &&
+        diamondQualityMatch && ringSizeMatch;
     });
 
     // If exact match found, use variant price
@@ -263,10 +265,10 @@ function Details() {
 
     // Try to find partial match (prioritize metal type if selected)
     if (selectedMetalType && product.variants.length > 0) {
-      const metalTypeVariant = product.variants.find(v => 
+      const metalTypeVariant = product.variants.find(v =>
         v.metal_type && String(v.metal_type).toLowerCase() === String(selectedMetalType).toLowerCase()
       );
-      
+
       if (metalTypeVariant) {
         return {
           price: metalTypeVariant.discounted_price || metalTypeVariant.price || metalTypeVariant.original_price || product.price || 0,
@@ -322,10 +324,10 @@ function Details() {
     // Ensure rating is a valid number between 0 and 5
     const validRating = Math.max(0, Math.min(5, rating || 0));
     const roundedRating = Math.round(validRating);
-    
+
     // Always show rating, even if 0 (will show empty stars)
     return (
-      <div className="rating mt-1" style={{ display: 'inline-block'}}>
+      <div className="rating mt-1" style={{ display: 'inline-block' }}>
         <div className={`star star-${roundedRating}`} style={{ display: 'inline-block' }}></div>
         {product.reviewCount > 0 ? (
           <div className="review-count" style={{ display: 'inline-block', marginLeft: '7.5pt' }}>
@@ -367,6 +369,7 @@ function Details() {
                 <div className="section-padding">
                   <div className="section-container p-l-r">
                     <div className="row">
+
                       {/* Product Images */}
                       <div className="product-images col-lg-7 col-md-12 col-12">
                         <div className="row">
@@ -375,7 +378,7 @@ function Details() {
                             <div className="content-thumbnail-scroll">
                               <div className="image-thumbnail react-thumbnail-slider">
                                 {productImages.length > 4 && thumbnailStart > 0 && (
-                                  <button 
+                                  <button
                                     className="thumbnail-nav-btn thumbnail-nav-up"
                                     onClick={() => {
                                       const newIndex = Math.max(0, selectedImage - 1);
@@ -387,34 +390,48 @@ function Details() {
                                   </button>
                                 )}
                                 <div className="thumbnail-list">
+
+                                  <div className={`img-item slick-current active`}>
+                                    <span
+                                      className="img-thumbnail-scroll relative"
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      <GoPlay size={30} className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-2xl' />
+                                      <video className='object-contain h-[140px]'>
+                                        <source src="/assets/videos/ring.mp4" type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                      </video>
+                                    </span>
+                                  </div>
+
                                   {thumbnails.map((image, idx) => {
                                     const actualIndex = thumbnailStart + idx;
                                     return (
-                                      <div 
-                                        key={actualIndex} 
-                                        className={`img-item ${selectedImage === actualIndex ? 'slick-current active' : ''}`}
+                                      <div
+                                        key={actualIndex}
+                                        className={`img-item `} //${selectedImage === actualIndex ? 'slick-current active' : ''}
                                       >
-                                    <span 
-                                      className="img-thumbnail-scroll"
+                                        <span
+                                          className="img-thumbnail-scroll"
                                           onClick={() => handleThumbnailClick(actualIndex)}
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                          <img 
-                                            width="600" 
-                                            height="600" 
-                                            src={image} 
+                                          style={{ cursor: 'pointer' }}
+                                        >
+                                          <img
+                                            width="600"
+                                            height="600"
+                                            src={image}
                                             alt={`Product ${actualIndex + 1}`}
                                             onError={(e) => {
                                               e.target.src = '/media/product/1.jpg';
                                             }}
                                           />
-                                    </span>
-                                  </div>
+                                        </span>
+                                      </div>
                                     );
                                   })}
                                 </div>
                                 {productImages.length > 4 && thumbnailStart + thumbnails.length < productImages.length && (
-                                  <button 
+                                  <button
                                     className="thumbnail-nav-btn thumbnail-nav-down"
                                     onClick={() => {
                                       const newIndex = Math.min(productImages.length - 1, selectedImage + 1);
@@ -431,30 +448,42 @@ function Details() {
 
                           {/* Main Image */}
                           <div className="col-md-10">
-                            <div className="scroll-image main-image">
-                              <div className="image-additional react-image-slider">
-                                <div className="main-image-container" style={{ position: 'relative' }}>
-                                  <img 
-                                    width="900" 
-                                    height="900" 
-                                    src={productImages[selectedImage]} 
+                            <div className="scroll-image main-image h-full">
+                              <div className="image-additional react-image-slider h-full">
+                                <div className="main-image-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                  <video
+                                    className='object-contain w-full h-full'
+                                    width="900"
+                                    height="900"
+                                    loop
+                                    muted
+                                    playsInline
+                                    controls
+                                  >
+                                    <source src="/assets/videos/ring.mp4" type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                  </video>
+                                  {/* <img
+                                    width="900"
+                                    height="900"
+                                    src={productImages[selectedImage]}
                                     alt={product.name}
                                     title={product.name}
                                     onError={(e) => {
                                       e.target.src = '/media/product/1.jpg';
                                     }}
                                     style={{ width: '100%', height: 'auto' }}
-                                  />
+                                  /> */}
                                   {productImages.length > 1 && (
                                     <>
-                                      <button 
+                                      <button
                                         className="image-nav-btn image-nav-prev"
                                         onClick={handlePreviousImage}
                                         aria-label="Previous image"
                                       >
                                         <i className="fa fa-chevron-left"></i>
                                       </button>
-                                      <button 
+                                      <button
                                         className="image-nav-btn image-nav-next"
                                         onClick={handleNextImage}
                                         aria-label="Next image"
@@ -463,7 +492,7 @@ function Details() {
                                       </button>
                                     </>
                                   )}
-                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -472,61 +501,64 @@ function Details() {
 
                       {/* Product Info */}
                       <div className="product-info col-lg-5 col-md-12 col-12">
-                        <h1 className="title">{product.name}</h1>
+                        <h1 className="title mb-0">{product.name}</h1>
+                        <small className='mb-[10px] block font-medium text-[#555]'>14K White Gold, E, VS1 | IGI Certified, 1 1/2 ct Center</small>
+                        <div className='mb-[10px]'>
+                        {product && renderStars(product.rating)}
+                        </div>
                         <span className="price mb-0">
                           {currentVariantPrice.originalPrice && currentVariantPrice.originalPrice > currentVariantPrice.price ? (
                             <>
+                              <ins className='font-bold mr-2'><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
                               <del aria-hidden="true" className='!mr-[10px] !text-[16px]'><span>${currentVariantPrice.originalPrice.toFixed(2)}</span></del>
-                              <ins className='font-bold'><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
                             </>
                           ) : (
                             <ins><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
                           )}
                         </span>
-                        {product && renderStars(product.rating)}
                         <div className="description !border-t border-black">
                           <p>{product.shortDescription || product.description || 'No description available.'}</p>
                         </div>
-                        
+
                         {/* Variations */}
                         {(product.sizes.length > 0 || product.colors.length > 0) && (
-                        <div className="variations">
-                          <table cellSpacing="0">
-                            <tbody>
+                          <div className="variations">
+                            <table cellSpacing="0">
+                              <tbody>
                                 {product.sizes.length > 0 && (
-                              <tr>
-                                <td className="label">Size</td>
-                                <td className="attributes">
-                                  <ul className="text">
+                                  <tr>
+                                    <td className="label">Size</td>
+                                    <td className="attributes">
+                                      <ul className="text">
                                         {product.sizes.map((size) => (
-                                      <li key={size}>
-                                        <span 
-                                          className={selectedSize === size ? 'selected' : ''}
-                                          onClick={() => setSelectedSize(size)}
-                                          style={{ cursor: 'pointer' }}
-                                        >{size}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </td>
-                              </tr>
+                                          <li key={size}>
+                                            <span
+                                              className={selectedSize === size ? 'selected' : ''}
+                                              onClick={() => setSelectedSize(size)}
+                                              style={{ cursor: 'pointer' }}
+                                            >{size}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </td>
+                                  </tr>
                                 )}
                                 {product.colors.length > 0 && (
-                              <tr>
-                                <td className="label">Color</td>
-                                <td className="attributes">
-                                  <ul className="colors">
+                                  <tr>
+                                    <td className="label">Color</td>
+                                    <td className="attributes">
+                                      <ul className="colors">
                                         {product.colors.map((color, index) => (
                                           <li key={color || index}>
-                                        <span 
+                                            <span
                                               className={`color-${index + 1} ${selectedColor === color ? 'selected' : ''}`}
-                                          onClick={() => setSelectedColor(color)}
-                                          style={{ cursor: 'pointer' }}
+                                              onClick={() => setSelectedColor(color)}
+                                              style={{ cursor: 'pointer' }}
                                               title={color}
-                                        ></span>
-                                      </li>
-                                    ))}
-                                  </ul>
+                                            ></span>
+                                          </li>
+                                        ))}
+                                      </ul>
                                     </td>
                                   </tr>
                                 )}
@@ -555,10 +587,10 @@ function Details() {
                                         } else if (metalLower.includes('rose gold')) {
                                           metalClass = 'metal-rose-gold';
                                         }
-                                        
+
                                         return (
                                           <li key={metal} title={metal}>
-                                            <span 
+                                            <span
                                               className={`!rounded-none !h-[25px] ${metalClass} ${selectedMetalType === metal ? 'outline outline-offset-[3px]' : ''}`}
                                               onClick={() => setSelectedMetalType(metal)}
                                               style={{ cursor: 'pointer' }}
@@ -591,12 +623,12 @@ function Details() {
                                     <ul className="text">
                                       {product.caratWeights.map((carat) => {
                                         const isSelected = selectedCaratWeight === carat || String(selectedCaratWeight) === String(carat);
-                                        const displayValue = typeof carat === 'number' && carat < 1 
-                                          ? `${carat} ct` 
+                                        const displayValue = typeof carat === 'number' && carat < 1
+                                          ? `${carat} ct`
                                           : `${carat} ctw`;
                                         return (
                                           <li key={carat}>
-                                            <span 
+                                            <span
                                               className={`!rounded-none !outline !outline-offset-[3px] !h-[35px] !w-[90px] !flex items-center justify-center p-0 ${isSelected ? 'selected' : ''}`}
                                               onClick={() => setSelectedCaratWeight(carat)}
                                               style={{ cursor: 'pointer' }}
@@ -626,8 +658,8 @@ function Details() {
                                     <ul className="text">
                                       {product.diamondQualities.map((quality, index) => (
                                         <li key={quality || index}>
-                                          <span 
-                                            className={`!rounded-none  !h-[35px] !w-[90px] !flex items-center justify-center p-0 ${ selectedDiamondQuality === quality ? 'selected' : ''}`}
+                                          <span
+                                            className={`!rounded-none  !h-[35px] !w-[90px] !flex items-center justify-center p-0 ${selectedDiamondQuality === quality ? 'selected' : ''}`}
                                             onClick={() => setSelectedDiamondQuality(quality)}
                                             style={{ cursor: 'pointer' }}
                                           >{quality}</span>
@@ -652,12 +684,12 @@ function Details() {
                                     <a href="#" onClick={(e) => { e.preventDefault(); }} style={{ marginLeft: '10px', fontSize: '12px', textDecoration: 'underline' }}>Find Ring Size</a>
                                   </td>
                                   <td className="attributes">
-                                    <select 
-                                      value={selectedRingSize} 
+                                    <select
+                                      value={selectedRingSize}
                                       onChange={(e) => setSelectedRingSize(e.target.value)}
-                                      style={{ 
-                                        padding: '8px 12px', 
-                                        border: '1px solid #ddd', 
+                                      style={{
+                                        padding: '8px 12px',
+                                        border: '1px solid #ddd',
                                         borderRadius: '4px',
                                         minWidth: '120px',
                                         cursor: 'pointer'
@@ -667,42 +699,42 @@ function Details() {
                                         <option key={size} value={size}>{size}</option>
                                       ))}
                                     </select>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
                         )}
 
                         {/* Add to Cart Section */}
                         <div className="buttons">
                           <div className="add-to-cart-wrap">
                             <div className="quantity">
-                              <button 
-                                type="button" 
-                                className="plus" 
+                              <button
+                                type="button"
+                                className="plus"
                                 onClick={() => handleQuantityChange(1)}
                               >+</button>
-                              <input 
-                                type="number" 
-                                className="qty" 
-                                step="1" 
-                                min="1" 
-                                name="quantity" 
-                                value={quantity} 
-                                title="Qty" 
-                                size="4" 
-                                placeholder="" 
-                                inputMode="numeric" 
+                              <input
+                                type="number"
+                                className="qty"
+                                step="1"
+                                min="1"
+                                name="quantity"
+                                value={quantity}
+                                title="Qty"
+                                size="4"
+                                placeholder=""
+                                inputMode="numeric"
                                 autoComplete="off"
                                 onChange={(e) => {
                                   const val = parseInt(e.target.value) || 1;
                                   setQuantity(val >= 1 ? val : 1);
                                 }}
                               />
-                              <button 
-                                type="button" 
-                                className="minus" 
+                              <button
+                                type="button"
+                                className="minus"
                                 onClick={() => handleQuantityChange(-1)}
                               >-</button>
                             </div>
@@ -719,8 +751,8 @@ function Details() {
                                   {addToCartError}
                                 </div>
                               )}
-                              <a 
-                                href="#" 
+                              <a
+                                href="#"
                                 tabIndex="0"
                                 onClick={handleAddToCart}
                                 style={{
@@ -734,15 +766,15 @@ function Details() {
                             </div>
                           </div>
                           <div className="btn-quick-buy" data-title="Buy It Now">
-                            <button 
+                            <button
                               className="product-btn"
                               onClick={(e) => {
                                 e.preventDefault();
                                 // TODO: Implement quick buy functionality
-                                console.log('Quick buy:', { 
-                                  productId: product.id, 
-                                  quantity, 
-                                  size: selectedSize, 
+                                console.log('Quick buy:', {
+                                  productId: product.id,
+                                  quantity,
+                                  size: selectedSize,
                                   color: selectedColor,
                                   metalType: selectedMetalType,
                                   caratWeight: selectedCaratWeight,
@@ -755,7 +787,7 @@ function Details() {
                             </button>
                           </div>
                           <div className="btn-wishlist" data-title="Wishlist">
-                            <button 
+                            <button
                               className="product-btn"
                               onClick={(e) => {
                                 e.preventDefault();
@@ -767,7 +799,7 @@ function Details() {
                             </button>
                           </div>
                           <div className="btn-compare" data-title="Compare">
-                            <button 
+                            <button
                               className="product-btn"
                               onClick={(e) => {
                                 e.preventDefault();
@@ -802,27 +834,27 @@ function Details() {
 
                         {/* Social Share */}
                         <div className="social-share">
-                          <a 
+                          <a
                             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
-                            title="Facebook" 
-                            className="share-facebook" 
-                            target="_blank" 
+                            title="Facebook"
+                            className="share-facebook"
+                            target="_blank"
                             rel="noopener noreferrer"
                           >
                             <i className="fa fa-facebook"></i>Facebook
                           </a>
-                          <a 
+                          <a
                             href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`}
-                            title="Twitter" 
+                            title="Twitter"
                             className="share-twitter"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <i className="fa fa-twitter"></i>Twitter
                           </a>
-                          <a 
+                          <a
                             href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(window.location.href)}&media=${encodeURIComponent(productImages[0])}`}
-                            title="Pinterest" 
+                            title="Pinterest"
                             className="share-pinterest"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -843,7 +875,7 @@ function Details() {
                     <div className="product-tabs-wrap">
                       <ul className="nav nav-tabs" role="tablist">
                         <li className="nav-item">
-                          <a 
+                          <a
                             className={`nav-link ${activeTab === 'description' ? 'active' : ''}`}
                             onClick={(e) => { e.preventDefault(); setActiveTab('description'); }}
                             role="tab"
@@ -853,7 +885,7 @@ function Details() {
                           </a>
                         </li>
                         <li className="nav-item">
-                          <a 
+                          <a
                             className={`nav-link ${activeTab === 'additional-information' ? 'active' : ''}`}
                             onClick={(e) => { e.preventDefault(); setActiveTab('additional-information'); }}
                             role="tab"
@@ -863,7 +895,7 @@ function Details() {
                           </a>
                         </li>
                         <li className="nav-item">
-                          <a 
+                          <a
                             className={`nav-link ${activeTab === 'reviews' ? 'active' : ''}`}
                             onClick={(e) => { e.preventDefault(); setActiveTab('reviews'); }}
                             role="tab"
@@ -892,7 +924,7 @@ function Details() {
                                 {Object.keys(product.additionalInfo).length === 0 && (
                                   <tr>
                                     <td colSpan="2">No additional information available.</td>
-                                </tr>
+                                  </tr>
                                 )}
                               </tbody>
                             </table>
@@ -906,20 +938,20 @@ function Details() {
                                   {product.reviewCount || 0} review{product.reviewCount !== 1 ? 's' : ''} for <span>{product.name}</span>
                                 </h2>
                                 {product.reviews && product.reviews.length > 0 ? (
-                                <ol className="comment-list">
+                                  <ol className="comment-list">
                                     {product.reviews.map((review, index) => (
                                       <li key={review.id || index} className="review">
-                                    <div className="content-comment-container">
-                                      <div className="comment-container">
-                                            <img 
-                                              src={review.avatar || "/media/user.jpg"} 
-                                              className="avatar" 
-                                              height="60" 
-                                              width="60" 
-                                              alt={review.author || 'User'} 
+                                        <div className="content-comment-container">
+                                          <div className="comment-container">
+                                            <img
+                                              src={review.avatar || "/media/user.jpg"}
+                                              className="avatar"
+                                              height="60"
+                                              width="60"
+                                              alt={review.author || 'User'}
                                             />
-                                        <div className="comment-text">
-                                          <div className="rating small">
+                                            <div className="comment-text">
+                                              <div className="rating small">
                                                 <div className={`star star-${Math.round(review.rating || 0)}`}></div>
                                               </div>
                                               <div className="review-author">{review.author || 'Anonymous'}</div>
@@ -928,11 +960,11 @@ function Details() {
                                           </div>
                                           <div className="description">
                                             <p>{review.comment || review.text || 'No comment provided.'}</p>
-                                      </div>
-                                    </div>
-                                  </li>
+                                          </div>
+                                        </div>
+                                      </li>
                                     ))}
-                                </ol>
+                                  </ol>
                                 ) : (
                                   <p>No reviews yet. Be the first to review this product!</p>
                                 )}
@@ -940,10 +972,10 @@ function Details() {
                               <div id="review-form">
                                 <div id="respond" className="comment-respond">
                                   <span id="reply-title" className="comment-reply-title">Add a review</span>
-                                  <form 
-                                    action="#" 
-                                    method="post" 
-                                    id="comment-form" 
+                                  <form
+                                    action="#"
+                                    method="post"
+                                    id="comment-form"
                                     className="comment-form"
                                     onSubmit={(e) => {
                                       e.preventDefault();
@@ -959,10 +991,10 @@ function Details() {
                                       <p className="stars">
                                         <span>
                                           {[1, 2, 3, 4, 5].map((star) => (
-                                            <a 
+                                            <a
                                               key={star}
-                                              className={`star-${star}`} 
-                                              href="#" 
+                                              className={`star-${star}`}
+                                              href="#"
                                               onClick={(e) => {
                                                 e.preventDefault();
                                                 // TODO: Set rating state
@@ -976,43 +1008,43 @@ function Details() {
                                       </p>
                                     </div>
                                     <p className="comment-form-comment">
-                                      <textarea 
-                                        id="comment" 
-                                        name="comment" 
-                                        placeholder="Your Reviews *" 
-                                        cols="45" 
-                                        rows="8" 
+                                      <textarea
+                                        id="comment"
+                                        name="comment"
+                                        placeholder="Your Reviews *"
+                                        cols="45"
+                                        rows="8"
                                         required
                                       ></textarea>
                                     </p>
                                     <div className="content-info-reviews">
                                       <p className="comment-form-author">
-                                        <input 
-                                          id="author" 
-                                          name="author" 
-                                          placeholder="Name *" 
-                                          type="text" 
-                                          size="30" 
-                                          required 
+                                        <input
+                                          id="author"
+                                          name="author"
+                                          placeholder="Name *"
+                                          type="text"
+                                          size="30"
+                                          required
                                         />
                                       </p>
                                       <p className="comment-form-email">
-                                        <input 
-                                          id="email" 
-                                          name="email" 
-                                          placeholder="Email *" 
-                                          type="email" 
-                                          size="30" 
-                                          required 
+                                        <input
+                                          id="email"
+                                          name="email"
+                                          placeholder="Email *"
+                                          type="email"
+                                          size="30"
+                                          required
                                         />
                                       </p>
                                       <p className="form-submit">
-                                        <input 
-                                          name="submit" 
-                                          type="submit" 
-                                          id="submit" 
-                                          className="submit" 
-                                          value="Submit" 
+                                        <input
+                                          name="submit"
+                                          type="submit"
+                                          id="submit"
+                                          className="submit"
+                                          value="Submit"
                                         />
                                       </p>
                                     </div>
