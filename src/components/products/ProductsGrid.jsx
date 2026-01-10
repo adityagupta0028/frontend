@@ -187,7 +187,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
           <div className="products-list grid">
             <div className="row">
               {products.map((product) => {
-                console.log('productproduct', product);
+               
                 // Initialize selections if product has variants
                 if (product.variants && product.variants.length > 0 && !productSelections[product.id]) {
                   initializeSelections(product);
@@ -213,7 +213,7 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                           </div>
                         )}
                         <div className={`relative product-thumb-hover bg-[#f6f5f3] ${product.hasBorder ? 'border' : ''}`}>
-                            <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="!relative default-image" alt={product.name} /> {/*{product.image}*/}
+                            <img width="600" height="600" src={getImageUrl(product.image)} className="!relative default-image" alt={product.name} onError={(e) => handleImageError(e)} />
                             <Swiper
                               modules={[Navigation]}
                               spaceBetween={0} // space between slides
@@ -231,22 +231,34 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                               }}
                               className='!absolute top-0 left-0 w-full h-full product-slider opacity-0 visibility-hidden'
                             >
-                              <SwiperSlide>
-                                <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547412/ring1_jwhika.png" className="swiper-image  back" alt={product.name} /> {/*{product.hoverImage}*/}
-                              </SwiperSlide>
-
-                              <SwiperSlide>
-                                <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="swiper-image " alt={product.name} /> {/*{product.image}*/}
-                              </SwiperSlide>
-
-                              <SwiperSlide>
-                                <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547412/ring1_jwhika.png" className="swiper-image  back" alt={product.name} /> {/*{product.hoverImage}*/}
-                              </SwiperSlide>
-
-                              <SwiperSlide>
-                                <img width="600" height="600" src="https://res.cloudinary.com/dbvoi7h3o/image/upload/v1767547414/ring2_rxitt7.png" className="swiper-image " alt={product.name} /> {/*{product.image}*/}
-                              </SwiperSlide>
-
+                              {product.images && product.images.length > 0 ? (
+                                // Use images array if available
+                                product.images.map((img, index) => (
+                                  <SwiperSlide key={index}>
+                                    <img width="600" height="600" src={getImageUrl(img)} className="swiper-image" alt={product.name} onError={(e) => handleImageError(e)} />
+                                  </SwiperSlide>
+                                ))
+                              ) : (
+                                // Fallback to image and hoverImage if images array is not available
+                                <>
+                                  {product.hoverImage && (
+                                    <SwiperSlide>
+                                      <img width="600" height="600" src={getImageUrl(product.hoverImage)} className="swiper-image back" alt={product.name} onError={(e) => handleImageError(e)} />
+                                    </SwiperSlide>
+                                  )}
+                                  <SwiperSlide>
+                                    <img width="600" height="600" src={getImageUrl(product.image)} className="swiper-image" alt={product.name} onError={(e) => handleImageError(e)} />
+                                  </SwiperSlide>
+                                  {product.hoverImage && (
+                                    <SwiperSlide>
+                                      <img width="600" height="600" src={getImageUrl(product.hoverImage)} className="swiper-image back" alt={product.name} onError={(e) => handleImageError(e)} />
+                                    </SwiperSlide>
+                                  )}
+                                  <SwiperSlide>
+                                    <img width="600" height="600" src={getImageUrl(product.image)} className="swiper-image" alt={product.name} onError={(e) => handleImageError(e)} />
+                                  </SwiperSlide>
+                                </>
+                              )}
                             </Swiper>
                           {/* Custom Navigation Buttons */}
                           <button

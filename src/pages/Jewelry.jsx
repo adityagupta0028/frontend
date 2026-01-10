@@ -20,10 +20,12 @@ function Jewelry() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedView, setSelectedView] = useState({ 
     label: 'Angled View', 
-    value: 'Angled View',
+    value: 'Angled view',
     image: '/assets/img/rings/angled.png' 
   });
   const [selectedSort, setSelectedSort] = useState('Featured');
+  const [selectedFilters, setSelectedFilters] = useState({});
+  const [viewAngleChanged, setViewAngleChanged] = useState(false);
 
   // Fetch subcategories for Wedding category
   const {
@@ -55,15 +57,55 @@ function Jewelry() {
     ];
   }, [subcategoriesData]);
 
+  // Clean up filters - remove null, undefined, and empty arrays
+  const cleanedFilters = useMemo(() => {
+    const cleaned = {};
+    Object.keys(selectedFilters).forEach(key => {
+      const value = selectedFilters[key];
+      if (value !== null && value !== undefined && value !== '') {
+        if (Array.isArray(value)) {
+          // Only include non-empty arrays
+          if (value.length > 0) {
+            cleaned[key] = value;
+          }
+        } else {
+          // Include single values (ObjectId strings)
+          cleaned[key] = value;
+        }
+      }
+    });
+    return cleaned;
+  }, [selectedFilters]);
+
+  // Build query parameters - only include viewAngle if user has explicitly changed it
+  const queryParams = useMemo(() => {
+    const params = {
+      categoryId: WEDDING_CATEGORY_ID,
+      limit: 20,
+      page: 1,
+      ...cleanedFilters,
+    };
+    
+    // Only add viewAngle if user has explicitly selected a view (not default)
+    if (viewAngleChanged && selectedView?.value) {
+      params.viewAngle = selectedView.value;
+    }
+    
+    // Debug: Log query params
+    console.log('Jewelry Query Params being sent:', params);
+    
+    return params;
+  }, [cleanedFilters, viewAngleChanged, selectedView]);
+
   // Fetch products for Wedding category
   const {
     data: productsData,
     isLoading: productsLoading,
-    error: productsError
-  } = useGetProductQuery({
-    categoryId: WEDDING_CATEGORY_ID,
-    limit: 20,
-    page: 1,
+    error: productsError,
+    refetch
+  } = useGetProductQuery(queryParams, {
+    // Force refetch when queryParams change
+    refetchOnMountOrArgChange: true,
   });
 
   // Transform products from API
@@ -130,17 +172,17 @@ function Jewelry() {
   const viewOptions = [
     { 
       label: 'Angled View', 
-      value: 'Angled View',
+      value: 'Angled view',
       image: '/assets/img/rings/angled.png' 
     },
     { 
       label: 'Top View', 
-      value: 'Top View',
+      value: 'Top view',
       image: '/assets/img/rings/top.png' 
     },
     { 
       label: 'Side View', 
-      value: 'Side View',
+      value: 'Side view',
       image: '/assets/img/rings/side.png' 
     }
   ];
@@ -169,6 +211,8 @@ function Jewelry() {
     } else {
       setSelectedView(view);
     }
+    // Mark that view angle has been changed from default
+    setViewAngleChanged(true);
   };
 
   const handleSortSelect = (sort) => {
@@ -179,6 +223,11 @@ function Jewelry() {
       const sortValue = sort?.value || sort?.label || 'Featured';
       setSelectedSort(sortValue);
     }
+  };
+
+  const handleFilterChange = (filters) => {
+    console.log('Filter change triggered:', filters);
+    setSelectedFilters(filters);
   };
 
   // Show loading state
@@ -210,7 +259,12 @@ function Jewelry() {
   }
   return (
     <div id="site-main" className="site-main">
-      <FilterSidebar isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} />
+      <FilterSidebar 
+        isOpen={isFilterOpen} 
+        onClose={() => setIsFilterOpen(false)}
+        selectedFilters={selectedFilters}
+        onFilterChange={handleFilterChange}
+      />
       <div id="main-content" className="main-content">
         <div id="primary" className="content-area">
           <div id="content" className="site-content" role="main">

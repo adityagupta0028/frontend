@@ -307,7 +307,9 @@ function FilterSidebar({ isOpen, onClose, selectedFilters = {}, onFilterChange }
                             e.currentTarget.style.opacity = '1';
                             e.currentTarget.style.transform = 'scale(1)';
                           }}
+                          onClick={() => handleFilterItemClick(section.key, item.id)}
                         >
+                         
                           <div className="filter-item-thumb">
                             <img src={item.image} alt={item.title} style={{ cursor: 'pointer' }} />
                           </div>
