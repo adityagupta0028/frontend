@@ -145,6 +145,149 @@ export const customerApi = createApi({
         },
       }),
     }),
+
+    // Update Profile (for contact information/email)
+    updateProfile: builder.mutation({
+      query: (data) => ({
+        url: "/updateProfile",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    // Address Endpoints
+    addAddress: builder.mutation({
+      query: (data) => ({
+        url: "/addAddress",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    getAddresses: builder.query({
+      query: () => ({
+        url: "/getAddresses",
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    getAddressById: builder.query({
+      query: (id) => ({
+        url: `/getAddress/${id}`,
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    updateAddress: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/updateAddress/${id}`,
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    deleteAddress: builder.mutation({
+      query: (id) => ({
+        url: `/deleteAddress/${id}`,
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    // Order/Checkout Endpoints
+    checkout: builder.mutation({
+      query: (data) => ({
+        url: "/checkout",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    getOrders: builder.query({
+      query: ({ page = 1, limit = 10, status, paymentStatus } = {}) => {
+        const params = new URLSearchParams();
+        if (page) params.append("page", page);
+        if (limit) params.append("limit", limit);
+        if (status) params.append("status", status);
+        if (paymentStatus) params.append("paymentStatus", paymentStatus);
+        return {
+          url: `/getOrders?${params.toString()}`,
+          method: "GET",
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          },
+        };
+      },
+    }),
+
+    getOrderById: builder.query({
+      query: (id) => ({
+        url: `/getOrder/${id}`,
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    // Stripe Payment Endpoints
+    createPaymentIntent: builder.mutation({
+      query: (data) => ({
+        url: "/createPaymentIntent",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    confirmPayment: builder.mutation({
+      query: (data) => ({
+        url: "/confirmPayment",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    getPaymentStatus: builder.query({
+      query: (orderId) => ({
+        url: `/getPaymentStatus/${orderId}`,
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -155,11 +298,23 @@ export const {
   useFacebookLoginMutation,
   useGetProfileQuery,
   useLogoutMutation,
+  useUpdateProfileMutation,
   useGetCartQuery,
   useAddToCartMutation,
   useSyncCartMutation,
   useUpdateCartItemMutation,
   useRemoveFromCartMutation,
   useClearCartMutation,
+  useAddAddressMutation,
+  useGetAddressesQuery,
+  useGetAddressByIdQuery,
+  useUpdateAddressMutation,
+  useDeleteAddressMutation,
+  useCheckoutMutation,
+  useGetOrdersQuery,
+  useGetOrderByIdQuery,
+  useCreatePaymentIntentMutation,
+  useConfirmPaymentMutation,
+  useGetPaymentStatusQuery,
 } = customerApi;
 

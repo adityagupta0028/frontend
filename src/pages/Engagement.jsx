@@ -26,6 +26,7 @@ function Engagement() {
   const [selectedSort, setSelectedSort] = useState('Featured');
   const [selectedFilters, setSelectedFilters] = useState({});
   const [viewAngleChanged, setViewAngleChanged] = useState(false);
+  const [metalImageFilter, setMetalImageFilter] = useState(null);
 
   // Fetch subcategories for Wedding category
   const {
@@ -87,13 +88,10 @@ function Engagement() {
       ...cleanedFilters,
     };
     
-    // Only add viewAngle if user has explicitly selected a view (not default)
-    if (viewAngleChanged) {
-      params.viewAngle = selectedView?.value || selectedView;
-    }
+  
     
     return params;
-  }, [cleanedFilters, viewAngleChanged, selectedView]);
+  }, [cleanedFilters, viewAngleChanged]);
 
   // Fetch products for Wedding category
   const {
@@ -148,6 +146,15 @@ function Engagement() {
         // Build all images array
         const allImages = images.map(img => buildImageUrl(img));
 
+        // Build metal_images array with proper URLs
+        const metalImages = product.metal_images && product.metal_images.length > 0
+          ? product.metal_images.map((metalImg) => ({
+              metal_type: metalImg.metal_type,
+              view_angle: metalImg.view_angle,
+              image: buildImageUrl(metalImg.image)
+            }))
+          : [];
+
         return {
           id: product._id || product.product_id,
           name: product.product_name || 'Product',
@@ -156,6 +163,7 @@ function Engagement() {
           image: mainImage,
           hoverImage: hoverImage,
           images: allImages, // Pass full images array for slider
+          metal_images: metalImages, // Include metal_images with proper URLs
           rating: product.average_rating || 0,
           reviews: product.review_count || 0,
           label: label,
@@ -206,6 +214,10 @@ function Engagement() {
   ];
 
   const handleViewSelect = (view) => {
+    console.log('View selected:', view);
+    console.log('Setting metalImageFilter to:', view.value);
+    setMetalImageFilter(view.value);
+    console.log('metalImageFilter state updated');
     // Handle both string and object formats
     if (typeof view === 'string') {
       // If string, find the matching option object
@@ -480,7 +492,10 @@ function Engagement() {
 
 
                     {/* Products Grid/List View */}
-                    <ProductsGrid products={products} layoutView={layoutView} />
+                    {(() => {
+                      console.log('Engagement - Passing metalImageFilter to ProductsGrid:', metalImageFilter);
+                      return <ProductsGrid products={products} layoutView={layoutView} metalImageFilter={metalImageFilter} />;
+                    })()}
                   </div>
                 </div>
               </div>

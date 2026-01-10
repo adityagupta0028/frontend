@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef,useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -7,19 +7,168 @@ import { GoHeart, GoHeartFill  } from "react-icons/go";
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-function ProductsGrid({ products = [], layoutView = 'grid' }) {
-  // State to track selected metal and carat for each product
+function ProductsGrid({ products = [], layoutView = 'grid', metalImageFilter = null }) {
+ 
   const [likedProducts, setLikedProducts] = useState({});
   const [productSelections, setProductSelections] = useState({});
   // Refs to store swiper instances for each product
   const swiperRefs = useRef({});
+
+  // Log metalImageFilter prop changes
+  useEffect(() => {
+    console.log('ProductsGrid - metalImageFilter prop received:', metalImageFilter);
+    console.log('ProductsGrid - metalImageFilter type:', typeof metalImageFilter);
+  }, [metalImageFilter]);
+
+  console.log('ProductsGrid - metalImageFilter (render):', metalImageFilter);
+
+
 
   // Helper function to get valid image URL with fallback
   const getImageUrl = (imageUrl, fallback = '/media/product/1.jpg') => {
     if (!imageUrl || imageUrl === 'undefined' || imageUrl === 'null') {
       return fallback;
     }
-    return imageUrl;
+    // If already a full URL (http/https), return as is
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    // If imageUrl starts with '/', add the base URL
+    if (imageUrl.startsWith('/')) {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+      return `${baseUrl}${imageUrl}`;
+    }
+    // If relative path without leading slash, add base URL and slash
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+    return `${baseUrl}/${imageUrl}`;
+  };
+
+  // Get default product image from metal_images (use metalImageFilter for view angle)
+  const getDefaultProductImage = (product, selectedMetal = null) => {
+    // First, try to get from metal_images based on selected metal type
+    if (product.metal_images && product.metal_images.length > 0) {
+      // Filter by selected metal type if available
+      let metalImages = product.metal_images;
+      if (selectedMetal) {
+        metalImages = product.metal_images.filter(
+          (img) => img.metal_type && 
+          String(img.metal_type).toLowerCase() === String(selectedMetal).toLowerCase()
+        );
+      }
+      
+      // If no match for selected metal, use all metal images
+      if (metalImages.length === 0 && product.metal_images.length > 0) {
+        metalImages = product.metal_images;
+      }
+      
+      // Filter by view angle if metalImageFilter is provided
+      if (metalImageFilter) {
+        const filteredByView = metalImages.find(
+          (img) => img.view_angle && String(img.view_angle) === String(metalImageFilter)
+        );
+        if (filteredByView && filteredByView.image) {
+          const imgUrl = filteredByView.image;
+          if (imgUrl && imgUrl !== 'undefined' && imgUrl !== 'null') {
+            return imgUrl.startsWith('http') ? imgUrl : getImageUrl(imgUrl);
+          }
+        }
+      }
+      
+      // Prioritize "Angled view" if no filter is set
+      const viewAngleToUse = metalImageFilter || "Angled view";
+      const viewImage = metalImages.find(
+        (img) => img.view_angle && String(img.view_angle) === String(viewAngleToUse)
+      );
+      if (viewImage && viewImage.image) {
+        // Image is already a full URL from mapping, return as is
+        const imgUrl = viewImage.image;
+        if (imgUrl && imgUrl !== 'undefined' && imgUrl !== 'null') {
+          return imgUrl.startsWith('http') ? imgUrl : getImageUrl(imgUrl);
+        }
+      }
+      
+      // If no matching view, get the first available metal image
+      if (metalImages.length > 0 && metalImages[0].image) {
+        const imgUrl = metalImages[0].image;
+        if (imgUrl && imgUrl !== 'undefined' && imgUrl !== 'null') {
+          return imgUrl.startsWith('http') ? imgUrl : getImageUrl(imgUrl);
+        }
+      }
+    }
+    
+    // Fallback to regular images
+    if (product.images && product.images.length > 0) {
+      const imgUrl = product.images[0];
+      if (imgUrl && imgUrl !== 'undefined' && imgUrl !== 'null') {
+        return imgUrl.startsWith('http') ? imgUrl : getImageUrl(imgUrl);
+      }
+    }
+    if (product.image) {
+      const imgUrl = product.image;
+      if (imgUrl && imgUrl !== 'undefined' && imgUrl !== 'null') {
+        return imgUrl.startsWith('http') ? imgUrl : getImageUrl(imgUrl);
+      }
+    }
+    return '/media/product/1.jpg';
+  };
+
+  // Get all images for swiper (metal images + regular images)
+  const getProductImages = (product, selectedMetal = null) => {
+    const images = [];
+    
+    // Get metal images based on selected metal type
+    if (product.metal_images && product.metal_images.length > 0) {
+      let metalImages = product.metal_images;
+      if (selectedMetal) {
+        metalImages = product.metal_images.filter(
+          (img) => img.metal_type && 
+          String(img.metal_type).toLowerCase() === String(selectedMetal).toLowerCase()
+        );
+      }
+      
+      // If no match for selected metal, use all metal images
+      if (metalImages.length === 0 && product.metal_images.length > 0) {
+        metalImages = product.metal_images;
+      }
+      
+      // If metalImageFilter is set, only show images with that view angle
+      if (metalImageFilter) {
+        const filteredImages = metalImages.filter(
+          (m) => m.view_angle && String(m.view_angle) === String(metalImageFilter)
+        );
+        filteredImages.forEach((img) => {
+          if (img && img.image) {
+            images.push(img.image.startsWith('http') ? img.image : getImageUrl(img.image));
+          }
+        });
+      } else {
+        // Add metal images in order: Angled view, Top view, Side view
+        const viewOrder = ["Angled view", "Top view", "Side view"];
+        viewOrder.forEach((viewAngle) => {
+          const img = metalImages.find((m) => m.view_angle === viewAngle);
+          if (img && img.image) {
+            // Image is already a full URL from mapping, return as is or process if needed
+            images.push(img.image.startsWith('http') ? img.image : getImageUrl(img.image));
+          }
+        });
+      }
+    }
+    
+    // Add regular images if no metal images or as fallback
+    if (images.length === 0) {
+      if (product.images && product.images.length > 0) {
+        product.images.forEach((img) => {
+          images.push(img.startsWith('http') ? img : getImageUrl(img));
+        });
+      } else if (product.image) {
+        images.push(product.image.startsWith('http') ? product.image : getImageUrl(product.image));
+      }
+      if (product.hoverImage) {
+        images.push(product.hoverImage.startsWith('http') ? product.hoverImage : getImageUrl(product.hoverImage));
+      }
+    }
+    
+    return images.length > 0 ? images : [getImageUrl('/media/product/1.jpg')];
   };
 
   // Handle image load error
@@ -213,53 +362,38 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                           </div>
                         )}
                         <div className={`relative product-thumb-hover bg-[#f6f5f3] ${product.hasBorder ? 'border' : ''}`}>
-                            <img width="600" height="600" src={getImageUrl(product.image)} className="!relative default-image" alt={product.name} onError={(e) => handleImageError(e)} />
-                            <Swiper
-                              modules={[Navigation]}
-                              spaceBetween={0} // space between slides
-                              slidesPerView={1} // number of slides visible at once
-                              loop={true} // makes the slider loop infinitely
-                              pagination={{
-                                clickable: true, // clickable pagination
-                              }}
-                              navigation={{
-                                prevEl: `.swiper-button-prev-${product.id}`,
-                                nextEl: `.swiper-button-next-${product.id}`,
-                              }}
-                              onSwiper={(swiper) => {
-                                swiperRefs.current[product.id] = swiper;
-                              }}
-                              className='!absolute top-0 left-0 w-full h-full product-slider opacity-0 visibility-hidden'
-                            >
-                              {product.images && product.images.length > 0 ? (
-                                // Use images array if available
-                                product.images.map((img, index) => (
-                                  <SwiperSlide key={index}>
-                                    <img width="600" height="600" src={getImageUrl(img)} className="swiper-image" alt={product.name} onError={(e) => handleImageError(e)} />
-                                  </SwiperSlide>
-                                ))
-                              ) : (
-                                // Fallback to image and hoverImage if images array is not available
+                            {(() => {
+                              const defaultImage = getDefaultProductImage(product, selectedMetal);
+                              const productImages = getProductImages(product, selectedMetal);
+                              return (
                                 <>
-                                  {product.hoverImage && (
-                                    <SwiperSlide>
-                                      <img width="600" height="600" src={getImageUrl(product.hoverImage)} className="swiper-image back" alt={product.name} onError={(e) => handleImageError(e)} />
-                                    </SwiperSlide>
-                                  )}
-                                  <SwiperSlide>
-                                    <img width="600" height="600" src={getImageUrl(product.image)} className="swiper-image" alt={product.name} onError={(e) => handleImageError(e)} />
-                                  </SwiperSlide>
-                                  {product.hoverImage && (
-                                    <SwiperSlide>
-                                      <img width="600" height="600" src={getImageUrl(product.hoverImage)} className="swiper-image back" alt={product.name} onError={(e) => handleImageError(e)} />
-                                    </SwiperSlide>
-                                  )}
-                                  <SwiperSlide>
-                                    <img width="600" height="600" src={getImageUrl(product.image)} className="swiper-image" alt={product.name} onError={(e) => handleImageError(e)} />
-                                  </SwiperSlide>
+                                  <img width="600" height="600" src={defaultImage} className="!relative default-image" alt={product.name} onError={(e) => handleImageError(e)} />
+                                  <Swiper
+                                    modules={[Navigation]}
+                                    spaceBetween={0}
+                                    slidesPerView={1}
+                                    loop={productImages.length > 1}
+                                    pagination={{
+                                      clickable: true,
+                                    }}
+                                    navigation={{
+                                      prevEl: `.swiper-button-prev-${product.id}`,
+                                      nextEl: `.swiper-button-next-${product.id}`,
+                                    }}
+                                    onSwiper={(swiper) => {
+                                      swiperRefs.current[product.id] = swiper;
+                                    }}
+                                    className='!absolute top-0 left-0 w-full h-full product-slider opacity-0 visibility-hidden'
+                                  >
+                                    {productImages.map((img, index) => (
+                                      <SwiperSlide key={index}>
+                                        <img width="600" height="600" src={img} className="swiper-image" alt={product.name} onError={(e) => handleImageError(e)} />
+                                      </SwiperSlide>
+                                    ))}
+                                  </Swiper>
                                 </>
-                              )}
-                            </Swiper>
+                              );
+                            })()}
                           {/* Custom Navigation Buttons */}
                           <button
                             className={`swiper-button-prev-${product.id} swiper-custom-button swiper-custom-button-prev opacity-0 visibility-hidden`}
@@ -401,7 +535,11 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                                   <div key={`${metal}-${index}`} className="d-flex flex-column align-items-center">
                                     <span
                                       className={`${metalClass} ${isSelected ? 'selected' : ''} !flex items-center justify-center`}
-                                      onClick={() => handleSelectionChange(product.id, 'metal', metal)}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleSelectionChange(product.id, 'metal', metal);
+                                      }}
                                       style={{
                                         // width: '50px',
                                         // height: '25px',
@@ -495,22 +633,29 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                         )}
                         <div className="product-thumb-hover">
                           <Link to={`/product/details/${product.id}`}>
-                            <img
-                              width="600"
-                              height="600"
-                              src={getImageUrl(product.image)}
-                              className="post-image"
-                              alt={product.name || 'Product'}
-                              onError={(e) => handleImageError(e)}
-                            />
-                            <img
-                              width="600"
-                              height="600"
-                              src={getImageUrl(product.hoverImage, getImageUrl(product.image))}
-                              className="hover-image back"
-                              alt={product.name || 'Product'}
-                              onError={(e) => handleImageError(e, getImageUrl(product.image))}
-                            />
+                            {(() => {
+                              const defaultImage = getDefaultProductImage(product, selectedMetal);
+                              return (
+                                <>
+                                  <img
+                                    width="600"
+                                    height="600"
+                                    src={defaultImage}
+                                    className="post-image"
+                                    alt={product.name || 'Product'}
+                                    onError={(e) => handleImageError(e)}
+                                  />
+                                  <img
+                                    width="600"
+                                    height="600"
+                                    src={defaultImage}
+                                    className="hover-image back"
+                                    alt={product.name || 'Product'}
+                                    onError={(e) => handleImageError(e, defaultImage)}
+                                  />
+                                </>
+                              );
+                            })()}
                           </Link>
                         </div>
                         <span className="product-quickview" data-title="Quick View">
@@ -551,7 +696,11 @@ function ProductsGrid({ products = [], layoutView = 'grid' }) {
                                   <div key={metal} className="d-flex flex-column align-items-center" style={{ gap: '5px' }}>
                                     <span
                                       className={`${metalClass} ${isSelected ? 'selected' : ''}`}
-                                      onClick={() => handleSelectionChange(product.id, 'metal', metal)}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleSelectionChange(product.id, 'metal', metal);
+                                      }}
                                       style={{
                                         width: '35px',
                                         height: '35px',
