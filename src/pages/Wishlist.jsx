@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { IoMailOutline } from "react-icons/io5";
+
+
 import './Wishlist.css';
 
 function Wishlist() {
@@ -20,13 +23,15 @@ function Wishlist() {
           <div className="wishlist-header">
             <h1 className="wishlist-title">Mohammad's Wish List</h1>
             <button className="share-wishlist-btn">
-              <i className="fa fa-envelope"></i>
               Share Wish List
+              <IoMailOutline className='text-2xl' />
+              {/* <i className="fa fa-envelope"></i> */}
             </button>
           </div>
 
           {/* Category Tabs */}
           <div className="wishlist-tabs">
+            <div className='wishlist-tabs-buttons'>
             <button 
               className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
               onClick={() => setActiveTab('all')}
@@ -45,6 +50,7 @@ function Wishlist() {
             >
               Wedding Rings (1)
             </button>
+            </div>
           </div>
 
           {/* Engagement Rings Section */}
@@ -55,11 +61,13 @@ function Wishlist() {
                 {/* Product Card 1 */}
                 <div className="wishlist-product-card">
                   <div className="product-image-wrapper">
-                    <img 
-                      src="https://image.brilliantearth.com/media/diamond_ring_vto/ZK/BE1D3939_yellow_Oval_top_2_carat.png" 
-                      alt="Freesia Hidden Halo"
-                      className="product-image"
-                    />
+                    <Link to="">
+                      <img 
+                        src="https://image.brilliantearth.com/media/diamond_ring_vto/ZK/BE1D3939_yellow_Oval_top_2_carat.png" 
+                        alt="Freesia Hidden Halo"
+                        className="product-image"
+                      />
+                    </Link>
                     <div className="product-actions">
                       <button className="action-icon">
                         <i className="fa fa-envelope"></i>
@@ -70,12 +78,14 @@ function Wishlist() {
                     </div>
                   </div>
                   <div className="product-info">
-                    <h3 className="product-name">Freesia Hidden Halo</h3>
-                    <p className="product-type">Setting Only</p>
+                    <Link to="" className='product_title'>
+                      <h3 className="product-name">Freesia Hidden Halo</h3>
+                    </Link>
+                    {/* <p className="product-type">Setting Only</p> */}
                     <p className="product-price">$1,290</p>
                     <button className="complete-ring-btn">
-                      Complete Ring
-                      <i className="fa fa-chevron-down"></i>
+                      Add To Bag
+                      {/* <i className="fa fa-chevron-down"></i> */}
                     </button>
                   </div>
                 </div>
@@ -99,7 +109,7 @@ function Wishlist() {
                   </div>
                   <div className="product-info">
                     <h3 className="product-name">Secret Garden</h3>
-                    <p className="product-type">Setting Only</p>
+                    {/* <p className="product-type">Setting Only</p> */}
                     <p className="product-price">$2,890</p>
                     <button className="complete-ring-btn">
                       Complete Ring
@@ -119,9 +129,10 @@ function Wishlist() {
                     <div className="promo-overlay">
                       <p className="promo-label">GET UP CLOSE</p>
                       <h3 className="promo-title">Visit Our Showrooms</h3>
+                      <button className="book-appointment-btn">Book Appointment</button>
                     </div>
                   </div>
-                  <button className="book-appointment-btn">Book Appointment</button>
+                  {/* <button className="book-appointment-btn">Book Appointment</button> */}
                 </div>
               </div>
             </div>
@@ -140,13 +151,13 @@ function Wishlist() {
                   alt="6.5 In. Petite Lab Diamond Tennis Bracelet"
                   className="recommended-image"
                 />
-                <h4 className="recommended-name">6.5 In. Petite Lab Diamond Tennis Bracelet</h4>
-                <p className="recommended-details">(1 1/2 Ct. Tw.)</p>
-                <p className="recommended-price">$995</p>
                 <div className="color-swatches">
                   <span className="color-swatch" style={{background: '#d4af37'}}></span>
                   <span className="color-swatch" style={{background: '#c0c0c0'}}></span>
                 </div>
+                <h4 className="recommended-name">6.5 In. Petite Lab Diamond Tennis Bracelet</h4>
+                <p className="recommended-price">$995</p>
+                {/* <p className="recommended-details">(1 1/2 Ct. Tw.)</p> */}
               </div>
 
               <div className="recommended-product-card">
@@ -156,12 +167,12 @@ function Wishlist() {
                   alt="2mm Huggie Perfect Hoop Earrings"
                   className="recommended-image"
                 />
-                <h4 className="recommended-name">2mm Huggie Perfect Hoop Earrings</h4>
-                <p className="recommended-price">$175</p>
                 <div className="color-swatches">
                   <span className="color-swatch" style={{background: '#d4af37'}}></span>
                   <span className="color-swatch" style={{background: '#c0c0c0'}}></span>
                 </div>
+                <h4 className="recommended-name">2mm Huggie Perfect Hoop Earrings</h4>
+                <p className="recommended-price">$175</p>
               </div>
 
               <div className="recommended-product-card">
@@ -171,14 +182,14 @@ function Wishlist() {
                   alt="Comfort Fit 5mm Wedding Ring"
                   className="recommended-image"
                 />
-                <h4 className="recommended-name">Comfort Fit 5mm Wedding Ring</h4>
-                <p className="recommended-price">$850</p>
                 <div className="color-swatches">
                   <span className="color-swatch" style={{background: '#d4af37'}}></span>
                   <span className="color-swatch" style={{background: '#c0c0c0'}}></span>
                   <span className="color-swatch" style={{background: '#e8b4a0'}}></span>
                   <span className="color-swatch" style={{background: '#f5d76e'}}></span>
                 </div>
+                <h4 className="recommended-name">Comfort Fit 5mm Wedding Ring</h4>
+                <p className="recommended-price">$850</p>
               </div>
 
               <div className="recommended-product-card">
@@ -187,13 +198,13 @@ function Wishlist() {
                   alt="Freesia Hidden Halo Diamond Ring"
                   className="recommended-image"
                 />
-                <h4 className="recommended-name">Freesia Hidden Halo Diamond Ring</h4>
-                <p className="recommended-price">$1,290</p>
                 <div className="color-swatches">
                   <span className="color-swatch" style={{background: '#c0c0c0'}}></span>
                   <span className="color-swatch" style={{background: '#e8b4a0'}}></span>
                   <span className="color-swatch" style={{background: '#d4af37'}}></span>
                 </div>
+                <h4 className="recommended-name">Freesia Hidden Halo Diamond Ring</h4>
+                <p className="recommended-price">$1,290</p>
               </div>
 
               
@@ -205,12 +216,12 @@ function Wishlist() {
                   alt="Nadia Di"
                   className="recommended-image"
                 />
-                <h4 className="recommended-name">Nadia Di</h4>
-                <p className="recommended-price">$1,450</p>
                 <div className="color-swatches">
                   <span className="color-swatch" style={{background: '#c0c0c0'}}></span>
                   <span className="color-swatch" style={{background: '#d4af37'}}></span>
                 </div>
+                <h4 className="recommended-name">Nadia Di</h4>
+                <p className="recommended-price">$1,450</p>
               </div>
             </div>
             <button className="scroll-arrow right">

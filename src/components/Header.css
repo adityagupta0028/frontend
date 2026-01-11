@@ -176,6 +176,7 @@
 .site-header {
   position: relative;
   z-index: 1000;
+  border-bottom: 1px solid #e2e2e2;
 }
 
 .header-desktop {

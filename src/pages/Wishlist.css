@@ -4,13 +4,13 @@
   padding: 20px 0 15px 0;
   font-size: 14px;
   color: #868686;
-  margin-bottom: 30px;
-  text-align: left;
   width: 100%;
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 400;
   line-height: 1.5;
+  max-width: 1200px;
+  margin: 0 auto 10px;
 }
 
 .wishlist-breadcrumb a {
@@ -54,7 +54,7 @@
 .share-wishlist-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
   padding: 10px 20px;
   background: transparent;
   border: 1px solid #2C2C2C;
@@ -62,7 +62,6 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -73,16 +72,19 @@
 
 /* Category Tabs */
 .wishlist-tabs {
-  display: flex;
-  gap: 20px;
+  
   max-width: 1200px;
   margin: 0 auto 40px;
   padding: 0 20px;
+}
+
+.wishlist-tabs .wishlist-tabs-buttons {
+  display: flex;
   border-bottom: 1px solid #e5e5e5;
 }
 
 .tab-btn {
-  padding: 12px 0;
+  padding: 12px 40px;
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
@@ -90,9 +92,8 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   letter-spacing: 0.5px;
-  font-weight: 500;
   margin-bottom: -1px;
 }
 
@@ -102,20 +103,21 @@
 
 .tab-btn.active {
   color: #2C2C2C;
+  font-weight: 500;
   border-bottom-color: #cb8161;
 }
 
 /* Section Title */
-.section-title {
-  font-size: 24px;
-  font-weight: 400;
+.wishlist-section  .section-title {
+  font-size: 28px;
+  font-weight: 600;
   color: #2C2C2C;
   margin: 0 0 30px 0;
   font-family: 'Cormorant Garamond', serif;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 20px;
+  text-transform: capitalize;
 }
 
 /* Wishlist Section */
@@ -134,15 +136,15 @@
 /* Product Card */
 .wishlist-product-card {
   background: #ffffff;
-  border: 1px solid #e5e5e5;
+  /* border: 1px solid #e5e5e5; */
   border-radius: 8px;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
 }
 
-.wishlist-product-card:hover {
+/* .wishlist-product-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .product-image-wrapper {
   position: relative;
@@ -195,15 +197,26 @@
 
 .product-info {
   padding: 20px;
+  text-align: center;
 }
 
 .product-name {
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 600;
   color: #2C2C2C;
   margin: 0 0 5px 0;
   font-family: 'Cormorant Garamond', serif;
 }
+
+/* .product_title {
+  font-weight: bold;
+} */
+
+.product_title:hover .product-name {
+  text-decoration: none;
+  color: #cb8161;
+}
+
 
 .product-type {
   font-size: 14px;
@@ -212,8 +225,8 @@
 }
 
 .product-price {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 15px;
+  /* font-weight: 600; */
   color: #2C2C2C;
   margin: 0 0 15px 0;
 }
@@ -221,13 +234,14 @@
 .complete-ring-btn {
   width: 100%;
   padding: 12px;
-  background: transparent;
-  border: 1px solid #2C2C2C;
-  color: #2C2C2C;
+  font-weight: 600;
+  background: #cb8161;
+  /* border: 1px solid #2C2C2C; */
+  color: #fff;
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
+  transition: all 0.1s ease;
+  /* text-transform: uppercase; */
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
@@ -236,7 +250,7 @@
 }
 
 .complete-ring-btn:hover {
-  background: #2C2C2C;
+  background: #db9476;
   color: #ffffff;
 }
 
@@ -277,7 +291,7 @@
 .promotional-card {
   background: #ffffff;
   border: 1px solid #e5e5e5;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -286,7 +300,8 @@
 .promo-image {
   position: relative;
   width: 100%;
-  padding-top: 150%; /* Taller aspect ratio */
+  height: 100%;
+  /* padding-top: 150%;  */
   overflow: hidden;
 }
 
@@ -316,37 +331,39 @@
 }
 
 .promo-label {
-  font-size: 12px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin: 0 0 10px 0;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .promo-title {
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 30px;
+  font-weight: 500;
+  color:#fff;
   margin: 0;
   font-family: 'Cormorant Garamond', serif;
+  margin-bottom: 20px;
 }
 
 .book-appointment-btn {
   width: 100%;
-  padding: 15px;
-  background: #2C2C2C;
-  border: none;
+  padding: 10px 20px;
+  width: auto;
+  border: 1px solid #fff;
   color: #ffffff;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   letter-spacing: 0.5px;
-  font-weight: 500;
+  /* font-weight: 500; */
 }
 
-.book-appointment-btn:hover {
+/* .book-appointment-btn:hover {
   background: #cb8161;
-}
+} */
 
 /* You May Also Like Section */
 .you-may-also-like {
@@ -357,7 +374,9 @@
 }
 
 .you-may-also-like .section-title {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+  font-size:34px
 }
 
 .recommended-products {
@@ -385,16 +404,16 @@
 .recommended-product-card {
   min-width: 200px;
   background: #ffffff;
-  border: 1px solid #e5e5e5;
+  /* border: 1px solid #e5e5e5; */
   border-radius: 8px;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
   position: relative;
 }
 
-.recommended-product-card:hover {
+/* .recommended-product-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .product-badge {
   position: absolute;
@@ -403,11 +422,12 @@
   background: #2C2C2C;
   color: #ffffff;
   padding: 4px 8px;
-  font-size: 10px;
+  font-size: 8px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   z-index: 2;
   font-weight: 600;
+  border-radius: 50px;
 }
 
 .product-badge.gift {
@@ -437,12 +457,13 @@
 }
 
 .recommended-name {
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 500;
   color: #2C2C2C;
   margin: 15px 15px 5px;
+  text-align: center;
   font-family: 'Cormorant Garamond', serif;
-  line-height: 1.4;
+  line-height: 1.2;
 }
 
 .recommended-details {
@@ -453,8 +474,9 @@
 }
 
 .recommended-price {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  /* font-weight: 600; */
+  text-align: center;
   color: #2C2C2C;
   margin: 0 15px 10px;
 }
@@ -462,7 +484,9 @@
 .color-swatches {
   display: flex;
   gap: 5px;
-  padding: 0 15px 15px;
+  margin-top:15px;
+  justify-content: center;
+  
 }
 
 .color-swatch {
