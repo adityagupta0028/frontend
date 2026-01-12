@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   useGetCartQuery,
   useGetProfileQuery,
   useUpdateProfileMutation,
   useAddAddressMutation,
+  useUpdateAddressMutation,
   useGetAddressesQuery,
   useCheckoutMutation,
-  useCreatePaymentIntentMutation,
-  useConfirmPaymentMutation,
 } from "../Services/CustomerApi";
 import { GetUrl } from "../config/GetUrl";
 import "./checkout.css";
@@ -16,15 +15,31 @@ import "./checkout.css";
 function Checkout() {
   const navigate = useNavigate();
   
-  // API Hooks
-  const { data: cartData, refetch: refetchCart } = useGetCartQuery();
-  const { data: profileData } = useGetProfileQuery();
-  const { data: addressesData, refetch: refetchAddresses } = useGetAddressesQuery();
+  // Check if user is logged in (only database, no localStorage)
+  const isLoggedIn = !!localStorage.getItem('customerToken');
+  
+  // Redirect to login if not logged in
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
+  
+  // API Hooks - Only fetch if logged in (database only)
+  const { data: cartData, refetch: refetchCart, isLoading: cartLoading } = useGetCartQuery(undefined, {
+    skip: !isLoggedIn, // Skip query if not logged in
+    pollingInterval: 30000, // Poll every 30 seconds to keep cart updated
+  });
+  const { data: profileData } = useGetProfileQuery(undefined, {
+    skip: !isLoggedIn,
+  });
+  const { data: addressesData, refetch: refetchAddresses } = useGetAddressesQuery(undefined, {
+    skip: !isLoggedIn,
+  });
   const [updateProfile] = useUpdateProfileMutation();
   const [addAddress] = useAddAddressMutation();
+  const [updateAddress] = useUpdateAddressMutation();
   const [checkout] = useCheckoutMutation();
-  const [createPaymentIntent] = useCreatePaymentIntentMutation();
-  const [confirmPayment] = useConfirmPaymentMutation();
 
   // Manage active sections
   const [activeSection, setActiveSection] = useState("contactSection");
@@ -60,8 +75,7 @@ function Checkout() {
 
   // Order state
   const [createdOrder, setCreatedOrder] = useState(null);
-  const [paymentIntentId, setPaymentIntentId] = useState(null);
-  const [clientSecret, setClientSecret] = useState(null);
+  const [existingAddressId, setExistingAddressId] = useState(null); // Track if address exists
 
   // Manage special instructions visibility
   const [isInstructionsVisible, setIsInstructionsVisible] = useState(false);
@@ -78,13 +92,73 @@ function Checkout() {
     }
   }, [profileData]);
 
-  // Calculate cart totals
-  const cartItems = cartData?.data?.items || [];
-  const cartSubtotal = cartData?.data?.subtotal || 0;
+  // Auto-fill shipping form if address already exists
+  useEffect(() => {
+    if (addressesData?.data?.addresses && addressesData.data.addresses.length > 0) {
+      const existingAddress = addressesData.data.addresses[0]; // Get first/default address
+      setExistingAddressId(existingAddress._id);
+      
+      // Parse fullName to firstName and lastName
+      const nameParts = existingAddress.fullName?.split(' ') || [];
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+      
+      // Auto-fill shipping form with existing address
+      setShippingInfo({
+        firstName: firstName,
+        lastName: lastName,
+        address: existingAddress.addressLine1 || '',
+        address2: existingAddress.addressLine2 || '',
+        city: existingAddress.city || '',
+        country: existingAddress.country || '',
+        state: existingAddress.state || '',
+        zipCode: existingAddress.postalCode || '',
+        phoneNumber: existingAddress.phoneNumber || '',
+        specialInstructions: '',
+      });
+    } else {
+      // No address exists, reset form
+      setExistingAddressId(null);
+      setShippingInfo({
+        firstName: "",
+        lastName: "",
+        address: "",
+        address2: "",
+        city: "",
+        country: "",
+        state: "",
+        zipCode: "",
+        phoneNumber: "",
+        specialInstructions: "",
+      });
+    }
+  }, [addressesData]);
+
+  // Calculate cart totals from database (dynamic)
+  const cartItems = isLoggedIn && cartData?.data?.items ? cartData.data.items : [];
+  
+  // Calculate subtotal dynamically from cart items
+  const cartSubtotal = useMemo(() => {
+    if (!isLoggedIn || !cartData?.data?.items) return 0;
+    return cartData.data.items.reduce((total, item) => {
+      const price = item.discountedPrice || item.price || 0;
+      const quantity = item.quantity || 1;
+      return total + (price * quantity);
+    }, 0);
+  }, [isLoggedIn, cartData]);
+  
+  // Get cart total from database or calculate
+  const cartTotalFromDB = cartData?.data?.total || cartData?.data?.subtotal || 0;
   const cartDiscount = 0; // Can be calculated from promotions
   const cartShipping = 0; // Free shipping
   const cartTax = 0; // Calculated at next step
-  const cartTotal = cartSubtotal - cartDiscount + cartShipping + cartTax;
+  const cartTotal = cartTotalFromDB > 0 ? cartTotalFromDB : (cartSubtotal - cartDiscount + cartShipping + cartTax);
+  
+  // Calculate total item count dynamically
+  const totalItemCount = useMemo(() => {
+    if (!isLoggedIn || !cartData?.data?.items) return 0;
+    return cartData.data.items.reduce((total, item) => total + (item.quantity || 1), 0);
+  }, [isLoggedIn, cartData]);
 
   // Handle contact information submission
   const handleContactSubmit = async (e) => {
@@ -124,8 +198,14 @@ function Checkout() {
         isDefault: true,
       };
 
-      const addressResult = await addAddress(addressData).unwrap();
-      // Refetch addresses to get the newly created address
+      // If address already exists, update it; otherwise create new one
+      if (existingAddressId) {
+        await updateAddress({ id: existingAddressId, ...addressData }).unwrap();
+      } else {
+        await addAddress(addressData).unwrap();
+      }
+      
+      // Refetch addresses to get the updated/created address
       await refetchAddresses();
       setActiveSection("paymentSection");
     } catch (err) {
@@ -142,15 +222,25 @@ function Checkout() {
     setIsLoading(true);
 
     try {
-      // Refetch addresses to get the latest one
-      await refetchAddresses();
-      const latestAddress = addressesData?.data?.addresses?.[0];
+      // Refetch addresses to get the latest one - use the refetch result
+      const addressesResult = await refetchAddresses();
+      const latestAddress = addressesResult?.data?.addresses?.[0] || addressesData?.data?.addresses?.[0];
 
-      if (!latestAddress) {
+      if (!latestAddress || !latestAddress._id) {
         throw new Error("Address not found. Please add shipping address first.");
       }
 
-      // Create order
+      // Ensure we have cart data and calculate total correctly
+      if (!cartData?.data || !cartData.data.items || cartData.data.items.length === 0) {
+        throw new Error("Cart is empty. Please add items to cart.");
+      }
+
+      // Parse expiry date (MM/YY format)
+      const expiryParts = paymentInfo.cardExpiry.split('/');
+      const expMonth = expiryParts[0] ? parseInt(expiryParts[0]) : null;
+      const expYear = expiryParts[1] ? parseInt('20' + expiryParts[1]) : null;
+
+      // Create order with card details
       const orderData = {
         addressId: latestAddress._id,
         paymentMethod: "stripe",
@@ -158,31 +248,33 @@ function Checkout() {
         tax: cartTax,
         discount: cartDiscount,
         notes: shippingInfo.specialInstructions || "",
+        // Include card details for logging
+        cardNumber: paymentInfo.cardNumber.replace(/\s/g, ''),
+        expMonth: expMonth,
+        expYear: expYear,
+        cvc: paymentInfo.cardCvv,
       };
 
       const orderResult = await checkout(orderData).unwrap();
+      
+      if (!orderResult.data || !orderResult.data._id) {
+        throw new Error("Order creation failed. Please try again.");
+      }
+
       setCreatedOrder(orderResult.data);
-
-      // Create payment intent
-      const paymentIntentResult = await createPaymentIntent({
-        orderId: orderResult.data._id,
-      }).unwrap();
-
-      setPaymentIntentId(paymentIntentResult.data.paymentIntentId);
-      setClientSecret(paymentIntentResult.data.clientSecret);
-
       setActiveSection("reviewSection");
     } catch (err) {
-      setError(err?.data?.message || "Failed to process payment");
+      console.error("Checkout error:", err);
+      setError(err?.data?.message || err?.message || "Failed to process payment. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle complete order (confirm payment)
+  // Handle complete order
   const handleCompleteOrder = async () => {
-    if (!createdOrder || !paymentIntentId || !clientSecret) {
-      setError("Order or payment information missing");
+    if (!createdOrder) {
+      setError("Order information missing");
       return;
     }
 
@@ -190,35 +282,13 @@ function Checkout() {
     setIsLoading(true);
 
     try {
-      // NOTE: For production, you MUST install @stripe/stripe-js and @stripe/react-stripe-js
-      // and use Stripe Elements to securely collect and process card details.
-      // The current implementation is a placeholder and will not work without Stripe.js
-      
-      // TODO: Install Stripe.js: npm install @stripe/stripe-js @stripe/react-stripe-js
-      // Then use Stripe Elements to confirm the payment with the clientSecret
-      // Example:
-      // const stripe = await loadStripe('YOUR_PUBLISHABLE_KEY');
-      // const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-      //   payment_method: {
-      //     card: cardElement,
-      //     billing_details: { name: paymentInfo.cardName }
-      //   }
-      // });
-
-      // For now, we'll just confirm the payment on the backend
-      // This assumes the payment was already processed (which won't work without Stripe.js)
-      const confirmResult = await confirmPayment({
-        orderId: createdOrder._id,
-        paymentIntentId: paymentIntentId,
-      }).unwrap();
-
       // Clear cart
       await refetchCart();
 
       // Redirect to success page
       navigate(`/order-success/${createdOrder._id}`);
     } catch (err) {
-      setError(err?.data?.message || "Payment failed. Please install Stripe.js and use Stripe Elements for secure payment processing.");
+      setError(err?.data?.message || "Failed to complete order. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -281,6 +351,28 @@ function Checkout() {
     }
     return v;
   };
+
+  // Show loading state while fetching cart
+  if (cartLoading && isLoggedIn) {
+    return (
+      <div className="checkout-container" style={{ padding: '50px', textAlign: 'center' }}>
+        <p>Loading cart...</p>
+      </div>
+    );
+  }
+
+  // Show empty cart message if no items
+  if (isLoggedIn && !cartLoading && cartItems.length === 0) {
+    return (
+      <div className="checkout-container" style={{ padding: '50px', textAlign: 'center' }}>
+        <h2>Your cart is empty</h2>
+        <p>Add items to your cart to proceed with checkout.</p>
+        <button onClick={() => navigate('/shop')} className="btn-continue" style={{ marginTop: '20px' }}>
+          Continue Shopping
+        </button>
+      </div>
+    );
+  }
 
   return (
     <main className="checkout-main !pt-[40px]">
@@ -444,9 +536,11 @@ function Checkout() {
                   </div>
                   <div className="form-row flex">
                     <div className="form-group flex-1">
-                      <select
+                      <input
+                        type="text"
                         id="shipping-country"
                         name="shippingCountry"
+                        placeholder="Country"
                         value={shippingInfo.country}
                         onChange={(e) =>
                           setShippingInfo({
@@ -456,18 +550,14 @@ function Checkout() {
                         }
                         required
                         disabled={isLoading}
-                      >
-                        <option value="">Country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="UK">United Kingdom</option>
-                        <option value="IN">India</option>
-                      </select>
+                      />
                     </div>
                     <div className="form-group flex-1">
-                      <select
+                      <input
+                        type="text"
                         id="shipping-state"
                         name="shippingState"
+                        placeholder="State"
                         value={shippingInfo.state}
                         onChange={(e) =>
                           setShippingInfo({
@@ -477,13 +567,7 @@ function Checkout() {
                         }
                         required
                         disabled={isLoading}
-                      >
-                        <option value="">Select a State</option>
-                        <option value="CA">California</option>
-                        <option value="NY">New York</option>
-                        <option value="TX">Texas</option>
-                        <option value="FL">Florida</option>
-                      </select>
+                      />
                     </div>
                   </div>
                   <div className="form-group">
@@ -716,7 +800,7 @@ function Checkout() {
                   onClick={handleCompleteOrder}
                   disabled={isLoading || !createdOrder}
                 >
-                  {isLoading ? "Processing Payment..." : "Complete Order"}
+                  {isLoading ? "Processing..." : "Complete Order"}
                 </button>
               </div>
             </div>
@@ -747,7 +831,7 @@ function Checkout() {
                     <path d="M16 10a4 4 0 0 1-8 0"></path>
                   </svg>
                   <span className="item-count">
-                    {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
+                    {totalItemCount} {totalItemCount === 1 ? "item" : "items"}
                   </span>
                   <svg
                     className="chevron-icon"
@@ -767,20 +851,51 @@ function Checkout() {
               <div
                 className={`summary-content ${
                   isOrderSummaryCollapsed ? "collapsed" : ""
-                }`}
+                } ${!isOrderSummaryCollapsed && cartItems.length > 5 ? "has-scroll" : ""}`}
                 id="orderSummaryContent"
               >
-                {cartItems.map((item, index) => (
+                {cartItems.map((item, index) => {
+                  // Build product image URL with proper formatting
+                  const buildImageUrl = (imgPath) => {
+                    if (!imgPath) return '/media/product/1.jpg';
+                    if (imgPath.startsWith('http')) return imgPath;
+                    // Handle both cases: path with or without leading slash
+                    const cleanPath = imgPath.startsWith('/') ? imgPath : `/${imgPath}`;
+                    const baseUrl = GetUrl.IMAGE_URL?.endsWith('/') 
+                      ? GetUrl.IMAGE_URL.slice(0, -1) 
+                      : GetUrl.IMAGE_URL;
+                    return `${baseUrl}${cleanPath}`;
+                  };
+                  
+                  // Get product image - try product images first, then metal_images
+                  const getProductImage = () => {
+                    // First try regular product images
+                    if (item.productId?.images && item.productId.images.length > 0) {
+                      return buildImageUrl(item.productId.images[0]);
+                    }
+                    // Then try metal_images (Angled view preferred)
+                    if (item.productId?.metal_images && item.productId.metal_images.length > 0) {
+                      const angledView = item.productId.metal_images.find(
+                        img => img.view_angle === 'Angled view'
+                      );
+                      if (angledView) {
+                        return buildImageUrl(angledView.image);
+                      }
+                      return buildImageUrl(item.productId.metal_images[0].image);
+                    }
+                    // Fallback to placeholder
+                    return '/media/product/1.jpg';
+                  };
+                  
+                  return (
                   <div key={item._id || index} className="summary-item">
                     <div className="item-image">
                       <img
-                        src={
-                          item.productId?.images?.[0] ||
-                          "../assets/images/placeholder-ring.png"
-                        }
+                        src={getProductImage()}
                         alt={item.productId?.product_name || "Product"}
                         onError={(e) => {
-                          e.target.style.display = "none";
+                          // Show placeholder on error instead of hiding
+                          e.target.src = '/media/product/1.jpg';
                         }}
                       />
                     </div>
@@ -803,7 +918,8 @@ function Checkout() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

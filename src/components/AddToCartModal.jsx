@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import './AddToCartModal.css';
 
 function AddToCartModal({ show, onHide, product, quantity, cartTotal, cartItemCount }) {
+  const navigate = useNavigate();
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (show) {
@@ -98,23 +99,27 @@ function AddToCartModal({ show, onHide, product, quantity, cartTotal, cartItemCo
         {/* Modal Footer */}
         <div className="modal-footer">
           {/* Secure Checkout Button */}
-          <Link 
-            to="/checkout" 
+          <button
+            onClick={() => {
+              onHide();
+              navigate('/checkout');
+            }}
             className="btn-checkout !text-[15px]"
-            onClick={onHide}
-
           >
             <span>SECURE CHECKOUT<strong className="checkout-total"> ${cartTotal?.toFixed(2) || '0.00'}</strong></span>
-          </Link>
+          </button>
 
           {/* View Shopping Bag Link */}
-          <Link 
-            to="/cart" 
+          <button
+            onClick={() => {
+              onHide();
+              navigate('/cart');
+            }}
             className="view-bag-link table mb-0"
-            onClick={onHide}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%' }}
           >
             View Shopping Bag ({cartItemCount || 0})
-          </Link>
+          </button>
         </div>
       </div>
     </>

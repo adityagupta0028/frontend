@@ -253,41 +253,6 @@ export const customerApi = createApi({
         },
       }),
     }),
-
-    // Stripe Payment Endpoints
-    createPaymentIntent: builder.mutation({
-      query: (data) => ({
-        url: "/createPaymentIntent",
-        method: "POST",
-        body: data,
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
-          "Content-Type": "application/json",
-        },
-      }),
-    }),
-
-    confirmPayment: builder.mutation({
-      query: (data) => ({
-        url: "/confirmPayment",
-        method: "POST",
-        body: data,
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
-          "Content-Type": "application/json",
-        },
-      }),
-    }),
-
-    getPaymentStatus: builder.query({
-      query: (orderId) => ({
-        url: `/getPaymentStatus/${orderId}`,
-        method: "GET",
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
-        },
-      }),
-    }),
   }),
 });
 
@@ -313,8 +278,5 @@ export const {
   useCheckoutMutation,
   useGetOrdersQuery,
   useGetOrderByIdQuery,
-  useCreatePaymentIntentMutation,
-  useConfirmPaymentMutation,
-  useGetPaymentStatusQuery,
 } = customerApi;
 
