@@ -18,6 +18,7 @@ import MyItems from './pages/MyItems';
 import MyAppointments from './pages/MyAppointments';
 import PaymentMethods from './pages/PaymentMethods';
 import Profile from './pages/Profile';
+import OrderHistory from './pages/OrderHistory';
 import Privacy from './pages/Privacy';
 import ReturnPolicy from './pages/ReturnPolicy';
 import Terms from './pages/Terms';
@@ -47,6 +48,7 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/login" element={<Login />} />
         <Route path="/my-account" element={<MyAccount />} />
+        <Route path="/order-history" element={<OrderHistory />} />
         <Route path="/my-items" element={<MyItems />} />
         <Route path="/my-appointments" element={<MyAppointments />} />
         <Route path="/payment-methods" element={<PaymentMethods />} />
