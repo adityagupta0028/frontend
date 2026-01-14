@@ -9,6 +9,7 @@ function Cart() {
   const [showChangeModal, setShowChangeModal] = useState(false);
   const [appraisalChecked, setAppraisalChecked] = useState({});
   const [selectedItemForChange, setSelectedItemForChange] = useState(null);
+  const [cartUpdateTrigger, setCartUpdateTrigger] = useState(0); // Trigger for real-time updates (NO PAGE REFRESH)
   
   // Check if user is logged in
   const isLoggedIn = !!localStorage.getItem('customerToken');
@@ -31,7 +32,7 @@ function Cart() {
       return localCart || [];
     }
     return [];
-  }, [isLoggedIn, cartData]);
+  }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger for real-time updates
   
   // Calculate totals
   const cartTotals = useMemo(() => {
@@ -84,7 +85,9 @@ function Cart() {
         refetchCart();
       } else {
         await removeFromCart(itemId);
-        // Force re-render by updating state
+        // Update state to trigger recalculation (NO PAGE REFRESH)
+        setCartUpdateTrigger(prev => prev + 1);
+        // Dispatch event for other components
         window.dispatchEvent(new Event('cartUpdated'));
       }
     } catch (error) {
@@ -105,6 +108,9 @@ function Cart() {
         refetchCart();
       } else {
         await updateCartItem(itemId, newQuantity);
+        // Update state to trigger recalculation (NO PAGE REFRESH)
+        setCartUpdateTrigger(prev => prev + 1);
+        // Dispatch event for other components
         window.dispatchEvent(new Event('cartUpdated'));
       }
     } catch (error) {
@@ -180,15 +186,21 @@ function Cart() {
     return 0;
   };
 
-  // Listen for cart updates (for localStorage)
+  // Listen for cart updates - NO PAGE REFRESH, just state updates
   useEffect(() => {
     const handleCartUpdate = () => {
-      // Force re-render
-      window.location.reload();
+      // Update cart data without page refresh
+      if (isLoggedIn && refetchCart) {
+        // For logged-in users, refetch from API
+        refetchCart();
+      } else {
+        // For guest users, trigger recalculation from localStorage
+        setCartUpdateTrigger(prev => prev + 1);
+      }
     };
     window.addEventListener('cartUpdated', handleCartUpdate);
     return () => window.removeEventListener('cartUpdated', handleCartUpdate);
-  }, []);
+  }, [isLoggedIn, refetchCart]);
 
   // Loading state
   if (cartLoading && isLoggedIn) {

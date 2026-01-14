@@ -1,8 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useMemo, useEffect } from 'react';
 import { useGetSingleProductQuery } from '../Services/ProductApi';
-import { useAddToCartMutation } from '../Services/CustomerApi';
-import { addToCart } from '../utils/cartService';
+import { useAddToCartMutation, useGetCartQuery } from '../Services/CustomerApi';
+import { addToCart, getLocalCart } from '../utils/cartService';
 import { GetUrl } from '../config/GetUrl';
 import AddToCartModal from '../components/AddToCartModal';
 import { GoPlay } from "react-icons/go";
@@ -23,9 +23,19 @@ function Details() {
   const [showAddToCartModal, setShowAddToCartModal] = useState(false);
   const [addToCartLoading, setAddToCartLoading] = useState(false);
   const [addToCartError, setAddToCartError] = useState('');
+  const [cartUpdateTrigger, setCartUpdateTrigger] = useState(0); // Trigger to force cart recalculation
 
   // Cart API hook
   const [addToCartApi] = useAddToCartMutation();
+
+  // Check if user is logged in
+  const isLoggedIn = !!localStorage.getItem('customerToken');
+
+  // Fetch cart from API if logged in
+  const { data: cartData, refetch: refetchCart } = useGetCartQuery(undefined, {
+    skip: !isLoggedIn,
+    pollingInterval: 30000, // Poll every 30 seconds to keep count updated
+  });
 
   // Fetch product details from API
   const {
@@ -205,7 +215,17 @@ function Details() {
       const result = await addToCart(productData, addToCartApi);
 
       if (result.success) {
-        // Show success modal
+        // Update cart data immediately (NO PAGE REFRESH)
+        if (isLoggedIn && refetchCart) {
+          // For logged-in users, refetch from API
+          refetchCart();
+        } else {
+          // For guest users, trigger recalculation from localStorage
+          setCartUpdateTrigger(prev => prev + 1);
+        }
+        // Dispatch custom event for other components (like Header) - NO PAGE REFRESH
+        window.dispatchEvent(new Event('cartUpdated'));
+        // Show success modal - React will batch updates and modal will get fresh cart data
         setShowAddToCartModal(true);
       } else {
         setAddToCartError('Failed to add item to cart');
@@ -283,6 +303,38 @@ function Details() {
       originalPrice: product.originalPrice || null
     };
   }, [product, selectedSize, selectedColor, selectedMetalType, selectedCaratWeight, selectedDiamondQuality, selectedRingSize]);
+
+  // Calculate cart total dynamically
+  const cartTotal = useMemo(() => {
+    const items = isLoggedIn && cartData?.data?.items ? cartData.data.items : (!isLoggedIn ? getLocalCart() : []);
+    return items.reduce((total, item) => {
+      const price = item.discountedPrice || item.price || 0;
+      return total + (price * (item.quantity || 1));
+    }, 0);
+  }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger to force recalculation
+
+  // Calculate cart item count dynamically
+  const cartItemCount = useMemo(() => {
+    if (isLoggedIn && cartData?.data?.items) {
+      return cartData.data.items.reduce((total, item) => total + (item.quantity || 1), 0);
+    } else if (!isLoggedIn) {
+      const localCart = getLocalCart();
+      return localCart.reduce((total, item) => total + (item.quantity || 1), 0);
+    }
+    return 0;
+  }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger to force recalculation
+
+  // Listen for cart updates from other components (for guest users) - NO PAGE REFRESH
+  useEffect(() => {
+    if (!isLoggedIn) {
+      const handleCartUpdate = () => {
+        // Trigger recalculation by updating state - NO PAGE REFRESH
+        setCartUpdateTrigger(prev => prev + 1);
+      };
+      window.addEventListener('cartUpdated', handleCartUpdate);
+      return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+    }
+  }, [isLoggedIn]);
 
   // Loading state
   if (isLoading) {
@@ -1075,8 +1127,8 @@ function Details() {
           images: product.images
         }}
         quantity={quantity}
-        cartTotal={(currentVariantPrice.price * quantity) + 7900} // Example: current item + existing cart items
-        cartItemCount={8} // TODO: Get from cart state/context
+        cartTotal={cartTotal}
+        cartItemCount={cartItemCount}
       />
     </div>
   );

@@ -145,6 +145,15 @@ function Jewelry() {
         // Build all images array
         const allImages = images.map(img => buildImageUrl(img));
 
+        // Build metal_images array with proper URLs
+        const metalImages = product.metal_images && product.metal_images.length > 0
+          ? product.metal_images.map((metalImg) => ({
+              metal_type: metalImg.metal_type,
+              view_angle: metalImg.view_angle,
+              image: buildImageUrl(metalImg.image)
+            }))
+          : [];
+
         return {
           id: product._id || product.product_id,
           name: product.product_name || 'Product',
@@ -153,6 +162,7 @@ function Jewelry() {
           image: mainImage,
           hoverImage: hoverImage,
           images: allImages, // Pass full images array for slider
+          metal_images: metalImages, // Include metal_images with proper URLs
           rating: product.average_rating || 0,
           reviews: product.review_count || 0,
           label: label,

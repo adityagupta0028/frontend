@@ -447,8 +447,11 @@ function Header() {
   // Check if user is logged in
   const isLoggedIn = !!localStorage.getItem('customerToken');
   
+  // State to trigger cart recalculation (NO PAGE REFRESH)
+  const [cartUpdateTrigger, setCartUpdateTrigger] = useState(0);
+  
   // Fetch cart from API if logged in
-  const { data: cartData } = useGetCartQuery(undefined, {
+  const { data: cartData, refetch: refetchCart } = useGetCartQuery(undefined, {
     skip: !isLoggedIn,
     pollingInterval: 30000, // Poll every 30 seconds to keep count updated
   });
@@ -462,7 +465,7 @@ function Header() {
       return localCart.reduce((total, item) => total + (item.quantity || 1), 0);
     }
     return 0;
-  }, [isLoggedIn, cartData]);
+  }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger for real-time updates
   
   // Get cart items for mini cart dropdown
   const cartItems = useMemo(() => {
@@ -472,7 +475,7 @@ function Header() {
       return getLocalCart().slice(0, 3);
     }
     return [];
-  }, [isLoggedIn, cartData]);
+  }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger for real-time updates
   
   // Calculate cart total
   const cartTotal = useMemo(() => {
@@ -481,7 +484,7 @@ function Header() {
       const price = item.discountedPrice || item.price || 0;
       return total + (price * (item.quantity || 1));
     }, 0);
-  }, [isLoggedIn, cartData]);
+  }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger for real-time updates
   
   // Get product image
   const getProductImage = (item) => {
@@ -497,15 +500,21 @@ function Header() {
     return item.productId?.product_name || 'Product';
   };
   
-  // Listen for cart updates
+  // Listen for cart updates - NO PAGE REFRESH, just state updates
   useEffect(() => {
     const handleCartUpdate = () => {
-      // Force re-render by updating a state or refetching
-      window.location.reload();
+      // Update cart data without page refresh
+      if (isLoggedIn && refetchCart) {
+        // For logged-in users, refetch from API
+        refetchCart();
+      } else {
+        // For guest users, trigger recalculation from localStorage
+        setCartUpdateTrigger(prev => prev + 1);
+      }
     };
     window.addEventListener('cartUpdated', handleCartUpdate);
     return () => window.removeEventListener('cartUpdated', handleCartUpdate);
-  }, []);
+  }, [isLoggedIn, refetchCart]);
   const navigate = useNavigate();
 
   const handleUserIconClick = () => {
