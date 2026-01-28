@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLoginMutation, useSignupMutation, useGoogleLoginMutation, useFacebookLoginMutation, useSyncCartMutation } from '../Services/CustomerApi';
-import { syncLocalCartToDatabase } from '../utils/cartService';
+import { useLoginMutation, useSignupMutation, useGoogleLoginMutation, useFacebookLoginMutation, useSyncCartMutation, useSyncWishlistMutation } from '../Services/CustomerApi';
+import { syncLocalCartToDatabase, getLocalCart, clearLocalCart } from '../utils/cartService';
+import { syncLocalWishlistToDatabase } from '../utils/wishlistService';
 import './Login.css';
 
 function Login() {
@@ -14,6 +15,7 @@ function Login() {
   const [googleLogin] = useGoogleLoginMutation();
   const [facebookLogin] = useFacebookLoginMutation();
   const [syncCart] = useSyncCartMutation();
+  const [syncWishlist] = useSyncWishlistMutation();
 
   // Load Google Identity Services
   useEffect(() => {
@@ -59,6 +61,14 @@ function Login() {
         } catch (syncError) {
           console.error('Error syncing cart:', syncError);
           // Continue even if cart sync fails
+        }
+
+        // Sync localStorage wishlist to database if items exist
+        try {
+          await syncLocalWishlistToDatabase(syncWishlist);
+        } catch (syncError) {
+          console.error('Error syncing wishlist:', syncError);
+          // Continue even if wishlist sync fails
         }
         
         navigate(-1);
@@ -124,6 +134,14 @@ function Login() {
           console.error('Error syncing cart:', syncError);
           // Continue even if cart sync fails
         }
+
+        // Sync localStorage wishlist to database if items exist
+        try {
+          await syncLocalWishlistToDatabase(syncWishlist);
+        } catch (syncError) {
+          console.error('Error syncing wishlist:', syncError);
+          // Continue even if wishlist sync fails
+        }
         
         navigate(-1);
         window.location.reload();
@@ -174,6 +192,13 @@ function Login() {
               } catch (syncError) {
                 console.error('Error syncing cart:', syncError);
               }
+
+              // Sync localStorage wishlist to database if items exist
+              try {
+                await syncLocalWishlistToDatabase(syncWishlist);
+              } catch (syncError) {
+                console.error('Error syncing wishlist:', syncError);
+              }
               
               navigate(-1);
               window.location.reload();
@@ -212,6 +237,13 @@ function Login() {
                     } catch (syncError) {
                       console.error('Error syncing cart:', syncError);
                     }
+                  }
+
+                  // Sync localStorage wishlist to database if items exist
+                  try {
+                    await syncLocalWishlistToDatabase(syncWishlist);
+                  } catch (syncError) {
+                    console.error('Error syncing wishlist:', syncError);
                   }
                   
                   navigate(-1);
@@ -262,6 +294,13 @@ function Login() {
                   await syncLocalCartToDatabase(syncCart);
                 } catch (syncError) {
                   console.error('Error syncing cart:', syncError);
+                }
+
+                // Sync localStorage wishlist to database if items exist
+                try {
+                  await syncLocalWishlistToDatabase(syncWishlist);
+                } catch (syncError) {
+                  console.error('Error syncing wishlist:', syncError);
                 }
                 
                 navigate(-1);

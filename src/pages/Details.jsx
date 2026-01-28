@@ -1,11 +1,13 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState, useMemo, useEffect } from 'react';
 import { useGetSingleProductQuery } from '../Services/ProductApi';
-import { useAddToCartMutation, useGetCartQuery } from '../Services/CustomerApi';
+import { useAddToCartMutation, useGetCartQuery, useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation } from '../Services/CustomerApi';
 import { addToCart, getLocalCart } from '../utils/cartService';
+import { addToWishlist, removeFromWishlist, getLocalWishlist } from '../utils/wishlistService';
 import { GetUrl } from '../config/GetUrl';
 import AddToCartModal from '../components/AddToCartModal';
 import { GoPlay } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 
 import './Details.css';
 
@@ -28,6 +30,10 @@ function Details() {
   // Cart API hook
   const [addToCartApi] = useAddToCartMutation();
 
+  // Wishlist API hooks
+  const [addToWishlistApi] = useAddToWishlistMutation();
+  const [removeFromWishlistApi] = useRemoveFromWishlistMutation();
+
   // Check if user is logged in
   const isLoggedIn = !!localStorage.getItem('customerToken');
 
@@ -37,15 +43,17 @@ function Details() {
     pollingInterval: 30000, // Poll every 30 seconds to keep count updated
   });
 
+  // Fetch wishlist from API if logged in
+  const { data: wishlistData, refetch: refetchWishlist } = useGetWishlistQuery(undefined, {
+    skip: !isLoggedIn,
+  });
+
   // Fetch product details from API
   const {
     data: productData,
     isLoading,
     error
   } = useGetSingleProductQuery(id || '');
-
-
-
 
   // Process product data from API
   const product = useMemo(() => {
@@ -119,6 +127,21 @@ function Details() {
     }
     return null;
   }, [productData]);
+
+  // Check if product is in wishlist
+  const isProductInWishlist = useMemo(() => {
+    if (!product || !product.id) return false;
+    
+    if (isLoggedIn && wishlistData?.data?.items) {
+      return wishlistData.data.items.some(
+        item => item.productId && item.productId.toString() === product.id.toString()
+      );
+    } else if (!isLoggedIn) {
+      const localWishlist = getLocalWishlist();
+      return localWishlist.some(item => item.productId === product.id);
+    }
+    return false;
+  }, [isLoggedIn, wishlistData, product]);
 
   // Set default selections when product loads
   useEffect(() => {
@@ -841,13 +864,60 @@ function Details() {
                           <div className="btn-wishlist" data-title="Wishlist">
                             <button
                               className="product-btn"
-                              onClick={(e) => {
+                              onClick={async (e) => {
                                 e.preventDefault();
-                                // TODO: Implement wishlist functionality
-                                console.log('Add to wishlist:', product.id);
+                                if (!product || !product.id) return;
+
+                                const selectedVariant = {
+                                  ...(selectedSize && { size: selectedSize }),
+                                  ...(selectedColor && { color: selectedColor }),
+                                  ...(selectedMetalType && { metal_type: selectedMetalType }),
+                                  ...(selectedCaratWeight && { carat_weight: selectedCaratWeight }),
+                                  ...(selectedDiamondQuality && { diamond_quality: selectedDiamondQuality }),
+                                  ...(selectedRingSize && { ring_size: selectedRingSize }),
+                                };
+
+                                try {
+                                  if (isProductInWishlist) {
+                                    // Remove from wishlist
+                                    await removeFromWishlist(product.id, removeFromWishlistApi);
+                                    if (isLoggedIn && refetchWishlist) {
+                                      refetchWishlist();
+                                    }
+                                    window.dispatchEvent(new Event('wishlistUpdated'));
+                                  } else {
+                                    // Add to wishlist
+                                    // Use currentVariantPrice which is already calculated
+                                    const productData = {
+                                      productId: product.id,
+                                      product_id: product.sku || product.id,
+                                      selectedVariant,
+                                      // Include product metadata for localStorage
+                                      productName: product.name || '',
+                                      productPrice: currentVariantPrice.price || product.price || 0,
+                                      productOriginalPrice: currentVariantPrice.originalPrice || product.originalPrice || null,
+                                      productImage: product.image || (product.images && product.images.length > 0 ? product.images[0] : '')
+                                    };
+                                    await addToWishlist(productData, addToWishlistApi);
+                                    if (isLoggedIn && refetchWishlist) {
+                                      refetchWishlist();
+                                    }
+                                    window.dispatchEvent(new Event('wishlistUpdated'));
+                                  }
+                                } catch (error) {
+                                  console.error('Error updating wishlist:', error);
+                                }
                               }}
                             >
-                              Add to wishlist
+                              {isProductInWishlist ? (
+                                <>
+                                  <GoHeartFill className="inline mr-2" /> Remove from wishlist
+                                </>
+                              ) : (
+                                <>
+                                  <GoHeart className="inline mr-2" /> Add to wishlist
+                                </>
+                              )}
                             </button>
                           </div>
                           <div className="btn-compare" data-title="Compare">

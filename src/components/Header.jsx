@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
-import { useGetCartQuery } from '../Services/CustomerApi';
+import { useGetCartQuery, useGetWishlistQuery } from '../Services/CustomerApi';
 import { getLocalCart, getCartItemCount } from '../utils/cartService';
+import { getLocalWishlist } from '../utils/wishlistService';
 import { GetUrl } from '../config/GetUrl';
 import './Header.css';
 
@@ -449,11 +450,17 @@ function Header() {
   
   // State to trigger cart recalculation (NO PAGE REFRESH)
   const [cartUpdateTrigger, setCartUpdateTrigger] = useState(0);
+  const [wishlistUpdateTrigger, setWishlistUpdateTrigger] = useState(0);
   
   // Fetch cart from API if logged in
   const { data: cartData, refetch: refetchCart } = useGetCartQuery(undefined, {
     skip: !isLoggedIn,
     pollingInterval: 30000, // Poll every 30 seconds to keep count updated
+  });
+
+  // Fetch wishlist from API if logged in
+  const { data: wishlistData, refetch: refetchWishlist } = useGetWishlistQuery(undefined, {
+    skip: !isLoggedIn,
   });
   
   // Get cart count
@@ -485,6 +492,16 @@ function Header() {
       return total + (price * (item.quantity || 1));
     }, 0);
   }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger for real-time updates
+
+  // Get wishlist count
+  const wishlistCount = useMemo(() => {
+    if (isLoggedIn && wishlistData?.data?.items) {
+      return wishlistData.data.items.length;
+    } else if (!isLoggedIn) {
+      return getLocalWishlist().length;
+    }
+    return 0;
+  }, [isLoggedIn, wishlistData, wishlistUpdateTrigger]);
   
   // Get product image
   const getProductImage = (item) => {
@@ -515,6 +532,23 @@ function Header() {
     window.addEventListener('cartUpdated', handleCartUpdate);
     return () => window.removeEventListener('cartUpdated', handleCartUpdate);
   }, [isLoggedIn, refetchCart]);
+
+  // Listen for wishlist updates
+  useEffect(() => {
+    const handleWishlistUpdate = () => {
+      // Update wishlist data without page refresh
+      if (isLoggedIn && refetchWishlist) {
+        // For logged-in users, refetch from API
+        refetchWishlist();
+      } else {
+        // For guest users, trigger recalculation from localStorage
+        setWishlistUpdateTrigger(prev => prev + 1);
+      }
+    };
+    window.addEventListener('wishlistUpdated', handleWishlistUpdate);
+    return () => window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
+  }, [isLoggedIn, refetchWishlist]);
+
   const navigate = useNavigate();
 
   const handleUserIconClick = () => {
@@ -686,7 +720,7 @@ function Header() {
                       </div>
                       <div className="wishlist-box">
                         <Link to="/wishlist"><i className="icon-heart"></i></Link>
-                        <span className="count-wishlist">1</span>
+                        {wishlistCount > 0 && <span className="count-wishlist">{wishlistCount}</span>}
                       </div>
                       <div className="topcart dropdown light">
                         <div className="dropdown mini-cart top-cart">

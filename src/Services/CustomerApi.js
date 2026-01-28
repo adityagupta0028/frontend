@@ -146,6 +146,61 @@ export const customerApi = createApi({
       }),
     }),
 
+    // Wishlist Endpoints
+    getWishlist: builder.query({
+      query: () => ({
+        url: "/getWishlist",
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    addToWishlist: builder.mutation({
+      query: (data) => ({
+        url: "/addToWishlist",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    removeFromWishlist: builder.mutation({
+      query: ({ productId }) => ({
+        url: `/removeFromWishlist/${productId}`,
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    clearWishlist: builder.mutation({
+      query: () => ({
+        url: "/clearWishlist",
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+        },
+      }),
+    }),
+
+    syncWishlist: builder.mutation({
+      query: (data) => ({
+        url: "/syncWishlist",
+        method: "POST",
+        body: data,
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
     // Update Profile (for contact information/email)
     updateProfile: builder.mutation({
       query: (data) => ({
@@ -270,6 +325,11 @@ export const {
   useUpdateCartItemMutation,
   useRemoveFromCartMutation,
   useClearCartMutation,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
+  useClearWishlistMutation,
+  useSyncWishlistMutation,
   useAddAddressMutation,
   useGetAddressesQuery,
   useGetAddressByIdQuery,

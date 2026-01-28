@@ -578,6 +578,63 @@
   }
 }
 
+/* Empty Wishlist State */
+.empty-wishlist-container {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.empty-wishlist {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-wishlist-icon {
+  color: #868686;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+.empty-wishlist h2 {
+  font-size: 28px;
+  font-weight: 400;
+  color: #2C2C2C;
+  margin: 0 0 10px 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.empty-wishlist p {
+  font-size: 16px;
+  color: #868686;
+  margin: 0 0 30px 0;
+}
+
+.shop-now-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #cb8161;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.shop-now-btn:hover {
+  background: #db9476;
+  color: #ffffff;
+}
+
+.empty-wishlist {
+  font-size: 16px;
+  color: #868686;
+  text-align: center;
+  padding: 40px 20px;
+}
+
 /* Prevent blur */
 .wishlist-section,
 .wishlist-product-card,

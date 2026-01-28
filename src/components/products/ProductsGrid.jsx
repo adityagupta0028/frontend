@@ -4,15 +4,39 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { GoHeart, GoHeartFill  } from "react-icons/go";
+import { useGetWishlistQuery, useAddToWishlistMutation, useRemoveFromWishlistMutation } from '../../Services/CustomerApi';
+import { addToWishlist, removeFromWishlist, getLocalWishlist, isInWishlist } from '../../utils/wishlistService';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
 function ProductsGrid({ products = [], layoutView = 'grid', metalImageFilter = null }) {
  
-  const [likedProducts, setLikedProducts] = useState({});
   const [productSelections, setProductSelections] = useState({});
+  const [wishlistUpdateTrigger, setWishlistUpdateTrigger] = useState(0);
   // Refs to store swiper instances for each product
   const swiperRefs = useRef({});
+
+  // Check if user is logged in
+  const isLoggedIn = !!localStorage.getItem('customerToken');
+
+  // Fetch wishlist from API if logged in
+  const { data: wishlistData, refetch: refetchWishlist } = useGetWishlistQuery(undefined, {
+    skip: !isLoggedIn,
+  });
+
+  // Mutations
+  const [addToWishlistApi] = useAddToWishlistMutation();
+  const [removeFromWishlistApi] = useRemoveFromWishlistMutation();
+
+  // Get wishlist items (from API or localStorage)
+  const wishlistItems = useMemo(() => {
+    if (isLoggedIn && wishlistData?.data) {
+      return wishlistData.data.items || [];
+    } else if (!isLoggedIn) {
+      return getLocalWishlist();
+    }
+    return [];
+  }, [isLoggedIn, wishlistData, wishlistUpdateTrigger]);
 
   // Log metalImageFilter prop changes
   useEffect(() => {
@@ -298,12 +322,76 @@ function ProductsGrid({ products = [], layoutView = 'grid', metalImageFilter = n
     }
   };
 
-  // Toggle the heart state for the clicked product
-  const handleHeartClick = (productId) => {
-    setLikedProducts(prev => ({
-      ...prev,
-      [productId]: !prev[productId], // Toggle the liked state
-    }));
+  // Check if product is in wishlist
+  const checkIsInWishlist = (productId) => {
+    if (isLoggedIn && wishlistData?.data) {
+      return wishlistItems.some(
+        item => item.productId && item.productId.toString() === productId.toString()
+      );
+    } else {
+      return wishlistItems.some(item => item.productId === productId);
+    }
+  };
+
+  // Handle heart click - add/remove from wishlist
+  const handleHeartClick = async (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const productId = product.id;
+    const isInWishlist = checkIsInWishlist(productId);
+    const selections = productSelections[productId] || {};
+    const selectedVariant = {
+      ...(selections.metal && { metal_type: selections.metal }),
+      ...(selections.carat && { carat_weight: selections.carat }),
+    };
+
+    try {
+      if (isInWishlist) {
+        // Remove from wishlist
+        await removeFromWishlist(productId, removeFromWishlistApi);
+        if (isLoggedIn && refetchWishlist) {
+          refetchWishlist();
+        } else {
+          setWishlistUpdateTrigger(prev => prev + 1);
+        }
+        window.dispatchEvent(new Event('wishlistUpdated'));
+      } else {
+        // Add to wishlist
+        // Calculate price based on selected variant
+        let productPrice = product.price || 0;
+        let productOriginalPrice = product.originalPrice || null;
+        
+        // Check if product has variants and calculate price
+        if (product.variants && product.variants.length > 0) {
+          const selectedMetal = selections.metal || '';
+          const selectedCarat = selections.carat || '';
+          const variantPrice = getVariantPrice(product, selectedMetal, selectedCarat);
+          productPrice = variantPrice.price || product.price || 0;
+          productOriginalPrice = variantPrice.originalPrice || product.originalPrice || null;
+        }
+        
+        const productData = {
+          productId,
+          product_id: product.sku || product.id,
+          selectedVariant,
+          // Include product metadata for localStorage
+          productName: product.name || '',
+          productPrice,
+          productOriginalPrice,
+          productImage: product.image || (product.images && product.images.length > 0 ? product.images[0] : '')
+        };
+        await addToWishlist(productData, addToWishlistApi);
+        if (isLoggedIn && refetchWishlist) {
+          refetchWishlist();
+        } else {
+          setWishlistUpdateTrigger(prev => prev + 1);
+        }
+        window.dispatchEvent(new Event('wishlistUpdated'));
+      }
+    } catch (error) {
+      console.error('Error updating wishlist:', error);
+    }
   };
 
   // Debug: Log products and images (remove in production)
@@ -490,13 +578,9 @@ function ProductsGrid({ products = [], layoutView = 'grid', metalImageFilter = n
                         </div> */}
 
 
-                        <div className="btn-add-to-cart absolute top-3 right-3 z-[9] cursor-pointer mt-0" data-title="Add to cart" onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleHeartClick(product.id);
-                        }}>
-                          {likedProducts[product.id] ? (
-                            <GoHeartFill size={22} />
+                        <div className="btn-add-to-cart absolute top-3 right-3 z-[9] cursor-pointer mt-0" data-title="Wishlist" onClick={(e) => handleHeartClick(e, product)}>
+                          {checkIsInWishlist(product.id) ? (
+                            <GoHeartFill size={22} className="text-red-500" />
                           ) : (
                             <GoHeart size={22} />
                           )}
