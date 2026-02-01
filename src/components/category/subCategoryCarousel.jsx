@@ -11,7 +11,7 @@ import { useEffect } from "react";
 export default function SubCategoryCarousel({ data }) {
 
   useEffect(() => {
-  
+
   }, [data])
 
 
@@ -25,7 +25,7 @@ export default function SubCategoryCarousel({ data }) {
             </div> */}
 
             <div className="block-content slider_container1 relative">
-              {/* Custom navigation buttons */}
+              {/* Custom navigation  buttons */}
               <button className="swiper-btn prev-btn">
                 <FaChevronLeft />
               </button>
