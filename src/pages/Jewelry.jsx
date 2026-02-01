@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { useGetSubCategoryQuery } from '../Services/CategoryApi';
 import { useGetProductQuery } from '../Services/ProductApi';
 import { GetUrl } from '../config/GetUrl';
-import './Wedding.css';
+import './Jewelry.css';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
 import ProductsGrid from '../components/products/ProductsGrid';
 import FilterSidebar from '../components/FilterSidebar';
@@ -18,10 +18,10 @@ const WEDDING_CATEGORY_ID = '69468b5a25a47dcbe1667e35';
 function Jewelry() {
   const [layoutView, setLayoutView] = useState('grid');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [selectedView, setSelectedView] = useState({ 
-    label: 'Angled View', 
+  const [selectedView, setSelectedView] = useState({
+    label: 'Angled View',
     value: 'Angled view',
-    image: '/assets/img/rings/angled.png' 
+    image: '/assets/img/rings/angled.png'
   });
   const [selectedSort, setSelectedSort] = useState('Featured');
   const [selectedFilters, setSelectedFilters] = useState({});
@@ -85,15 +85,15 @@ function Jewelry() {
       page: 1,
       ...cleanedFilters,
     };
-    
+
     // Only add viewAngle if user has explicitly selected a view (not default)
     if (viewAngleChanged && selectedView?.value) {
       params.viewAngle = selectedView.value;
     }
-    
+
     // Debug: Log query params
     console.log('Jewelry Query Params being sent:', params);
-    
+
     return params;
   }, [cleanedFilters, viewAngleChanged, selectedView]);
 
@@ -118,8 +118,8 @@ function Jewelry() {
           if (imgPath.startsWith('http')) return imgPath;
           // Handle both cases: path with or without leading slash
           const cleanPath = imgPath.startsWith('/') ? imgPath : `/${imgPath}`;
-          const baseUrl = GetUrl.IMAGE_URL?.endsWith('/') 
-            ? GetUrl.IMAGE_URL.slice(0, -1) 
+          const baseUrl = GetUrl.IMAGE_URL?.endsWith('/')
+            ? GetUrl.IMAGE_URL.slice(0, -1)
             : GetUrl.IMAGE_URL;
           return `${baseUrl}${cleanPath}`;
         };
@@ -148,10 +148,10 @@ function Jewelry() {
         // Build metal_images array with proper URLs
         const metalImages = product.metal_images && product.metal_images.length > 0
           ? product.metal_images.map((metalImg) => ({
-              metal_type: metalImg.metal_type,
-              view_angle: metalImg.view_angle,
-              image: buildImageUrl(metalImg.image)
-            }))
+            metal_type: metalImg.metal_type,
+            view_angle: metalImg.view_angle,
+            image: buildImageUrl(metalImg.image)
+          }))
           : [];
 
         return {
@@ -180,34 +180,34 @@ function Jewelry() {
 
   // View dropdown options with images
   const viewOptions = [
-    { 
-      label: 'Angled View', 
+    {
+      label: 'Angled View',
       value: 'Angled view',
-      image: '/assets/img/rings/angled.png' 
+      image: '/assets/img/rings/angled.png'
     },
-    { 
-      label: 'Top View', 
+    {
+      label: 'Top View',
       value: 'Top view',
-      image: '/assets/img/rings/top.png' 
+      image: '/assets/img/rings/top.png'
     },
-    { 
-      label: 'Side View', 
+    {
+      label: 'Side View',
       value: 'Side view',
-      image: '/assets/img/rings/side.png' 
+      image: '/assets/img/rings/side.png'
     }
   ];
 
   const sortOptions = [
-    { 
-      label: 'Featured', 
+    {
+      label: 'Featured',
       value: 'Featured',
     },
-    { 
-      label: 'Price: High to Low', 
+    {
+      label: 'Price: High to Low',
       value: 'Price: High to Low',
     },
-    { 
-      label: 'Price: Low to High', 
+    {
+      label: 'Price: Low to High',
       value: 'Price: Low to High',
     }
   ];
@@ -269,8 +269,8 @@ function Jewelry() {
   }
   return (
     <div id="site-main" className="site-main">
-      <FilterSidebar 
-        isOpen={isFilterOpen} 
+      <FilterSidebar
+        isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
         selectedFilters={selectedFilters}
         onFilterChange={handleFilterChange}
@@ -280,6 +280,7 @@ function Jewelry() {
           <div id="content" className="site-content" role="main">
             {/* title for category  */}
             <div id="title" className="page-title">
+
               <div className="section-container">
                 <div className="content-title-heading">
                   <h1 className="text-title-heading">
