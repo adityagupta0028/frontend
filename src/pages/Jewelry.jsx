@@ -9,6 +9,8 @@ import ProductsGrid from '../components/products/ProductsGrid';
 import FilterSidebar from '../components/FilterSidebar';
 import CustomDropdown from '../components/CustomDropdown';
 import { SlEqualizer } from "react-icons/sl";
+import { IoDiamondOutline } from "react-icons/io5";
+import { BiSort } from "react-icons/bi";
 
 // Wedding Category ID
 const WEDDING_CATEGORY_ID = '69468b5a25a47dcbe1667e35';
@@ -278,20 +280,26 @@ function Jewelry() {
       <div id="main-content" className="main-content">
         <div id="primary" className="content-area">
           <div id="content" className="site-content" role="main">
-            {/* title for category  */}
-            <div id="title" className="page-title">
-
+            {/* Hero Banner Section */}
+            <div
+              className="hero-banner"
+              style={{ backgroundImage: `url('/media/banner/jewelry_hero.png')` }}
+            >
               <div className="section-container">
-                <div className="content-title-heading">
-                  <h1 className="text-title-heading">
-                    Wedding Bands & Anniversary Bands
-                  </h1>
-                </div>
-                <div className="breadcrumbs">
-                  <Link to="/">Home</Link>
-                  <span className="delimiter"></span>
-                  <Link to="/wedding">Wedding & Anniversary Bands</Link>
-                  <span className="delimiter"></span>
+                <div className="hero-content">
+                  <div className="hero-breadcrumbs">
+                    <Link to="/">Home</Link>
+                    <span className="breadcrumb-delimiter">/</span>
+                    <Link to="/jewelry">Jewelry</Link>
+                  </div>
+                  <div className="hero-title-heading">
+                    <h1 className="hero-text-title">
+                      Fine Jewelry
+                    </h1>
+                  </div>
+                  <p className="hero-description">
+                    Explore our curated collection of fine jewelry, from timeless classics to modern statements. Each piece is a masterpiece of design and handcrafted to perfection.
+                  </p>
                 </div>
               </div>
             </div>
@@ -306,18 +314,22 @@ function Jewelry() {
                 <div className="row">
                   <div className="col-xl-12 col-lg-12 col-md-12 col-12">
                     {/* Products Topbar */}
-                    <div className="products-topbar bg-gray-100 px-[10px] py-[5px] flex items-center justify-between border border-[#e1e1e1] rounded-[2px]">
-                      <div className="products-topbar-left flex items-center gap-[15px]">
-                        <button className="filter-open-btn flex items-center gap-[5px] !text-[15px] !font-medium bg-transparent border rounded-0 !border-[#cb8161] !text-[#cb8161] " onClick={() => setIsFilterOpen(true)}> <SlEqualizer size={18} /> Filter</button>
-                        <div className='result'>{products.length} Results</div>
+                    <div className="products-topbar px-[15px] py-[10px] flex items-center justify-between">
+                      <div className="products-topbar-left flex items-center">
+                        <button className="filter-open-btn" onClick={() => setIsFilterOpen(true)}>
+                          <SlEqualizer size={16} /> Filter
+                        </button>
+                        <div className='result-count font-light'>{products.length} Results</div>
                       </div>
 
-                      <div className="products-topbar-right flex justify-end items-center gap-[30px]">
+                      <div className="products-topbar-right flex justify-end items-center gap-[40px]">
                         <CustomDropdown
                           options={viewOptions}
                           selectedValue={selectedView}
                           onSelect={handleViewSelect}
                           chevronSize={10}
+                          prefix="VIEW"
+                          leftIcon={IoDiamondOutline}
                         />
 
                         <CustomDropdown
@@ -326,7 +338,8 @@ function Jewelry() {
                           onSelect={handleSortSelect}
                           chevronSize={10}
                           type="sort"
-                          staticText="Sort"
+                          prefix="SORT"
+                          leftIcon={BiSort}
                         />
                       </div>
                     </div>
