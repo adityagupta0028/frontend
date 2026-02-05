@@ -20,6 +20,9 @@ function Details() {
   const [selectedCaratWeight, setSelectedCaratWeight] = useState('');
   const [selectedDiamondQuality, setSelectedDiamondQuality] = useState('');
   const [selectedRingSize, setSelectedRingSize] = useState('');
+  const [selectedShape, setSelectedShape] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState('');
+  const [selectedDiamondType, setSelectedDiamondType] = useState('');
   const [activeTab, setActiveTab] = useState('description');
   const [selectedImage, setSelectedImage] = useState(0);
   const [showAddToCartModal, setShowAddToCartModal] = useState(false);
@@ -97,6 +100,34 @@ function Details() {
       const ringSizesFromVariants = p.variants?.map(v => v.ring_size).filter(Boolean) || [];
       const ringSizes = [...new Set([...ringSizesFromProduct, ...ringSizesFromVariants])];
 
+      // Process shapes from variants
+      const shapesFromVariants = p.variants?.map(v => v.shape).filter(Boolean) || [];
+      const shapes = [...new Set(shapesFromVariants)];
+
+      // Process styles from variants (if available) or use design_styles
+      const stylesFromVariants = p.variants?.map(v => v.style).filter(Boolean) || [];
+      const stylesFromProduct = Array.isArray(p.design_styles) ? p.design_styles.filter(Boolean) : 
+                                (p.design_styles ? [p.design_styles] : []);
+      const styles = [...new Set([...stylesFromVariants, ...stylesFromProduct])];
+      // Default styles if none found
+      const defaultStyles = styles.length > 0 ? styles : ['Pavé', 'Hidden Halo'];
+
+      // Process diamond types from variants
+      const diamondTypesFromVariants = p.variants?.map(v => v.diamond_type).filter(Boolean) || [];
+      const diamondTypesFromProduct = Array.isArray(p.diamond_origin) ? p.diamond_origin.map(origin => 
+        origin.toLowerCase().includes('lab') ? 'Lab' : 'Natural'
+      ) : (p.diamond_origin ? [p.diamond_origin.toLowerCase().includes('lab') ? 'Lab' : 'Natural'] : []);
+      const diamondTypes = [...new Set([...diamondTypesFromVariants, ...diamondTypesFromProduct])];
+      // Default diamond types if none found
+      const defaultDiamondTypes = diamondTypes.length > 0 ? diamondTypes : ['Lab', 'Natural'];
+
+      // Get current selected variant info for subtitle
+      const currentMetal = metalTypes.length > 0 ? metalTypes[0] : '';
+      const currentDiamondType = defaultDiamondTypes.length > 0 ? defaultDiamondTypes[0] : '';
+      const currentCarat = caratWeights.length > 0 ? caratWeights[0] : '';
+      const currentQuality = diamondQualities.length > 0 ? diamondQualities[0] : '';
+      const currentShape = shapes.length > 0 ? shapes[0] : '';
+
       return {
         id: p._id || p.product_id,
         name: p.product_name || 'Product',
@@ -117,12 +148,22 @@ function Details() {
         caratWeights: caratWeights,
         diamondQualities: diamondQualities,
         ringSizes: ringSizes,
+        shapes: shapes,
+        styles: defaultStyles,
+        diamondTypes: defaultDiamondTypes,
         inStock: p.in_stock !== false,
         additionalInfo: p.additional_information || {},
         reviews: p.reviews || [],
-        variants: p.variants || []
-
-
+        variants: p.variants || [],
+        matchingBandAvailable: p.matching_band_available || false,
+        diamondColorGrade: p.diamond_color_grade || '',
+        diamondClarityGrade: p.diamond_clarity_grade || '',
+        // For subtitle
+        currentMetal,
+        currentDiamondType,
+        currentCarat,
+        currentQuality,
+        currentShape
       };
     }
     return null;
@@ -164,8 +205,17 @@ function Details() {
       if (product.ringSizes.length > 0 && !selectedRingSize) {
         setSelectedRingSize(product.ringSizes[0]);
       }
+      if (product.shapes && product.shapes.length > 0 && !selectedShape) {
+        setSelectedShape(product.shapes[0]);
+      }
+      if (product.styles && product.styles.length > 0 && !selectedStyle) {
+        setSelectedStyle(product.styles[0]);
+      }
+      if (product.diamondTypes && product.diamondTypes.length > 0 && !selectedDiamondType) {
+        setSelectedDiamondType(product.diamondTypes[0]);
+      }
     }
-  }, [product, selectedSize, selectedColor, selectedMetalType, selectedCaratWeight, selectedDiamondQuality, selectedRingSize]);
+  }, [product, selectedSize, selectedColor, selectedMetalType, selectedCaratWeight, selectedDiamondQuality, selectedRingSize, selectedShape, selectedStyle, selectedDiamondType]);
 
   // Fallback product images if API fails
   const fallbackImages = [
@@ -221,6 +271,9 @@ function Details() {
         ...(selectedCaratWeight && { carat_weight: selectedCaratWeight }),
         ...(selectedDiamondQuality && { diamond_quality: selectedDiamondQuality }),
         ...(selectedRingSize && { ring_size: selectedRingSize }),
+        ...(selectedShape && { shape: selectedShape }),
+        ...(selectedStyle && { style: selectedStyle }),
+        ...(selectedDiamondType && { diamond_type: selectedDiamondType }),
       };
 
       // Prepare product data for cart
@@ -293,9 +346,15 @@ function Details() {
         String(variant.diamond_quality) === String(selectedDiamondQuality);
       const ringSizeMatch = !selectedRingSize || !variant.ring_size ||
         String(variant.ring_size) === String(selectedRingSize);
+      const shapeMatch = !selectedShape || !variant.shape ||
+        String(variant.shape) === String(selectedShape);
+      const styleMatch = !selectedStyle || !variant.style ||
+        String(variant.style) === String(selectedStyle);
+      const diamondTypeMatch = !selectedDiamondType || !variant.diamond_type ||
+        String(variant.diamond_type).toLowerCase() === String(selectedDiamondType).toLowerCase();
 
       return sizeMatch && colorMatch && metalTypeMatch && caratWeightMatch &&
-        diamondQualityMatch && ringSizeMatch;
+        diamondQualityMatch && ringSizeMatch && shapeMatch && styleMatch && diamondTypeMatch;
     });
 
     // If exact match found, use variant price
@@ -325,7 +384,7 @@ function Details() {
       price: product.price || 0,
       originalPrice: product.originalPrice || null
     };
-  }, [product, selectedSize, selectedColor, selectedMetalType, selectedCaratWeight, selectedDiamondQuality, selectedRingSize]);
+  }, [product, selectedSize, selectedColor, selectedMetalType, selectedCaratWeight, selectedDiamondQuality, selectedRingSize, selectedShape, selectedStyle, selectedDiamondType]);
 
   // Calculate cart total dynamically
   const cartTotal = useMemo(() => {
@@ -575,307 +634,459 @@ function Details() {
                       </div>
 
                       {/* Product Info */}
-                      <div className="product-info col-lg-5 col-md-12 col-12">
-                        <h1 className="title mb-0">{product.name}</h1>
-                        <small className='mb-[10px] block font-medium text-[#555]'>14K White Gold, E, VS1 | IGI Certified, 1 1/2 ct Center</small>
-                        <div className='mb-[10px]'>
-                        {product && renderStars(product.rating)}
+                      <div className="product-info col-lg-5 col-md-12 col-12" style={{ paddingLeft: '30px' }}>
+                        {/* Product Title */}
+                        <h1 className="title mb-0" style={{ fontSize: '28px', fontWeight: '600', marginBottom: '10px' }}>
+                          {product.name || 'Product Rings 5'}
+                        </h1>
+                        
+                        {/* Product Subtitle */}
+                        <small className='mb-[10px] block font-medium' style={{ color: '#555', fontSize: '14px', display: 'block', marginBottom: '10px' }}>
+                          {(() => {
+                            const metal = selectedMetalType || product.currentMetal || '14K Rose Gold';
+                            const diamondType = (selectedDiamondType || product.currentDiamondType || 'natural').toLowerCase();
+                            const carat = selectedCaratWeight || product.currentCarat || '0.25';
+                            const caratDisplay = typeof carat === 'number' && carat < 1 ? `${carat} ct` : `${carat} ctw`;
+                            return `${metal} | ${diamondType} | ${caratDisplay} Center`;
+                          })()}
+                        </small>
+                        
+                        {/* Rating */}
+                        <div className='mb-[10px]' style={{ marginBottom: '10px' }}>
+                          {product && renderStars(product.rating)}
                         </div>
-                        <span className="price mb-0">
+                        
+                        {/* Price */}
+                        <div className="price mb-0" style={{ marginBottom: '20px' }}>
                           {currentVariantPrice.originalPrice && currentVariantPrice.originalPrice > currentVariantPrice.price ? (
                             <>
-                              <ins className='font-bold mr-2'><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
-                              <del aria-hidden="true" className='!mr-[10px] !text-[16px]'><span>${currentVariantPrice.originalPrice.toFixed(2)}</span></del>
+                              <ins className='font-bold mr-2' style={{ fontSize: '24px', fontWeight: 'bold', marginRight: '8px', textDecoration: 'none', color: '#000' }}>
+                                <span>${currentVariantPrice.price.toFixed(2)}</span>
+                              </ins>
+                              <del aria-hidden="true" style={{ fontSize: '18px', color: '#999', textDecoration: 'line-through' }}>
+                                <span>${currentVariantPrice.originalPrice.toFixed(2)}</span>
+                              </del>
                             </>
                           ) : (
-                            <ins><span>${currentVariantPrice.price.toFixed(2)}</span></ins>
+                            <ins style={{ fontSize: '24px', fontWeight: 'bold', textDecoration: 'none', color: '#000' }}>
+                              <span>${currentVariantPrice.price.toFixed(2)}</span>
+                            </ins>
                           )}
-                        </span>
-                        <div className="description !border-t border-black">
-                          <p>{product.shortDescription || product.description || 'No description available.'}</p>
                         </div>
 
-                        {/* Variations */}
-                        {(product.sizes.length > 0 || product.colors.length > 0) && (
-                          <div className="variations">
-                            <table cellSpacing="0">
-                              <tbody>
-                                {product.sizes.length > 0 && (
-                                  <tr>
-                                    <td className="label">Size</td>
-                                    <td className="attributes">
-                                      <ul className="text">
-                                        {product.sizes.map((size) => (
-                                          <li key={size}>
-                                            <span
-                                              className={selectedSize === size ? 'selected' : ''}
-                                              onClick={() => setSelectedSize(size)}
-                                              style={{ cursor: 'pointer' }}
-                                            >{size}</span>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </td>
-                                  </tr>
+                        {/* Customize your wedding band section */}
+                        <div className="customize-section" style={{ marginTop: '30px' }}>
+                          <h2 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px' }}>{product.name || 'Product Rings 5'}</h2>
+                          <h3 style={{ fontSize: '16px', fontWeight: '500', marginBottom: '25px', color: '#333' }}>Customize your wedding band</h3>
+
+                          {/* Metal Type Selection */}
+                          <div className="variations" style={{ marginBottom: '25px' }}>
+                            <div style={{ marginBottom: '10px' }}>
+                              <label style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333', display: 'block', marginBottom: '8px' }}>
+                                METAL: {selectedMetalType || product.metalTypes?.[0] || '14K ROSE GOLD'}
+                              </label>
+                              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                {product.metalTypes && product.metalTypes.length > 0 ? (
+                                  product.metalTypes.map((metal) => {
+                                    const metalLower = metal.toLowerCase();
+                                    let bgColor = '#e8b4a0'; // rose gold default
+                                    if (metalLower.includes('white gold') || metalLower.includes('platinum')) {
+                                      bgColor = '#e8e8e8';
+                                    } else if (metalLower.includes('yellow gold')) {
+                                      bgColor = '#ffd700';
+                                    } else if (metalLower.includes('rose gold')) {
+                                      bgColor = '#e8b4a0';
+                                    }
+                                    const isSelected = selectedMetalType === metal || (!selectedMetalType && metal === product.metalTypes[0]);
+                                    return (
+                                      <div
+                                        key={metal}
+                                        onClick={() => setSelectedMetalType(metal)}
+                                        style={{
+                                          width: '35px',
+                                          height: '35px',
+                                          borderRadius: '50%',
+                                          backgroundColor: bgColor,
+                                          border: isSelected ? '2px solid #000' : '1px solid #ddd',
+                                          cursor: 'pointer',
+                                          transition: 'all 0.2s'
+                                        }}
+                                        title={metal}
+                                      />
+                                    );
+                                  })
+                                ) : (
+                                  <div
+                                    style={{
+                                      width: '35px',
+                                      height: '35px',
+                                      borderRadius: '50%',
+                                      backgroundColor: '#e8b4a0',
+                                      border: '2px solid #000',
+                                      cursor: 'pointer'
+                                    }}
+                                  />
                                 )}
-                                {product.colors.length > 0 && (
-                                  <tr>
-                                    <td className="label">Color</td>
-                                    <td className="attributes">
-                                      <ul className="colors">
-                                        {product.colors.map((color, index) => (
-                                          <li key={color || index}>
-                                            <span
-                                              className={`color-${index + 1} ${selectedColor === color ? 'selected' : ''}`}
-                                              onClick={() => setSelectedColor(color)}
-                                              style={{ cursor: 'pointer' }}
-                                              title={color}
-                                            ></span>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
+                              </div>
+                            </div>
                           </div>
-                        )}
 
-                        {/* Metal Type Selection */}
-                        {product.metalTypes.length > 0 && (
-                          <div className="variations" style={{ marginTop: '20px' }}>
-                            <table cellSpacing="0">
-                              <tbody>
-                                <tr className='!block'>
-                                  <td className="label block !w-full !tracking-[1px] !font-bold mb-1">Metal Type</td>
-                                  <td className="attributes">
-                                    <ul className="metals !px-[5px]">
-                                      {product.metalTypes.map((metal) => {
-                                        // Determine metal class based on metal type
-                                        const metalLower = metal.toLowerCase();
-                                        let metalClass = '';
-                                        if (metalLower.includes('white gold') || metalLower.includes('platinum')) {
-                                          metalClass = 'metal-white-gold';
-                                        } else if (metalLower.includes('yellow gold')) {
-                                          metalClass = 'metal-yellow-gold';
-                                        } else if (metalLower.includes('rose gold')) {
-                                          metalClass = 'metal-rose-gold';
-                                        }
-
-                                        return (
-                                          <li key={metal} title={metal}>
-                                            <span
-                                              className={`!rounded-none !h-[25px] ${metalClass} ${selectedMetalType === metal ? 'outline outline-offset-[3px]' : ''}`}
-                                              onClick={() => setSelectedMetalType(metal)}
-                                              style={{ cursor: 'pointer' }}
-                                            ></span>
-                                            <div style={{ fontSize: '11px', marginTop: '5px', textAlign: 'center', maxWidth: '50px' }}>
-                                              {metal.replace(/^\d+K\s*/, '').substring(0, 8)}
-                                            </div>
-                                          </li>
-                                        );
-                                      })}
-                                    </ul>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-
-                        {/* Carat Weight Selection */}
-                        {product.caratWeights.length > 0 && (
-                          <div className="variations" style={{ marginTop: '20px' }}>
-                            <table cellSpacing="0">
-                              <tbody>
-                                <tr>
-                                  <td className="label block !w-full !tracking-[1px] !font-bold mb-1">
-                                    Carat Weight
-                                    <i className="fa fa-info-circle" style={{ marginLeft: '5px', cursor: 'help' }} title="Select the carat weight for your diamond"></i>
-                                  </td>
-                                  <td className="attributes">
-                                    <ul className="text">
-                                      {product.caratWeights.map((carat) => {
-                                        const isSelected = selectedCaratWeight === carat || String(selectedCaratWeight) === String(carat);
-                                        const displayValue = typeof carat === 'number' && carat < 1
-                                          ? `${carat} ct`
-                                          : `${carat} ctw`;
-                                        return (
-                                          <li key={carat}>
-                                            <span
-                                              className={`!rounded-none !outline !outline-offset-[3px] !h-[35px] !w-[90px] !flex items-center justify-center p-0 ${isSelected ? 'selected' : ''}`}
-                                              onClick={() => setSelectedCaratWeight(carat)}
-                                              style={{ cursor: 'pointer' }}
-                                            >{displayValue}</span>
-                                          </li>
-                                        );
-                                      })}
-                                    </ul>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-
-                        {/* Diamond Quality Selection */}
-                        {product.diamondQualities.length > 0 && (
-                          <div className="variations" style={{ marginTop: '20px' }}>
-                            <table cellSpacing="0">
-                              <tbody>
-                                <tr>
-                                  <td className="label block !w-full !tracking-[1px] !font-bold mb-1">
-                                    Diamond Quality
-                                    <i className="fa fa-info-circle" style={{ marginLeft: '5px', cursor: 'help' }} title="Select the diamond quality grade"></i>
-                                  </td>
-                                  <td className="attributes">
-                                    <ul className="text">
-                                      {product.diamondQualities.map((quality, index) => (
-                                        <li key={quality || index}>
-                                          <span
-                                            className={`!rounded-none  !h-[35px] !w-[90px] !flex items-center justify-center p-0 ${selectedDiamondQuality === quality ? 'selected' : ''}`}
-                                            onClick={() => setSelectedDiamondQuality(quality)}
-                                            style={{ cursor: 'pointer' }}
-                                          >{quality}</span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-
-                        {/* Ring Size Selection */}
-                        {product.ringSizes.length > 0 && (
-                          <div className="variations" style={{ marginTop: '20px' }}>
-                            <table cellSpacing="0">
-                              <tbody>
-                                <tr>
-                                  <td className="label block !w-full !tracking-[1px] !font-bold mb-1">
-                                    Ring Size
-                                    <a href="#" onClick={(e) => { e.preventDefault(); }} style={{ marginLeft: '10px', fontSize: '12px', textDecoration: 'underline' }}>Find Ring Size</a>
-                                  </td>
-                                  <td className="attributes">
-                                    <select
-                                      value={selectedRingSize}
-                                      onChange={(e) => setSelectedRingSize(e.target.value)}
+                          {/* Total Carat Weight Selection */}
+                          <div className="variations" style={{ marginBottom: '25px' }}>
+                            <div>
+                              <label style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333', display: 'block', marginBottom: '8px' }}>
+                                TOTAL CARAT WEIGHT: {(() => {
+                                  const carat = selectedCaratWeight || product.caratWeights?.[0] || '0.25';
+                                  return typeof carat === 'number' && carat < 1 ? `${carat} CT` : `${carat} CTW`;
+                                })()}
+                              </label>
+                              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                {product.caratWeights && product.caratWeights.length > 0 ? (
+                                  product.caratWeights.map((carat) => {
+                                    const isSelected = selectedCaratWeight === carat || String(selectedCaratWeight) === String(carat) || (!selectedCaratWeight && carat === product.caratWeights[0]);
+                                    const displayValue = typeof carat === 'number' && carat < 1 ? `${carat} ct` : `${carat}ct ctw`;
+                                    return (
+                                      <button
+                                        key={carat}
+                                        onClick={() => setSelectedCaratWeight(carat)}
+                                        style={{
+                                          height: '35px',
+                                          minWidth: '90px',
+                                          padding: '0 12px',
+                                          border: isSelected ? '2px solid #9333ea' : '1px solid #ddd',
+                                          backgroundColor: isSelected ? '#9333ea' : '#fff',
+                                          color: isSelected ? '#fff' : '#333',
+                                          fontSize: '14px',
+                                          fontWeight: isSelected ? '600' : '400',
+                                          cursor: 'pointer',
+                                          borderRadius: '0',
+                                          transition: 'all 0.2s'
+                                        }}
+                                      >
+                                        {displayValue}
+                                      </button>
+                                    );
+                                  })
+                                ) : (
+                                  <>
+                                    <button
                                       style={{
-                                        padding: '8px 12px',
-                                        border: '1px solid #ddd',
-                                        borderRadius: '4px',
-                                        minWidth: '120px',
-                                        cursor: 'pointer'
+                                        height: '35px',
+                                        minWidth: '90px',
+                                        padding: '0 12px',
+                                        border: '2px solid #9333ea',
+                                        backgroundColor: '#9333ea',
+                                        color: '#fff',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        borderRadius: '0'
                                       }}
                                     >
-                                      {product.ringSizes.map((size) => (
-                                        <option key={size} value={size}>{size}</option>
-                                      ))}
-                                    </select>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-
-                        {/* Add to Cart Section */}
-                        <div className="buttons">
-                          <div className="add-to-cart-wrap">
-                            <div className="quantity">
-                              <button
-                                type="button"
-                                className="plus"
-                                onClick={() => handleQuantityChange(1)}
-                              >+</button>
-                              <input
-                                type="number"
-                                className="qty"
-                                step="1"
-                                min="1"
-                                name="quantity"
-                                value={quantity}
-                                title="Qty"
-                                size="4"
-                                placeholder=""
-                                inputMode="numeric"
-                                autoComplete="off"
-                                onChange={(e) => {
-                                  const val = parseInt(e.target.value) || 1;
-                                  setQuantity(val >= 1 ? val : 1);
-                                }}
-                              />
-                              <button
-                                type="button"
-                                className="minus"
-                                onClick={() => handleQuantityChange(-1)}
-                              >-</button>
-                            </div>
-                            <div className="btn-add-to-cart">
-                              {addToCartError && (
-                                <div style={{
-                                  color: '#c33',
-                                  fontSize: '14px',
-                                  marginBottom: '10px',
-                                  padding: '8px',
-                                  backgroundColor: '#fee',
-                                  borderRadius: '4px'
-                                }}>
-                                  {addToCartError}
-                                </div>
-                              )}
-                              <a
-                                href="#"
-                                tabIndex="0"
-                                onClick={handleAddToCart}
-                                style={{
-                                  opacity: addToCartLoading ? 0.6 : 1,
-                                  pointerEvents: addToCartLoading ? 'none' : 'auto',
-                                  cursor: addToCartLoading ? 'wait' : 'pointer'
-                                }}
-                              >
-                                {addToCartLoading ? 'Adding...' : 'Add to cart'}
-                              </a>
+                                      0.25 ct
+                                    </button>
+                                    <button
+                                      style={{
+                                        height: '35px',
+                                        minWidth: '90px',
+                                        padding: '0 12px',
+                                        border: '1px solid #ddd',
+                                        backgroundColor: '#fff',
+                                        color: '#333',
+                                        fontSize: '14px',
+                                        cursor: 'pointer',
+                                        borderRadius: '0'
+                                      }}
+                                    >
+                                      0.25ct ctw
+                                    </button>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </div>
-                          <div className="btn-quick-buy" data-title="Buy It Now">
-                            <button
-                              className="product-btn"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                // TODO: Implement quick buy functionality
-                                console.log('Quick buy:', {
-                                  productId: product.id,
-                                  quantity,
-                                  size: selectedSize,
-                                  color: selectedColor,
-                                  metalType: selectedMetalType,
-                                  caratWeight: selectedCaratWeight,
-                                  diamondQuality: selectedDiamondQuality,
-                                  ringSize: selectedRingSize
-                                });
-                              }}
-                            >
-                              Buy It Now
-                            </button>
-                          </div>
-                          <div className="btn-wishlist" data-title="Wishlist">
-                            <button
-                              className="product-btn"
-                              onClick={async (e) => {
-                                e.preventDefault();
-                                if (!product || !product.id) return;
 
-                                const selectedVariant = {
-                                  ...(selectedSize && { size: selectedSize }),
-                                  ...(selectedColor && { color: selectedColor }),
-                                  ...(selectedMetalType && { metal_type: selectedMetalType }),
-                                  ...(selectedCaratWeight && { carat_weight: selectedCaratWeight }),
-                                  ...(selectedDiamondQuality && { diamond_quality: selectedDiamondQuality }),
-                                  ...(selectedRingSize && { ring_size: selectedRingSize }),
-                                };
+                          {/* Shape Selection */}
+                          <div className="variations" style={{ marginBottom: '25px' }}>
+                            <div>
+                              <label style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333', display: 'block', marginBottom: '8px' }}>
+                                SHAPE: {(selectedShape || product.shapes?.[0] || 'OVAL').toUpperCase()}
+                              </label>
+                              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                {product.shapes && product.shapes.length > 0 ? (
+                                  product.shapes.map((shape) => {
+                                    const isSelected = selectedShape === shape || (!selectedShape && shape === product.shapes[0]);
+                                    return (
+                                      <button
+                                        key={shape}
+                                        onClick={() => setSelectedShape(shape)}
+                                        style={{
+                                          height: '35px',
+                                          minWidth: '90px',
+                                          padding: '0 12px',
+                                          border: isSelected ? '2px solid #9333ea' : '1px solid #ddd',
+                                          backgroundColor: isSelected ? '#9333ea' : '#fff',
+                                          color: isSelected ? '#fff' : '#333',
+                                          fontSize: '14px',
+                                          fontWeight: isSelected ? '600' : '400',
+                                          cursor: 'pointer',
+                                          borderRadius: '0',
+                                          transition: 'all 0.2s',
+                                          textTransform: 'capitalize'
+                                        }}
+                                      >
+                                        {shape}
+                                      </button>
+                                    );
+                                  })
+                                ) : (
+                                  <button
+                                    style={{
+                                      height: '35px',
+                                      minWidth: '90px',
+                                      padding: '0 12px',
+                                      border: '2px solid #9333ea',
+                                      backgroundColor: '#9333ea',
+                                      color: '#fff',
+                                      fontSize: '14px',
+                                      fontWeight: '600',
+                                      cursor: 'pointer',
+                                      borderRadius: '0'
+                                    }}
+                                  >
+                                    Oval
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Style Selection */}
+                          <div className="variations" style={{ marginBottom: '25px' }}>
+                            <div>
+                              <label style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333', display: 'block', marginBottom: '8px' }}>
+                                STYLE: {(selectedStyle || product.styles?.[0] || 'PAVÉ').toUpperCase()}
+                              </label>
+                              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                {product.styles && product.styles.length > 0 ? (
+                                  product.styles.map((style) => {
+                                    const isSelected = selectedStyle === style || (!selectedStyle && style === product.styles[0]);
+                                    return (
+                                      <button
+                                        key={style}
+                                        onClick={() => setSelectedStyle(style)}
+                                        style={{
+                                          height: '35px',
+                                          minWidth: '90px',
+                                          padding: '0 12px',
+                                          border: isSelected ? '2px solid #9333ea' : '1px solid #ddd',
+                                          backgroundColor: isSelected ? '#9333ea' : '#fff',
+                                          color: isSelected ? '#fff' : '#333',
+                                          fontSize: '14px',
+                                          fontWeight: isSelected ? '600' : '400',
+                                          cursor: 'pointer',
+                                          borderRadius: '0',
+                                          transition: 'all 0.2s',
+                                          textTransform: 'capitalize'
+                                        }}
+                                      >
+                                        {style}
+                                      </button>
+                                    );
+                                  })
+                                ) : (
+                                  <>
+                                    <button
+                                      style={{
+                                        height: '35px',
+                                        minWidth: '90px',
+                                        padding: '0 12px',
+                                        border: '2px solid #9333ea',
+                                        backgroundColor: '#9333ea',
+                                        color: '#fff',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        borderRadius: '0'
+                                      }}
+                                    >
+                                      Pavé
+                                    </button>
+                                    <button
+                                      style={{
+                                        height: '35px',
+                                        minWidth: '90px',
+                                        padding: '0 12px',
+                                        border: '1px solid #ddd',
+                                        backgroundColor: '#fff',
+                                        color: '#333',
+                                        fontSize: '14px',
+                                        cursor: 'pointer',
+                                        borderRadius: '0'
+                                      }}
+                                    >
+                                      Hidden Halo
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Diamond Type Selection */}
+                          <div className="variations" style={{ marginBottom: '25px' }}>
+                            <div>
+                              <label style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#333', display: 'block', marginBottom: '8px' }}>
+                                DIAMOND TYPE: {(selectedDiamondType || product.diamondTypes?.[0] || 'NATURAL').toUpperCase()}
+                              </label>
+                              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                {product.diamondTypes && product.diamondTypes.length > 0 ? (
+                                  product.diamondTypes.map((diamondType) => {
+                                    const isSelected = selectedDiamondType === diamondType || (!selectedDiamondType && diamondType === product.diamondTypes[0]);
+                                    return (
+                                      <button
+                                        key={diamondType}
+                                        onClick={() => setSelectedDiamondType(diamondType)}
+                                        style={{
+                                          height: '35px',
+                                          minWidth: '90px',
+                                          padding: '0 12px',
+                                          border: isSelected ? '2px solid #9333ea' : '1px solid #ddd',
+                                          backgroundColor: isSelected ? '#9333ea' : '#fff',
+                                          color: isSelected ? '#fff' : '#333',
+                                          fontSize: '14px',
+                                          fontWeight: isSelected ? '600' : '400',
+                                          cursor: 'pointer',
+                                          borderRadius: '0',
+                                          transition: 'all 0.2s',
+                                          textTransform: 'capitalize'
+                                        }}
+                                      >
+                                        {diamondType}
+                                      </button>
+                                    );
+                                  })
+                                ) : (
+                                  <>
+                                    <button
+                                      style={{
+                                        height: '35px',
+                                        minWidth: '90px',
+                                        padding: '0 12px',
+                                        border: '2px solid #9333ea',
+                                        backgroundColor: '#9333ea',
+                                        color: '#fff',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        cursor: 'pointer',
+                                        borderRadius: '0'
+                                      }}
+                                    >
+                                      natural
+                                    </button>
+                                    <button
+                                      style={{
+                                        height: '35px',
+                                        minWidth: '90px',
+                                        padding: '0 12px',
+                                        border: '1px solid #ddd',
+                                        backgroundColor: '#fff',
+                                        color: '#333',
+                                        fontSize: '14px',
+                                        cursor: 'pointer',
+                                        borderRadius: '0'
+                                      }}
+                                    >
+                                      Natural
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Choose this setting Button */}
+                        <div style={{ marginTop: '30px', marginBottom: '20px' }}>
+                          <button
+                            onClick={handleAddToCart}
+                            disabled={addToCartLoading}
+                            style={{
+                              width: '100%',
+                              backgroundColor: '#9333ea',
+                              color: '#fff',
+                              fontSize: '16px',
+                              fontWeight: '600',
+                              padding: '16px 24px',
+                              border: 'none',
+                              borderRadius: '0',
+                              cursor: addToCartLoading ? 'wait' : 'pointer',
+                              opacity: addToCartLoading ? 0.6 : 1,
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseOver={(e) => {
+                              if (!addToCartLoading) e.target.style.backgroundColor = '#7e22ce';
+                            }}
+                            onMouseOut={(e) => {
+                              if (!addToCartLoading) e.target.style.backgroundColor = '#9333ea';
+                            }}
+                          >
+                            {addToCartLoading ? 'Adding...' : 'Choose this setting'}
+                          </button>
+                          {addToCartError && (
+                            <div style={{
+                              color: '#c33',
+                              fontSize: '14px',
+                              marginTop: '10px',
+                              padding: '8px',
+                              backgroundColor: '#fee',
+                              borderRadius: '4px'
+                            }}>
+                              {addToCartError}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Secondary Action Buttons */}
+                        <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+                          <button
+                            style={{
+                              flex: 1,
+                              backgroundColor: '#fff',
+                              border: '1px solid #ddd',
+                              color: '#333',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              padding: '12px 16px',
+                              borderRadius: '0',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '8px',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseOver={(e) => {
+                              e.target.style.backgroundColor = '#f9f9f9';
+                            }}
+                            onMouseOut={(e) => {
+                              e.target.style.backgroundColor = '#fff';
+                            }}
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              if (!product || !product.id) return;
+
+                              const selectedVariant = {
+                                ...(selectedSize && { size: selectedSize }),
+                                ...(selectedColor && { color: selectedColor }),
+                                ...(selectedMetalType && { metal_type: selectedMetalType }),
+                                ...(selectedCaratWeight && { carat_weight: selectedCaratWeight }),
+                                ...(selectedDiamondQuality && { diamond_quality: selectedDiamondQuality }),
+                                ...(selectedRingSize && { ring_size: selectedRingSize }),
+                                ...(selectedShape && { shape: selectedShape }),
+                                ...(selectedStyle && { style: selectedStyle }),
+                                ...(selectedDiamondType && { diamond_type: selectedDiamondType }),
+                              };
 
                                 try {
                                   if (isProductInWishlist) {
@@ -911,27 +1122,127 @@ function Details() {
                             >
                               {isProductInWishlist ? (
                                 <>
-                                  <GoHeartFill className="inline mr-2" /> Remove from wishlist
+                                  <GoHeartFill style={{ marginRight: '8px' }} /> Remove from wishlist
                                 </>
                               ) : (
                                 <>
-                                  <GoHeart className="inline mr-2" /> Add to wishlist
+                                  <GoHeart style={{ marginRight: '8px' }} /> Add to wishlist
                                 </>
                               )}
                             </button>
+                          <button
+                            style={{
+                              flex: 1,
+                              backgroundColor: '#fff',
+                              border: '1px solid #ddd',
+                              color: '#333',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              padding: '12px 16px',
+                              borderRadius: '0',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '8px',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseOver={(e) => {
+                              e.target.style.backgroundColor = '#f9f9f9';
+                            }}
+                            onMouseOut={(e) => {
+                              e.target.style.backgroundColor = '#fff';
+                            }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              // TODO: Implement drop a hint functionality
+                              console.log('Drop a hint:', product.id);
+                            }}
+                          >
+                            <i className="fa fa-gift"></i> Drop a Hint
+                          </button>
+                        </div>
+
+                        {/* Returns and Delivery Info */}
+                        <div style={{ marginBottom: '20px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '14px', color: '#666' }}>
+                            <i className="fa fa-refresh"></i>
+                            <span>30-day returns, no fine print.</span>
                           </div>
-                          <div className="btn-compare" data-title="Compare">
-                            <button
-                              className="product-btn"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                // TODO: Implement compare functionality
-                                console.log('Compare:', product.id);
-                              }}
-                            >
-                              Compare
-                            </button>
+                          <div style={{ fontSize: '14px', color: '#666' }}>
+                            Free delivery by Monday, Feb 2.
                           </div>
+                        </div>
+
+                        {/* Help Section */}
+                        <div style={{ marginBottom: '20px', fontSize: '14px', color: '#666' }}>
+                          Need help? <a href="#" style={{ color: '#9333ea', textDecoration: 'none' }} onMouseOver={(e) => e.target.style.textDecoration = 'underline'} onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Chat with us</a> or call <a href="tel:8557204858" style={{ color: '#9333ea', textDecoration: 'none' }} onMouseOver={(e) => e.target.style.textDecoration = 'underline'} onMouseOut={(e) => e.target.style.textDecoration = 'none'}>855.720.4858</a>
+                        </div>
+
+                        {/* Guarantees Section */}
+                        <div style={{ marginBottom: '30px' }}>
+                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px' }}>
+                            <i className="fa fa-calendar" style={{ color: '#9333ea', marginTop: '4px', fontSize: '16px' }}></i>
+                            <div style={{ fontSize: '14px', fontWeight: '600', color: '#333' }}>
+                              Free 30-day returns & 1-year resizing
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px' }}>
+                            <i className="fa fa-diamond" style={{ color: '#9333ea', marginTop: '4px', fontSize: '16px' }}></i>
+                            <div style={{ fontSize: '14px', fontWeight: '600', color: '#333' }}>
+                              Guaranteed for life
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                            <i className="fa fa-shield" style={{ color: '#9333ea', marginTop: '4px', fontSize: '16px' }}></i>
+                            <div style={{ fontSize: '14px', fontWeight: '600', color: '#333' }}>
+                              Authenticity inspection
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Collapsible Sections */}
+                        <div>
+                          <details style={{ borderBottom: '1px solid #e5e5e5', paddingBottom: '12px', marginBottom: '12px' }}>
+                            <summary style={{ cursor: 'pointer', fontSize: '14px', fontWeight: '600', color: '#333', display: 'flex', alignItems: 'center', justifyContent: 'space-between', listStyle: 'none' }}>
+                              <span>Product Information</span>
+                              <i className="fa fa-chevron-down" style={{ fontSize: '10px', transition: 'transform 0.3s' }}></i>
+                            </summary>
+                            <div style={{ marginTop: '12px', fontSize: '14px', color: '#666' }}>
+                              {Object.keys(product.additionalInfo || {}).length > 0 ? (
+                                <table style={{ width: '100%' }}>
+                                  <tbody>
+                                    {Object.entries(product.additionalInfo).map(([key, value]) => (
+                                      <tr key={key} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600' }}>{key}</th>
+                                        <td style={{ padding: '8px 0' }}>{String(value)}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              ) : (
+                                <div style={{ color: '#999' }}>No additional information available.</div>
+                              )}
+                            </div>
+                          </details>
+                          <details style={{ borderBottom: '1px solid #e5e5e5', paddingBottom: '12px', marginBottom: '12px' }}>
+                            <summary style={{ cursor: 'pointer', fontSize: '14px', fontWeight: '600', color: '#333', display: 'flex', alignItems: 'center', justifyContent: 'space-between', listStyle: 'none' }}>
+                              <span>100% money back guarantee</span>
+                              <i className="fa fa-chevron-down" style={{ fontSize: '10px', transition: 'transform 0.3s' }}></i>
+                            </summary>
+                            <div style={{ marginTop: '12px', fontSize: '14px', color: '#666' }}>
+                              If you're not satisfied, return it within 30 days for a full refund. No questions asked.
+                            </div>
+                          </details>
+                          <details style={{ borderBottom: '1px solid #e5e5e5', paddingBottom: '12px' }}>
+                            <summary style={{ cursor: 'pointer', fontSize: '14px', fontWeight: '600', color: '#333', display: 'flex', alignItems: 'center', justifyContent: 'space-between', listStyle: 'none' }}>
+                              <span>Free returns and resizing</span>
+                              <i className="fa fa-chevron-down" style={{ fontSize: '10px', transition: 'transform 0.3s' }}></i>
+                            </summary>
+                            <div style={{ marginTop: '12px', fontSize: '14px', color: '#666' }}>
+                              We offer free return shipping and one free resizing within the first year.
+                            </div>
+                          </details>
                         </div>
 
                         {/* Product Meta */}

@@ -330,3 +330,77 @@
   text-decoration: underline;
 }
 
+/* Purple selected state for customization options */
+.variations .attributes ul.text li span.selected.bg-purple-600 {
+  background-color: #9333ea !important;
+  border-color: #9333ea !important;
+  color: white !important;
+}
+
+/* Customize section styling */
+.customize-section {
+  margin-top: 2rem;
+}
+
+.customize-section h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Matching band banner */
+.bg-purple-100 {
+  background-color: #f3e8ff;
+}
+
+.border-purple-300 {
+  border-color: #c084fc;
+}
+
+.text-purple-800 {
+  color: #6b21a8;
+}
+
+.text-purple-600 {
+  color: #9333ea;
+}
+
+/* Collapsible sections */
+details summary {
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary::marker {
+  display: none;
+}
+
+details[open] summary i.fa-chevron-down {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+/* Remove default details marker */
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary::marker {
+  display: none;
+}
+
+/* Product info section spacing */
+.product-info {
+  padding-left: 30px;
+}
+
+@media (max-width: 768px) {
+  .product-info {
+    padding-left: 15px;
+    padding-top: 20px;
+  }
+}
+
