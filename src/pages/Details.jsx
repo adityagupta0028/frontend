@@ -136,7 +136,6 @@ function Details() {
         price: p.discounted_price || p.original_price || 0,
         originalPrice: p.original_price || null,
         images: images.length > 0 ? images : ['/media/product/1.jpg'],
-        sku: p.sku || 'N/A',
         category: p.category_name || 'Uncategorized',
         categoryId: p.category_id,
         tags: p.tags || [],
@@ -158,6 +157,23 @@ function Details() {
         matchingBandAvailable: p.matching_band_available || false,
         diamondColorGrade: p.diamond_color_grade || '',
         diamondClarityGrade: p.diamond_clarity_grade || '',
+        // Product Information fields
+        sku: p.sku || p.product_id || 'N/A',
+        sizesAvailable: p.ring_size && Array.isArray(p.ring_size) && p.ring_size.length > 0 
+          ? `${Math.min(...p.ring_size)} To ${Math.max(...p.ring_size)}` 
+          : (p.ring_size ? String(p.ring_size) : 'N/A'),
+        metal: selectedMetalType || (p.metal_type && Array.isArray(p.metal_type) ? p.metal_type[0] : (p.metal_type || 'N/A')),
+        diamondClarity: p.diamond_clarity_grade || (p.diamond_quality && Array.isArray(p.diamond_quality) ? p.diamond_quality[0]?.split(',')[1]?.trim() : '') || 'N/A',
+        diamondColor: p.diamond_color_grade || (p.diamond_quality && Array.isArray(p.diamond_quality) ? p.diamond_quality[0]?.split(',')[0]?.replace(/Best|Better|Good/gi, '').trim() : '') || 'N/A',
+        diamondType: selectedDiamondType || (p.diamond_origin && Array.isArray(p.diamond_origin) ? (p.diamond_origin[0]?.toLowerCase().includes('lab') ? 'Lab' : 'Natural') : (p.diamond_origin ? (p.diamond_origin.toLowerCase().includes('lab') ? 'Lab' : 'Natural') : 'N/A')),
+        lab: p.lab || p.certification_lab || 'IGI',
+        centerDiamondCut: p.center_stone_diamond_quality || p.center_diamond_cut || 'Rare Carat Ideal',
+        centerDiamondColor: p.center_stone_color || p.diamond_color_grade || 'F',
+        centerDiamondClarity: p.center_stone_clarity || p.diamond_clarity_grade || 'VS+',
+        centerDiamondShape: selectedShape || (p.center_stone_shape || (p.shapes && p.shapes.length > 0 ? p.shapes[0] : 'Round')),
+        centerCarat: selectedCaratWeight || (p.carat_weight && Array.isArray(p.carat_weight) ? p.carat_weight[0] : (p.carat_weight || p.center_stone_min_weight || '1')),
+        numberOfDiamonds: p.number_of_diamonds || p.side_stone_quantity || '24',
+        totalCaratWeightMin: p.total_carat_weight_min || p.side_stone_total_carat || '0.3',
         // For subtitle
         currentMetal,
         currentDiamondType,
@@ -405,6 +421,55 @@ function Details() {
     }
     return 0;
   }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger to force recalculation
+
+  // Calculate dynamic product information based on selected values
+  const dynamicProductInfo = useMemo(() => {
+    if (!product) return null;
+
+    // Get sizes available
+    const sizesAvailable = product.ringSizes && product.ringSizes.length > 0
+      ? `${Math.min(...product.ringSizes)} To ${Math.max(...product.ringSizes)}`
+      : (product.sizesAvailable || 'N/A');
+
+    // Get metal - use selected or default
+    const metal = selectedMetalType || product.metal || 'N/A';
+
+    // Get diamond clarity - use selected quality or default
+    const diamondClarity = selectedDiamondQuality 
+      ? (selectedDiamondQuality.includes(',') ? selectedDiamondQuality.split(',')[1]?.trim() : selectedDiamondQuality)
+      : (product.diamondClarity || product.diamondClarityGrade || 'N/A');
+
+    // Get diamond color - use selected quality or default
+    const diamondColor = selectedDiamondQuality
+      ? (selectedDiamondQuality.includes(',') ? selectedDiamondQuality.split(',')[0]?.replace(/Best|Better|Good/gi, '').trim() : selectedDiamondQuality)
+      : (product.diamondColor || product.diamondColorGrade || 'N/A');
+
+    // Get diamond type - use selected or default
+    const diamondType = selectedDiamondType || product.diamondType || 'N/A';
+
+    // Get center carat - use selected or default
+    const centerCarat = selectedCaratWeight || product.centerCarat || '1';
+
+    // Get center diamond shape - use selected or default
+    const centerDiamondShape = selectedShape || product.centerDiamondShape || 'Round';
+
+    return {
+      sku: product.sku || 'N/A',
+      sizesAvailable,
+      metal,
+      diamondClarity,
+      diamondColor,
+      diamondType,
+      lab: product.lab || 'IGI',
+      centerDiamondCut: product.centerDiamondCut || 'Rare Carat Ideal',
+      centerDiamondColor: product.centerDiamondColor || product.diamondColorGrade || 'F',
+      centerDiamondClarity: product.centerDiamondClarity || product.diamondClarityGrade || 'VS+',
+      centerDiamondShape,
+      centerCarat,
+      numberOfDiamonds: product.numberOfDiamonds || '24',
+      totalCaratWeightMin: product.totalCaratWeightMin || '0.3'
+    };
+  }, [product, selectedMetalType, selectedDiamondQuality, selectedDiamondType, selectedCaratWeight, selectedShape]);
 
   // Listen for cart updates from other components (for guest users) - NO PAGE REFRESH
   useEffect(() => {
@@ -1209,15 +1274,147 @@ function Details() {
                               <i className="fa fa-chevron-down" style={{ fontSize: '10px', transition: 'transform 0.3s' }}></i>
                             </summary>
                             <div style={{ marginTop: '12px', fontSize: '14px', color: '#666' }}>
-                              {Object.keys(product.additionalInfo || {}).length > 0 ? (
-                                <table style={{ width: '100%' }}>
+                              {dynamicProductInfo ? (
+                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                   <tbody>
-                                    {Object.entries(product.additionalInfo).map(([key, value]) => (
-                                      <tr key={key} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600' }}>{key}</th>
-                                        <td style={{ padding: '8px 0' }}>{String(value)}</td>
+                                    {/* SKU */}
+                                    {dynamicProductInfo.sku && dynamicProductInfo.sku !== 'N/A' && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>SKU</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.sku}</td>
                                       </tr>
-                                    ))}
+                                    )}
+                                    
+                                    {/* Sizes Available */}
+                                    {dynamicProductInfo.sizesAvailable && dynamicProductInfo.sizesAvailable !== 'N/A' && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Sizes Available</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.sizesAvailable}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Metal */}
+                                    {dynamicProductInfo.metal && dynamicProductInfo.metal !== 'N/A' && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Metal</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.metal}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Diamond Clarity */}
+                                    {dynamicProductInfo.diamondClarity && dynamicProductInfo.diamondClarity !== 'N/A' && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Diamond Clarity</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.diamondClarity}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Diamond Color */}
+                                    {dynamicProductInfo.diamondColor && dynamicProductInfo.diamondColor !== 'N/A' && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Diamond Color</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.diamondColor}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Diamond Type */}
+                                    {dynamicProductInfo.diamondType && dynamicProductInfo.diamondType !== 'N/A' && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Diamond Type</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.diamondType}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Lab */}
+                                    {dynamicProductInfo.lab && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Lab</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.lab}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Center Diamond Cut */}
+                                    {dynamicProductInfo.centerDiamondCut && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Center Diamond Cut</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.centerDiamondCut}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Center Diamond Color */}
+                                    {dynamicProductInfo.centerDiamondColor && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Center Diamond Color</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.centerDiamondColor}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Center Diamond Clarity */}
+                                    {dynamicProductInfo.centerDiamondClarity && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Center Diamond Clarity</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.centerDiamondClarity}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Center Diamond Shape */}
+                                    {dynamicProductInfo.centerDiamondShape && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Center Diamond Shape</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.centerDiamondShape}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Center Carat */}
+                                    {dynamicProductInfo.centerCarat && (
+                                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Center Carat</th>
+                                        <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.centerCarat}</td>
+                                      </tr>
+                                    )}
+                                    
+                                    {/* Diamond Information Section */}
+                                    {(dynamicProductInfo.numberOfDiamonds || dynamicProductInfo.totalCaratWeightMin) && (
+                                      <>
+                                        <tr>
+                                          <td colSpan="2" style={{ padding: '16px 0 8px 0', fontWeight: '600', fontSize: '15px' }}>Diamond information</td>
+                                        </tr>
+                                        
+                                        {/* Number of Diamonds */}
+                                        {dynamicProductInfo.numberOfDiamonds && (
+                                          <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                            <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Number of Diamonds</th>
+                                            <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.numberOfDiamonds}</td>
+                                          </tr>
+                                        )}
+                                        
+                                        {/* Total Carat Weight (min) */}
+                                        {dynamicProductInfo.totalCaratWeightMin && (
+                                          <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                            <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>Total Carat Weight (min)</th>
+                                            <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{dynamicProductInfo.totalCaratWeightMin}</td>
+                                          </tr>
+                                        )}
+                                      </>
+                                    )}
+                                    
+                                    {/* Additional Info from additionalInfo object */}
+                                    {product.additionalInfo && Object.keys(product.additionalInfo).length > 0 && (
+                                      <>
+                                        {Object.entries(product.additionalInfo).map(([key, value]) => {
+                                          // Skip if already displayed above
+                                          const displayedKeys = ['SKU', 'Sizes Available', 'Metal', 'Diamond Clarity', 'Diamond Color', 'Diamond Type', 'Lab', 'Center Diamond Cut', 'Center Diamond Color', 'Center Diamond Clarity', 'Center Diamond Shape', 'Center Carat', 'Number of Diamonds', 'Total Carat Weight (min)'];
+                                          if (displayedKeys.includes(key)) return null;
+                                          
+                                          return (
+                                            <tr key={key} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                              <th style={{ textAlign: 'left', padding: '8px 16px 8px 0', fontWeight: '600', width: '40%', verticalAlign: 'top' }}>{key}</th>
+                                              <td style={{ padding: '8px 0', verticalAlign: 'top' }}>{String(value)}</td>
+                                            </tr>
+                                          );
+                                        })}
+                                      </>
+                                    )}
                                   </tbody>
                                 </table>
                               ) : (
