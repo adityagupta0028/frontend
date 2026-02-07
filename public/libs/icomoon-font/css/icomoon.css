@@ -1,13 +1,13 @@
 @font-face {
-  font-family: icomoon;
-  src: url(../fonts/icomoon6dbe.eot?fzv6fp);
-  src: url(../fonts/icomoon6dbe.eot?fzv6fp#iefix) format("embedded-opentype"), url(../fonts/icomoon6dbe.ttf?fzv6fp) format("truetype"), url(../fonts/icomoon6dbe.woff?fzv6fp) format("woff"), url(../fonts/icomoon6dbe.svg?fzv6fp#icomoon) format("svg");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-family: icomoon;
+    src: url(../fonts/icomoon6dbe.eot?fzv6fp);
+    src: url(../fonts/icomoon6dbe.eot?fzv6fp#iefix) format("embedded-opentype"), url(../fonts/icomoon6dbe.ttf?fzv6fp) format("truetype"), url(../fonts/icomoon6dbe.woff?fzv6fp) format("woff"), url(../fonts/icomoon6dbe.svg?fzv6fp#icomoon) format("svg");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
-[class*=" icon-"], 
+[class*=" icon-"],
 [class^=icon-] {
     font-family: icomoon;
     speak: none;
@@ -17,7 +17,7 @@
     text-transform: none;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing:grayscale
+    -moz-osx-font-smoothing: grayscale
 }
 
 .icon-compare:before {

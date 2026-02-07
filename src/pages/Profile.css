@@ -46,7 +46,7 @@
   font-weight: 700;
   color: #2C2C2C;
   margin: 0 0 15px 0;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'inter', sans-serif;
 }
 
 .title-divider {
@@ -361,6 +361,7 @@
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -654,4 +655,3 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-

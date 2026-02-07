@@ -83,7 +83,7 @@
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e5e5e5;
-  font-family: 'Lato', sans-serif;
+  font-family: 'inter', sans-serif;
 }
 
 .site-navigation .sub-menu p {
@@ -91,13 +91,17 @@
   font-weight: 600;
   color: #2C2C2C;
   margin-bottom: 15px;
-  font-family: 'Lato', sans-serif;
+  font-family: 'inter', sans-serif;
 }
 
 .site-navigation .sub-menu ul {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+.chevron-down {
+  color: #2C2C2C;
 }
 
 .site-navigation .sub-menu li {
@@ -108,7 +112,7 @@
   color: #2C2C2C;
   text-decoration: none;
   font-size: 14px;
-  font-family: 'Lato', sans-serif;
+  font-family: 'inter', sans-serif;
   transition: color 0.3s ease;
   display: block;
 }
@@ -129,7 +133,7 @@
   text-transform: uppercase;
   border: 2px solid #000;
   transition: all 0.3s ease;
-  font-family: 'Lato', sans-serif;
+  font-family: 'inter', sans-serif;
   text-align: center;
 }
 
@@ -190,12 +194,12 @@
 }
 
 /* Ensure navbar items stay visible */
-.site-navigation ul>li.level-0.menu-item-has-children > a {
+.site-navigation ul>li.level-0.menu-item-has-children>a {
   position: relative;
   z-index: 1003;
 }
 
-.site-navigation ul>li.level-0.menu-item-has-children > a span {
+.site-navigation ul>li.level-0.menu-item-has-children>a span {
   position: relative;
   z-index: 1003;
 }
@@ -248,4 +252,3 @@
   display: block;
   width: 100%;
 }
-

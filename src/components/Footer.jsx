@@ -10,7 +10,7 @@ function Footer() {
               <div className="row">
                 <div className="col-lg-3 col-md-6 column-1">
                   <div className="block block-menu m-b-20">
-                    <h2 className="block-title">Contact Us</h2>
+                    <h2 className="block-title"><style>font-family: 'inter', sans-serif;</style>Contact Us</h2>
                     <div className="block-content">
                       <ul>
                         <li>

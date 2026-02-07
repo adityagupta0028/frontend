@@ -16,7 +16,7 @@ export default function SubCategoryCarousel({ data }) {
 
 
   return (
-    <section className="section section-padding top-border p-t-5">
+    <section className="section section-padding top-border p-t-5 m-b-0">
       <div className="section-container">
         <div className="block block-posts slider">
           <div className="block-widget-wrap">

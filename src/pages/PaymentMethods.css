@@ -46,7 +46,7 @@
   font-weight: 700;
   color: #2C2C2C;
   margin: 0;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'inter', sans-serif;
 }
 
 /* Payment Methods Container */
@@ -425,4 +425,3 @@ select.form-input {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-

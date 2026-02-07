@@ -8,450 +8,450 @@ import './Header.css';
 
 const menusData = [
   {
-    menu:"Home",
-    href:'/',
-    subMenus:null,
+    menu: "Home",
+    href: '/',
+    subMenus: null
   },
+  // {
+  //   menu:"Shop",
+  //   href:'/',
+  //   subMenus:{
+  //     rings:{
+  //       title:"Curated Rings",
+  //       styles:[
+  //         {
+  //           name:'Solitaire',
+  //           link:'Solitaire'
+  //         },
+  //         {
+  //           name:'Side Stone',
+  //           link:'side-stone'
+  //         },
+  //         {
+  //           name:'Halo',
+  //           link:'halo'
+  //         },
+  //         {
+  //           name:'Vintage',
+  //           link:'vintage'
+  //         },
+  //         {
+  //           name:'Botanical',
+  //           link:'botanical'
+  //         },
+  //       ],
+  //       shapes:[
+  //         {
+  //           name:'Round',
+  //           link:'round'
+  //         },
+  //         {
+  //           name:'Princess',
+  //           link:'princess'
+  //         },
+  //         {
+  //           name:'Oval',
+  //           link:'oval'
+  //         },
+  //         {
+  //           name:'Cushio',
+  //           link:'cushio'
+  //         },
+  //         {
+  //           name:'Radiant',
+  //           link:'radiant'
+  //         },
+  //         {
+  //           name:'Pear',
+  //           link:'pear'
+  //         },
+  //         {
+  //           name:'Assher',
+  //           link:'Assher'
+  //         },
+  //         {
+  //           name:'Heart',
+  //           link:'Heart'
+  //         },
+  //         {
+  //           name:'Vintage Cuts',
+  //           link:'Vintage Cuts'
+  //         },
+  //       ],
+  //     },
+  //     studio:{
+  //       title:"Design Studio",
+  //       gallery:{
+  //           imgSrc:"/media/site-headdder.jpg",
+  //           alt:"gallery image"
+  //         },
+  //       diamond:[
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //       ],
+  //       jewellery:[
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //       ],
+  //     }
+  //   },
+
+  // },
   {
-    menu:"Shop",
-    href:'/',
-    subMenus:{
-      rings:{
-        title:"Curated Rings",
-        styles:[
+    menu: "Engagement",
+    href: '/engagement-rings',
+    subMenus: {
+      rings: {
+        title: "Curated Rings",
+        styles: [
           {
-            name:'Solitaire',
-            link:'Solitaire'
+            name: 'Solitaire',
+            link: 'Solitaire'
           },
           {
-            name:'Side Stone',
-            link:'side-stone'
+            name: 'Side Stone',
+            link: 'side-stone'
           },
           {
-            name:'Halo',
-            link:'halo'
+            name: 'Halo',
+            link: 'halo'
           },
           {
-            name:'Vintage',
-            link:'vintage'
+            name: 'Vintage',
+            link: 'vintage'
           },
           {
-            name:'Botanical',
-            link:'botanical'
+            name: 'Botanical',
+            link: 'botanical'
           },
         ],
-        shapes:[
+        shapes: [
           {
-            name:'Round',
-            link:'round'
+            name: 'Round',
+            link: 'round'
           },
           {
-            name:'Princess',
-            link:'princess'
+            name: 'Princess',
+            link: 'princess'
           },
           {
-            name:'Oval',
-            link:'oval'
+            name: 'Oval',
+            link: 'oval'
           },
           {
-            name:'Cushio',
-            link:'cushio'
+            name: 'Cushio',
+            link: 'cushio'
           },
           {
-            name:'Radiant',
-            link:'radiant'
+            name: 'Radiant',
+            link: 'radiant'
           },
           {
-            name:'Pear',
-            link:'pear'
+            name: 'Pear',
+            link: 'pear'
           },
           {
-            name:'Assher',
-            link:'Assher'
+            name: 'Assher',
+            link: 'Assher'
           },
           {
-            name:'Heart',
-            link:'Heart'
+            name: 'Heart',
+            link: 'Heart'
           },
           {
-            name:'Vintage Cuts',
-            link:'Vintage Cuts'
+            name: 'Vintage Cuts',
+            link: 'Vintage Cuts'
           },
         ],
       },
-      studio:{
-        title:"Design Studio",
-        gallery:{
-            imgSrc:"/media/site-headdder.jpg",
-            alt:"gallery image"
-          },
-        diamond:[
+      studio: {
+        title: "Design Studio",
+        gallery: {
+          imgSrc: "/media/site-headdder.jpg",
+          alt: "gallery image"
+        },
+        diamond: [
           {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
+          },
+          {
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
         ],
-        jewellery:[
+        jewellery: [
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
         ],
       }
     },
-    
+
   },
   {
-    menu:"Engagement",
-    href:'/engagement-rings',
-    subMenus:{
-      rings:{
-        title:"Curated Rings",
-        styles:[
+    menu: "Wedding",
+    href: '/wedding',
+    subMenus: {
+      rings: {
+        title: "Curated Rings",
+        styles: [
           {
-            name:'Solitaire',
-            link:'Solitaire'
+            name: 'Solitaire',
+            link: 'Solitaire'
           },
           {
-            name:'Side Stone',
-            link:'side-stone'
+            name: 'Side Stone',
+            link: 'side-stone'
           },
           {
-            name:'Halo',
-            link:'halo'
+            name: 'Halo',
+            link: 'halo'
           },
           {
-            name:'Vintage',
-            link:'vintage'
+            name: 'Vintage',
+            link: 'vintage'
           },
           {
-            name:'Botanical',
-            link:'botanical'
+            name: 'Botanical',
+            link: 'botanical'
           },
         ],
-        shapes:[
+        shapes: [
           {
-            name:'Round',
-            link:'round'
+            name: 'Round',
+            link: 'round'
           },
           {
-            name:'Princess',
-            link:'princess'
+            name: 'Princess',
+            link: 'princess'
           },
           {
-            name:'Oval',
-            link:'oval'
+            name: 'Oval',
+            link: 'oval'
           },
           {
-            name:'Cushio',
-            link:'cushio'
+            name: 'Cushio',
+            link: 'cushio'
           },
           {
-            name:'Radiant',
-            link:'radiant'
+            name: 'Radiant',
+            link: 'radiant'
           },
           {
-            name:'Pear',
-            link:'pear'
+            name: 'Pear',
+            link: 'pear'
           },
           {
-            name:'Assher',
-            link:'Assher'
+            name: 'Assher',
+            link: 'Assher'
           },
           {
-            name:'Heart',
-            link:'Heart'
+            name: 'Heart',
+            link: 'Heart'
           },
           {
-            name:'Vintage Cuts',
-            link:'Vintage Cuts'
+            name: 'Vintage Cuts',
+            link: 'Vintage Cuts'
           },
         ],
       },
-      studio:{
-        title:"Design Studio",
-        gallery:{
-            imgSrc:"/media/site-headdder.jpg",
-            alt:"gallery image"
-          },
-        diamond:[
+      studio: {
+        title: "Design Studio",
+        gallery: {
+          imgSrc: "/media/site-headdder.jpg",
+          alt: "gallery image"
+        },
+        diamond: [
           {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
+          },
+          {
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
         ],
-        jewellery:[
+        jewellery: [
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
         ],
       }
     },
-    
+
   },
   {
-    menu:"Wedding",
-    href:'/wedding',
-    subMenus:{
-      rings:{
-        title:"Curated Rings",
-        styles:[
+    menu: "Jewelry",
+    href: '/jewelry',
+    subMenus: {
+      rings: {
+        title: "Curated Rings",
+        styles: [
           {
-            name:'Solitaire',
-            link:'Solitaire'
+            name: 'Solitaire',
+            link: 'Solitaire'
           },
           {
-            name:'Side Stone',
-            link:'side-stone'
+            name: 'Side Stone',
+            link: 'side-stone'
           },
           {
-            name:'Halo',
-            link:'halo'
+            name: 'Halo',
+            link: 'halo'
           },
           {
-            name:'Vintage',
-            link:'vintage'
+            name: 'Vintage',
+            link: 'vintage'
           },
           {
-            name:'Botanical',
-            link:'botanical'
+            name: 'Botanical',
+            link: 'botanical'
           },
         ],
-        shapes:[
+        shapes: [
           {
-            name:'Round',
-            link:'round'
+            name: 'Round',
+            link: 'round'
           },
           {
-            name:'Princess',
-            link:'princess'
+            name: 'Princess',
+            link: 'princess'
           },
           {
-            name:'Oval',
-            link:'oval'
+            name: 'Oval',
+            link: 'oval'
           },
           {
-            name:'Cushio',
-            link:'cushio'
+            name: 'Cushio',
+            link: 'cushio'
           },
           {
-            name:'Radiant',
-            link:'radiant'
+            name: 'Radiant',
+            link: 'radiant'
           },
           {
-            name:'Pear',
-            link:'pear'
+            name: 'Pear',
+            link: 'pear'
           },
           {
-            name:'Assher',
-            link:'Assher'
+            name: 'Assher',
+            link: 'Assher'
           },
           {
-            name:'Heart',
-            link:'Heart'
+            name: 'Heart',
+            link: 'Heart'
           },
           {
-            name:'Vintage Cuts',
-            link:'Vintage Cuts'
+            name: 'Vintage Cuts',
+            link: 'Vintage Cuts'
           },
         ],
       },
-      studio:{
-        title:"Design Studio",
-        gallery:{
-            imgSrc:"/media/site-headdder.jpg",
-            alt:"gallery image"
-          },
-        diamond:[
+      studio: {
+        title: "Design Studio",
+        gallery: {
+          imgSrc: "/media/site-headdder.jpg",
+          alt: "gallery image"
+        },
+        diamond: [
           {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
+          },
+          {
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
         ],
-        jewellery:[
+        jewellery: [
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
           {
-            title:'Lorem Ipsum 1',
-            url:"",
+            title: 'Lorem Ipsum 1',
+            url: "",
           },
         ],
       }
     },
-    
+
   },
   {
-    menu:"Jewelry",
-    href:'/jewelry',
-    subMenus:{
-      rings:{
-        title:"Curated Rings",
-        styles:[
-          {
-            name:'Solitaire',
-            link:'Solitaire'
-          },
-          {
-            name:'Side Stone',
-            link:'side-stone'
-          },
-          {
-            name:'Halo',
-            link:'halo'
-          },
-          {
-            name:'Vintage',
-            link:'vintage'
-          },
-          {
-            name:'Botanical',
-            link:'botanical'
-          },
-        ],
-        shapes:[
-          {
-            name:'Round',
-            link:'round'
-          },
-          {
-            name:'Princess',
-            link:'princess'
-          },
-          {
-            name:'Oval',
-            link:'oval'
-          },
-          {
-            name:'Cushio',
-            link:'cushio'
-          },
-          {
-            name:'Radiant',
-            link:'radiant'
-          },
-          {
-            name:'Pear',
-            link:'pear'
-          },
-          {
-            name:'Assher',
-            link:'Assher'
-          },
-          {
-            name:'Heart',
-            link:'Heart'
-          },
-          {
-            name:'Vintage Cuts',
-            link:'Vintage Cuts'
-          },
-        ],
-      },
-      studio:{
-        title:"Design Studio",
-        gallery:{
-            imgSrc:"/media/site-headdder.jpg",
-            alt:"gallery image"
-          },
-        diamond:[
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-        ],
-        jewellery:[
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-          {
-            title:'Lorem Ipsum 1',
-            url:"",
-          },
-        ],
-      }
-    },
-    
+    menu: "Contact",
+    href: '/',
+    subMenus: null,
   },
   {
-    menu:"Contact",
-    href:'/',
-    subMenus:null,
-  },
-  {
-    menu:"About Us",
-    href:'/',
-    subMenus:null,
+    menu: "About Us",
+    href: '/',
+    subMenus: null,
   },
 ];
 
 function Header() {
   // Check if user is logged in
   const isLoggedIn = !!localStorage.getItem('customerToken');
-  
+
   // State to trigger cart recalculation (NO PAGE REFRESH)
   const [cartUpdateTrigger, setCartUpdateTrigger] = useState(0);
   const [wishlistUpdateTrigger, setWishlistUpdateTrigger] = useState(0);
-  
+
   // Fetch cart from API if logged in
   const { data: cartData, refetch: refetchCart } = useGetCartQuery(undefined, {
     skip: !isLoggedIn,
@@ -462,7 +462,7 @@ function Header() {
   const { data: wishlistData, refetch: refetchWishlist } = useGetWishlistQuery(undefined, {
     skip: !isLoggedIn,
   });
-  
+
   // Get cart count
   const cartCount = useMemo(() => {
     if (isLoggedIn && cartData?.data?.items) {
@@ -473,7 +473,7 @@ function Header() {
     }
     return 0;
   }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger for real-time updates
-  
+
   // Get cart items for mini cart dropdown
   const cartItems = useMemo(() => {
     if (isLoggedIn && cartData?.data?.items) {
@@ -483,7 +483,7 @@ function Header() {
     }
     return [];
   }, [isLoggedIn, cartData, cartUpdateTrigger]); // Include cartUpdateTrigger for real-time updates
-  
+
   // Calculate cart total
   const cartTotal = useMemo(() => {
     const items = isLoggedIn && cartData?.data?.items ? cartData.data.items : (!isLoggedIn ? getLocalCart() : []);
@@ -502,7 +502,7 @@ function Header() {
     }
     return 0;
   }, [isLoggedIn, wishlistData, wishlistUpdateTrigger]);
-  
+
   // Get product image
   const getProductImage = (item) => {
     if (item.productId?.images && item.productId.images.length > 0) {
@@ -511,12 +511,12 @@ function Header() {
     }
     return '/media/product/1.jpg';
   };
-  
+
   // Get product name
   const getProductName = (item) => {
     return item.productId?.product_name || 'Product';
   };
-  
+
   // Listen for cart updates - NO PAGE REFRESH, just state updates
   useEffect(() => {
     const handleCartUpdate = () => {
@@ -604,17 +604,17 @@ function Header() {
                                 const productName = getProductName(item);
                                 const itemPrice = (item.discountedPrice || item.price || 0) * (item.quantity || 1);
                                 const productId = item.productId?._id || item.productId;
-                                
+
                                 return (
                                   <li key={itemId} className="mini-cart-item">
-                                    <Link 
-                                      to={`/product/details/${productId}`} 
+                                    <Link
+                                      to={`/product/details/${productId}`}
                                       className="product-image"
                                     >
                                       <img width="600" height="600" src={productImage} alt={productName} />
                                     </Link>
-                                    <Link 
-                                      to={`/product/details/${productId}`} 
+                                    <Link
+                                      to={`/product/details/${productId}`}
                                       className="product-name"
                                     >
                                       {productName}
@@ -747,17 +747,17 @@ function Header() {
                                     const productName = getProductName(item);
                                     const itemPrice = (item.discountedPrice || item.price || 0) * (item.quantity || 1);
                                     const productId = item.productId?._id || item.productId;
-                                    
+
                                     return (
                                       <li key={itemId} className="mini-cart-item">
-                                        <Link 
-                                          to={`/product/details/${productId}`} 
+                                        <Link
+                                          to={`/product/details/${productId}`}
                                           className="product-image"
                                         >
                                           <img width="600" height="600" src={productImage} alt={productName} />
                                         </Link>
-                                        <Link 
-                                          to={`/product/details/${productId}`} 
+                                        <Link
+                                          to={`/product/details/${productId}`}
                                           className="product-name"
                                         >
                                           {productName}
@@ -801,119 +801,119 @@ function Header() {
             <div className="site-navigation">
               <nav id="main-navigation">
                 <ul id="menu-main-menu" className="menu">
-                    {
-                      menusData.map((menu, idx)=>(
-                        <li className={`level-0 menu-item ${menu.subMenus ? 'menu-item-has-children' : ''}`} key={idx}>
-                          <Link to={menu.href}><span className="menu-item-text">{menu.menu}</span></Link>
-                          {menu?.subMenus && (
-                            <ul className="sub-menu !top-[38px]">
-                              <div className="container row mx-auto">
-                                <div className="col-md-6">
-                                  <h3 className="border-bottom pb-2 fw-bold">{menu.subMenus.rings.title}</h3>
-                                  <div className="row">
-                                    <div className="col-md-6">
-                                      <p>Shop by Style</p>
-                                      {menu.subMenus.rings.styles.map((item, itemIdx)=>(
-                                        <li className="level-1 menu-item px-0">
-                                          <Link to="/shop"><span className="menu-item-text">{item.name}</span></Link>
+                  {
+                    menusData.map((menu, idx) => (
+                      <li className={`level-0 menu-item ${menu.subMenus ? 'menu-item-has-children' : ''}`} key={idx}>
+                        <Link to={menu.href}><span className="menu-item-text">{menu.menu}</span></Link>
+                        {menu?.subMenus && (
+                          <ul className="sub-menu !top-[38px]">
+                            <div className="container row mx-auto">
+                              <div className="col-md-6">
+                                <h3 className="border-bottom pb-2 fw-bold">{menu.subMenus.rings.title}</h3>
+                                <div className="row">
+                                  <div className="col-md-6">
+                                    <p>Shop by Style</p>
+                                    {menu.subMenus.rings.styles.map((item, itemIdx) => (
+                                      <li className="level-1 menu-item px-0">
+                                        <Link to="/shop"><span className="menu-item-text">{item.name}</span></Link>
+                                      </li>
+                                    ))}
+
+                                  </div>
+                                  <div className="col-md-6">
+                                    <p>Shop by Shape</p>
+                                    <div className="row">
+                                      <div className="col-6 px-0">
+                                        {menu.subMenus.rings.shapes.map((item, itemIdx) => {
+                                          if (itemIdx < 5) {
+                                            return (
+                                              <li className="level-1 menu-item px-0">
+                                                <Link to="/shop">
+                                                  <span className="menu-item-text flex">
+                                                    <span class="thumb-icon mr-[10px] flex items-center">
+                                                      <img src="https://images.grownbrilliance.com/images/menu/round.svg" loading="lazy" width="20" height="20" alt="" class="lz-img-custom !w-[20px] !h-[20px] mb-0" />
+                                                    </span>
+                                                    {item.name}
+                                                  </span>
+                                                </Link>
+                                              </li>
+                                            )
+                                          }
+                                        }
+                                        )}
+                                      </div>
+
+
+                                      <div className="col-6">
+                                        {menu.subMenus.rings.shapes.map((item, itemIdx) => {
+                                          if (itemIdx >= 5) {
+                                            return (
+                                              <li className="level-1 menu-item px-0">
+                                                <Link to="/shop">
+                                                  <span className="menu-item-text flex">
+                                                    <span class="thumb-icon mr-[10px] flex items-center">
+                                                      <img src="https://images.grownbrilliance.com/images/menu/round.svg" loading="lazy" width="20" height="20" alt="" class="lz-img-custom !w-[20px] !h-[20px] mb-0" />
+                                                    </span>
+                                                    {item.name}
+                                                  </span>
+                                                </Link>
+                                              </li>
+                                            )
+                                          }
+                                        }
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="intro-btn w-100 mt-4">
+                                  <Link to="/shop" className="w-100 button button-arrow animation-horizontal text-center !p-0">View all</Link>
+                                </div>
+                              </div>
+
+                              <div className="col-md-6">
+                                <h3 className="border-bottom pb-2 fw-bold">{menu.subMenus.studio.title}</h3>
+                                <div className="row">
+                                  <div className="col-12">
+                                    <img src={menu.subMenus.studio.gallery.imgSrc} alt="image" className="w-100" style={{ height: '200px', objectFit: 'cover' }} />
+                                  </div>
+
+
+                                  <div className="flex gap-[20px] justify-center">
+                                    <Link to="/engagement-rings" className="button w-[250px] button-arrow animation-horizontal text-center bg-transparent text-black py-0 !text-[12px] !tracking-[1px] !px-[30px] !border-[1px] hover:!bg-[#000] hover:!text-white">Start with Setting</Link>
+                                    <Link to="/engagement-rings" className="button w-[250px] button-arrow animation-horizontal text-center bg-transparent text-black py-0 !text-[12px] !tracking-[1px] !px-[30px] !border-[1px] hover:!bg-[#000] hover:!text-white">Start with a Diamond</Link>
+                                  </div>
+
+                                  <div className='flex mt-3 gap-[30px]'>
+                                    <div className="flex-1">
+                                      <p className="fw-bold mt-3 pb-2 uppercase tracking-[0.5px] border-b">Diamond Education</p>
+                                      {menu.subMenus.studio.diamond.map((diamondItem, diamondIdx) => (
+                                        <li className="level-1 menu-item px-0 mb-0">
+                                          <Link to="/shop"><span className="menu-item-text">{diamondItem.title}</span></Link>
                                         </li>
                                       ))}
-                                      
+
                                     </div>
-                                    <div className="col-md-6">
-                                      <p>Shop by Shape</p>
-                                      <div className="row">
-                                        <div className="col-6 px-0">
-                                          {menu.subMenus.rings.shapes.map((item, itemIdx)=>{
-                                            if(itemIdx < 5){
-                                              return (
-                                                <li className="level-1 menu-item px-0">
-                                                  <Link to="/shop">
-                                                    <span className="menu-item-text flex">
-                                                      <span class="thumb-icon mr-[10px] flex items-center">
-                                                        <img src="https://images.grownbrilliance.com/images/menu/round.svg" loading="lazy" width="20" height="20" alt="" class="lz-img-custom !w-[20px] !h-[20px] mb-0" />
-                                                      </span>
-                                                      {item.name}
-                                                    </span>
-                                                  </Link>
-                                                </li>
-                                              )
-                                            }
-                                          }
-                                          )}
-                                        </div>
 
-
-                                        <div className="col-6">
-                                          {menu.subMenus.rings.shapes.map((item, itemIdx)=>{
-                                            if(itemIdx >= 5){
-                                              return (
-                                                <li className="level-1 menu-item px-0">
-                                                  <Link to="/shop">
-                                                    <span className="menu-item-text flex">
-                                                      <span class="thumb-icon mr-[10px] flex items-center">
-                                                        <img src="https://images.grownbrilliance.com/images/menu/round.svg" loading="lazy" width="20" height="20" alt="" class="lz-img-custom !w-[20px] !h-[20px] mb-0" />
-                                                      </span>
-                                                      {item.name}
-                                                    </span>
-                                                  </Link>
-                                                </li>
-                                              )
-                                            }
-                                          }
-                                          )}
-                                        </div>
-                                      </div>
+                                    <div className="flex-1">
+                                      <p className="fw-bold mt-3 pb-2 uppercase tracking-[0.5px] border-b">Jewelry Guide</p>
+                                      {menu.subMenus.studio.jewellery.map((jwlItem, jwlIdx) => (
+                                        <li className="level-1 menu-item px-0 mb-0">
+                                          <Link to="/shop"><span className="menu-item-text">{jwlItem.title}</span></Link>
+                                        </li>
+                                      ))}
                                     </div>
                                   </div>
-                                  <div className="intro-btn w-100 mt-4">
-                                    <Link to="/shop" className="w-100 button button-arrow animation-horizontal text-center !p-0">View all</Link>
-                                  </div>
+
                                 </div>
-
-                                <div className="col-md-6">
-                                  <h3 className="border-bottom pb-2 fw-bold">{menu.subMenus.studio.title}</h3>
-                                  <div className="row">
-                                    <div className="col-12">
-                                      <img src={menu.subMenus.studio.gallery.imgSrc} alt="image" className="w-100" style={{ height: '200px', objectFit: 'cover' }} />
-                                    </div>
-
-
-                                    <div className="flex gap-[20px] justify-center">
-                                      <Link to="/engagement-rings" className="button w-[250px] button-arrow animation-horizontal text-center bg-transparent text-black py-0 !text-[12px] !tracking-[1px] !px-[30px] !border-[1px] hover:!bg-[#000] hover:!text-white">Start with Setting</Link>
-                                      <Link to="/engagement-rings" className="button w-[250px] button-arrow animation-horizontal text-center bg-transparent text-black py-0 !text-[12px] !tracking-[1px] !px-[30px] !border-[1px] hover:!bg-[#000] hover:!text-white">Start with a Diamond</Link>
-                                    </div>
-
-                                      <div className='flex mt-3 gap-[30px]'>
-                                        <div className="flex-1">
-                                        <p className="fw-bold mt-3 pb-2 uppercase tracking-[0.5px] border-b">Diamond Education</p>
-                                        {menu.subMenus.studio.diamond.map((diamondItem, diamondIdx)=>(
-                                          <li className="level-1 menu-item px-0 mb-0">
-                                            <Link to="/shop"><span className="menu-item-text">{diamondItem.title}</span></Link>
-                                          </li>
-                                        ))}
-                                        
-                                      </div>
-
-                                      <div className="flex-1">
-                                        <p className="fw-bold mt-3 pb-2 uppercase tracking-[0.5px] border-b">Jewelry Guide</p>
-                                        {menu.subMenus.studio.jewellery.map((jwlItem, jwlIdx)=>(
-                                          <li className="level-1 menu-item px-0 mb-0">
-                                            <Link to="/shop"><span className="menu-item-text">{jwlItem.title}</span></Link>
-                                          </li>
-                                        ))}
-                                      </div>
-                                      </div>
-
-                                  </div>
-                                </div>
-
                               </div>
-                            </ul>
-                          )}
-                        </li>
-                      ))
-                    }
+
+                            </div>
+                          </ul>
+                        )}
+                      </li>
+                    ))
+                  }
                 </ul>
               </nav>
             </div>
@@ -923,7 +923,7 @@ function Header() {
 
 
         </div>
-      </header>
+      </header >
     </>
   );
 }
