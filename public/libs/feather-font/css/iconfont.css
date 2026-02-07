@@ -6,7 +6,8 @@
   font-style: normal
 }
 
-[class*=" feather-"], [class^=feather-] {
+[class*=" feather-"],
+[class^=feather-] {
   font-family: feather;
   speak: none;
   font-style: normal;

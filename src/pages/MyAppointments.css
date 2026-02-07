@@ -45,7 +45,7 @@
   font-weight: 700;
   color: #2C2C2C;
   margin: 0 0 15px 0;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'inter', sans-serif;
 }
 
 .title-divider {
@@ -109,7 +109,7 @@
 /* Table Cell Styles */
 .meeting-id {
   font-weight: 500;
-  font-family: 'Courier New', monospace;
+  font-family: 'inter', sans-serif;
   color: #2C2C2C;
 }
 
@@ -257,4 +257,3 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-

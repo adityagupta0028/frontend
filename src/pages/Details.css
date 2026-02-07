@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  margin-top: 20px;
 }
 
 .react-thumbnail-slider .thumbnail-list {
@@ -71,6 +72,7 @@
 .react-image-slider {
   position: relative;
   width: 100%;
+  margin-top: 20px;
 }
 
 .react-image-slider .main-image-container {
@@ -82,6 +84,7 @@
   width: 100%;
   height: auto;
   display: block;
+  border-radius: 15px;
 }
 
 .image-nav-btn {
@@ -103,7 +106,10 @@
 
 .image-nav-btn:hover {
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.image-nav-btn:hover i {
+  color: #002f5c;
 }
 
 .image-nav-prev {
@@ -154,9 +160,10 @@
 }
 
 .content-thumbnail-scroll .img-thumbnail-scroll img {
-  width: 100%;
+  width: 50%;
   height: auto;
   object-fit: cover;
+  border: 0.5px solid #afabab;
 }
 
 /* Product Variation Fields Styles */
@@ -251,7 +258,7 @@
   box-shadow: 0 0 0 2px rgba(249, 182, 30, 0.3);
 }
 
-.variations .attributes ul.metals li > div {
+.variations .attributes ul.metals li>div {
   font-size: 11px;
   color: #666;
   text-align: center;
@@ -392,9 +399,71 @@ details summary::marker {
   display: none;
 }
 
-/* Product info section spacing */
-.product-info {
-  padding-left: 30px;
+/* Product Information Section Styling */
+.product-info h1.title {
+  font-family: 'inter', sans-serif;
+  letter-spacing: -0.5px;
+  color: #000000;
+}
+
+.product-info .price ins {
+  font-family: 'Inter', sans-serif;
+  color: #000000;
+}
+
+/* Star Rating Styling */
+.rating .star {
+  filter: grayscale(1) brightness(0);
+  /* Black stars */
+}
+
+.review-count span {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Button & Selection Styling */
+.variations label {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+}
+
+.variations button:hover {
+  border-color: #002f5c !important;
+}
+
+/* Scrollable sections for specifications */
+details {
+  border-top: 1px solid #e5e5e5;
+}
+
+details summary {
+  padding: 15px 0;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+details div table tr th {
+  font-weight: 500;
+  color: #666;
+}
+
+details div table tr td {
+  color: #000;
+  font-weight: 600;
+}
+
+/* Gallery Hover navigation */
+.image-nav-btn {
+  background: rgba(255, 255, 255, 1) !important;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.main-image-container:hover .image-nav-btn {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
@@ -403,4 +472,3 @@ details summary::marker {
     padding-top: 20px;
   }
 }
-

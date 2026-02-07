@@ -98,7 +98,7 @@
   font-size: 18px;
   font-weight: 400;
   margin-bottom: 10px;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'inter', sans-serif;
   color: #2C2C2C;
 }
 
@@ -238,9 +238,8 @@
   .products-list.grid .product-wapper {
     margin-bottom: 20px;
   }
-  
+
   .shape-scroll {
     max-width: 200px;
   }
 }
-
