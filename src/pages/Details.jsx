@@ -63,9 +63,11 @@ function Details() {
     if (productData?.data?.product) {
       const p = productData.data.product;
 
+console.log("productData=====>",productData);
+
       // Process images
-      const images = (p.images || []).map(img =>
-        img.startsWith('http') ? img : `${GetUrl.IMAGE_URL}${img}`
+      const images = (p.metal_images || []).map(img =>
+        img?.image?.startsWith('http') ? img?.image : `${GetUrl.IMAGE_URL}${img?.image}`
       );
 
       // Process sizes and colors from variants
