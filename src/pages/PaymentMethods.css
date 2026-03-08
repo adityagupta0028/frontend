@@ -139,6 +139,116 @@
   text-align: left;
 }
 
+/* Saved Cards */
+.saved-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.saved-card-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #ffffff;
+  transition: box-shadow 0.3s ease;
+}
+
+.saved-card-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.card-icon-wrapper {
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-icon-wrapper.visa {
+  color: #1A1F71;
+}
+
+.card-icon-wrapper.mastercard {
+  color: #EB001B;
+}
+
+.card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2C2C2C;
+  font-family: 'inter', sans-serif;
+}
+
+.card-expiry {
+  margin: 0;
+  font-size: 14px;
+  color: #868686;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.default-badge {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #2C2C2C;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.make-default-btn,
+.remove-card-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'inter', sans-serif;
+  transition: color 0.3s ease;
+}
+
+.make-default-btn {
+  color: #2C2C2C;
+}
+
+.make-default-btn:hover {
+  color: #cb8161;
+}
+
+.remove-card-btn {
+  color: #d32f2f;
+}
+
+.remove-card-btn:hover {
+  color: #b71c1c;
+}
+
 /* OFFERS Button */
 .offer-button {
   position: fixed;

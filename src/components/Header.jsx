@@ -118,7 +118,7 @@ const menusData = [
 
   // },
   {
-    menu: "Engagement",
+    menu: "Engagement Rings",
     href: '/engagement-rings',
     subMenus: {
       rings: {
@@ -223,7 +223,7 @@ const menusData = [
 
   },
   {
-    menu: "Wedding",
+    menu: "Wedding Rings",
     href: '/wedding',
     subMenus: {
       rings: {

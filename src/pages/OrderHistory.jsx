@@ -200,6 +200,9 @@ function OrderHistory() {
                           </p>
                         </div>
                         <div className="order-statuses">
+                          <p className="order-date">
+                            Order Status
+                          </p>
                           <span
                             className={`status-badge ${getStatusBadgeClass(
                               order.orderStatus
@@ -207,7 +210,11 @@ function OrderHistory() {
                           >
                             {order.orderStatus || 'Pending'}
                           </span>
+                          <p className="order-date">
+                            Payment Status
+                          </p>
                           <span
+
                             className={`payment-badge ${getPaymentStatusBadgeClass(
                               order.paymentStatus
                             )}`}
@@ -430,7 +437,7 @@ function OrderHistory() {
                                 <span className="item-price-full">
                                   {formatCurrency(
                                     (item.discountedPrice || item.price) *
-                                      (item.quantity || 1)
+                                    (item.quantity || 1)
                                   )}
                                 </span>
                               </div>

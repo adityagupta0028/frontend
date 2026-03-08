@@ -1,4 +1,4 @@
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './MyAccount.css';
 
 function MyAccount() {
@@ -29,8 +29,8 @@ function MyAccount() {
                 <Link to="/order-history" className="nav-link">
                   Order History
                 </Link>
-                <Link to="/settings" className="nav-link">
-                  Settings & Preferences
+                <Link to="/profile" className="nav-link">
+                  Profile
                 </Link>
                 <Link to="/cart" className="nav-link">
                   Shopping Bag
@@ -41,7 +41,7 @@ function MyAccount() {
                 <Link to="/refer" className="nav-link">
                   Refer a Friend
                 </Link>
-                <Link  className="nav-link" onClick={() => {localStorage.removeItem('customerToken');localStorage.removeItem('customerData'); navigate("/login");}}>
+                <Link className="nav-link" onClick={() => { localStorage.removeItem('customerToken'); localStorage.removeItem('customerData'); navigate("/login"); }}>
                   Sign Out
                 </Link>
               </nav>
@@ -62,10 +62,10 @@ function MyAccount() {
 
                 {/* Settings & Preferences Card */}
                 <div className="account-card">
-                  <h3 className="card-title">Settings & Preferences</h3>
+                  <h3 className="card-title">Profile</h3>
                   <p className="card-description">Update your name, email or change your password.</p>
-                  <Link to="/settings" className="card-link">
-                    Update Preferences
+                  <Link to="/profile" className="card-link">
+                    Update Profile
                   </Link>
                 </div>
 
@@ -80,10 +80,10 @@ function MyAccount() {
 
                 {/* Wish List Card */}
                 <div className="account-card">
-                  <h3 className="card-title">Wish List</h3>
+                  <h3 className="card-title">Wishlist</h3>
                   <p className="card-description">View your bag items and checkout.</p>
                   <Link to="/wishlist" className="card-link">
-                    View My Wish List
+                    View My Wishlist
                   </Link>
                 </div>
 
@@ -97,11 +97,10 @@ function MyAccount() {
                 </div>
 
                 {/* My Items Card */}
-                <div className="account-card my-items-card">
-                  <div className="card-header-with-icon">
-                    <i className="fa fa-key card-icon"></i>
-                    <h3 className="card-title">My Items</h3>
-                  </div>
+                <div className="account-card">
+                  <h3 className="card-title">
+                    MY ITEMS
+                  </h3>
                   <p className="card-description">Review your collection and request service for your items.</p>
                   <Link to="/my-items" className="card-link">
                     View Collection
@@ -109,11 +108,10 @@ function MyAccount() {
                 </div>
 
                 {/* My Appointments Card */}
-                <div className="account-card my-appointments-card">
-                  <div className="card-header-with-icon">
-                    <i className="fa fa-calendar card-icon"></i>
-                    <h3 className="card-title">My Appointments</h3>
-                  </div>
+                <div className="account-card">
+
+                  <h3 className="card-title">My Appointments</h3>
+
                   <p className="card-description">View and manage your showroom appointments and consultations.</p>
                   <Link to="/my-appointments" className="card-link">
                     View Appointments
@@ -121,23 +119,17 @@ function MyAccount() {
                 </div>
 
                 {/* Truly Custom Requests Card */}
-                <div className="account-card truly-custom-card">
-                  <div className="card-header-with-icon">
-                    <i className="fa fa-gem card-icon"></i>
-                    <h3 className="card-title">Truly Custom Requests</h3>
-                  </div>
+                <div className="account-card">
+                  <h3 className="card-title">Truly Custom Requests</h3>
                   <p className="card-description">Here you can keep track of your Truly Custom Designs.</p>
-                  <Link to="/truly-custom-requests" className="card-link">
+                  <Link to="/custom-requests" className="card-link">
                     View Requests
                   </Link>
                 </div>
 
                 {/* Payment Methods Card */}
-                <div className="account-card payment-methods-card">
-                  <div className="card-header-with-icon">
-                    <i className="fa fa-credit-card card-icon"></i>
-                    <h3 className="card-title">Payment Methods</h3>
-                  </div>
+                <div className="account-card">
+                  <h3 className="card-title">Payment Methods</h3>
                   <p className="card-description">Manage your saved payment methods and billing information.</p>
                   <Link to="/payment-methods" className="card-link">
                     Manage Payment Methods
@@ -145,7 +137,7 @@ function MyAccount() {
                 </div>
 
                 {/* Personal Details Card */}
-                <div className="account-card personal-details-card">
+                {/* <div className="account-card personal-details-card">
                   <div className="card-header-with-icon">
                     <i className="fa fa-user card-icon"></i>
                     <h3 className="card-title">Personal Details</h3>
@@ -154,7 +146,7 @@ function MyAccount() {
                   <Link to="/profile" className="card-link">
                     View Personal Details
                   </Link>
-                </div>
+                </div> */}
               </div>
 
               {/* Continue Shopping Section */}
@@ -164,8 +156,8 @@ function MyAccount() {
                   {/* Engagement Rings */}
                   <Link to="/shop?category=engagement-rings" className="category-card">
                     <div className="category-image">
-                      <img 
-                        src="https://image.brilliantearth.com/static/img/shopping/wishlist-Shop-By-Category/Engagement-Rings-dt.jpg" 
+                      <img
+                        src="https://image.brilliantearth.com/static/img/shopping/wishlist-Shop-By-Category/Engagement-Rings-dt.jpg"
                         alt="Engagement Rings"
                         loading="lazy"
                       />
@@ -176,8 +168,8 @@ function MyAccount() {
                   {/* Wedding Rings */}
                   <Link to="/shop?category=wedding-rings" className="category-card">
                     <div className="category-image">
-                      <img 
-                        src="https://image.brilliantearth.com/static/img/shopping/wishlist-Shop-By-Category/Wedding-Rings-dt.jpg" 
+                      <img
+                        src="https://image.brilliantearth.com/static/img/shopping/wishlist-Shop-By-Category/Wedding-Rings-dt.jpg"
                         alt="Wedding Rings"
                         loading="lazy"
                       />
@@ -188,8 +180,8 @@ function MyAccount() {
                   {/* Gemstone Rings */}
                   <Link to="/shop?category=gemstone-rings" className="category-card">
                     <div className="category-image">
-                      <img 
-                        src="https://image.brilliantearth.com/static/img/shopping/wishlist-Shop-By-Category/Gemstone-Rings-dt.jpg" 
+                      <img
+                        src="https://image.brilliantearth.com/static/img/shopping/wishlist-Shop-By-Category/Gemstone-Rings-dt.jpg"
                         alt="Gemstone Rings"
                         loading="lazy"
                       />
@@ -200,8 +192,8 @@ function MyAccount() {
                   {/* Fine Jewelry */}
                   <Link to="/shop?category=fine-jewelry" className="category-card">
                     <div className="category-image">
-                      <img 
-                        src="https://image.brilliantearth.com/static/img/shopping/wishlist-Shop-By-Category/Fine-Jewelry-dt.jpg" 
+                      <img
+                        src="https://image.brilliantearth.com/static/img/shopping/wishlist-Shop-By-Category/Fine-Jewelry-dt.jpg"
                         alt="Fine Jewelry"
                         loading="lazy"
                       />

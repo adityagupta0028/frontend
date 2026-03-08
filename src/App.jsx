@@ -26,6 +26,7 @@ import Engagement from './pages/Engagement';
 import Wedding from './pages/Wedding';
 import Jewelry from './pages/Jewelry';
 import NotFound from './pages/NotFound';
+import Refer from './pages/Refer';
 import './App.css';
 
 function AppContent() {
@@ -59,6 +60,7 @@ function AppContent() {
         <Route path="/engagement-rings" element={<Engagement />} />
         <Route path="/wedding" element={<Wedding />} />
         <Route path="/jewelry" element={<Jewelry />} />
+        <Route path="/refer" element={<Refer />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!isLoginPage && <Footer />}

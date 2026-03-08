@@ -3,7 +3,7 @@ import { useState } from 'react';
 import './PaymentMethods.css';
 
 function PaymentMethods() {
-  const [activeForm, setActiveForm] = useState(null); // null, 'credit-card', 'gift-card', 'jared-card'
+  const [activeForm, setActiveForm] = useState(null); // null, 'credit-card', 'gift-card'
 
   const handleAddClick = (formType) => {
     setActiveForm(formType);
@@ -64,7 +64,7 @@ function PaymentMethods() {
                 {/* Add Credit Card Section */}
                 <div className="form-section">
                   <h2 className="form-section-title">Add Credit Card</h2>
-                  
+
                   <div className="form-group">
                     <label htmlFor="cardType" className="form-label">
                       Select Card Type <span className="required">*</span>
@@ -142,13 +142,13 @@ function PaymentMethods() {
                       </button>
                     </div>
                   </div>
-                
+
                 </div>
                 <div className="section-divider"></div>
                 {/* Billing Address Section */}
                 <div className="form-section">
                   <h2 className="form-section-title">Billing Address</h2>
-                  
+
                   <div className="form-row">
                     <div className="form-group form-group-half">
                       <label htmlFor="firstName" className="form-label">
@@ -304,7 +304,7 @@ function PaymentMethods() {
               <form className="payment-form">
                 <div className="form-section">
                   <h2 className="form-section-title">Add Gift Card</h2>
-                  
+
                   <div className="form-group">
                     <label htmlFor="giftCardNumber" className="form-label">
                       Gift Card Number <span className="required">*</span>
@@ -380,9 +380,42 @@ function PaymentMethods() {
               <div className="section-header">
                 <div className="section-left">
                   <h2 className="section-title">Credit Cards</h2>
-                  <p className="section-message">You do not have any saved credit cards</p>
+
+                  <div className="saved-cards-list">
+                    <div className="saved-card-item">
+                      <div className="card-info">
+                        <div className="card-icon-wrapper visa">
+                          <i className="fa fa-cc-visa"></i>
+                        </div>
+                        <div className="card-details">
+                          <p className="card-name">Visa ending in 4242</p>
+                          <p className="card-expiry">Expires 12/26</p>
+                        </div>
+                      </div>
+                      <div className="card-actions">
+                        <span className="default-badge">Default</span>
+                        <button className="remove-card-btn">Remove</button>
+                      </div>
+                    </div>
+
+                    <div className="saved-card-item">
+                      <div className="card-info">
+                        <div className="card-icon-wrapper mastercard">
+                          <i className="fa fa-cc-mastercard"></i>
+                        </div>
+                        <div className="card-details">
+                          <p className="card-name">Mastercard ending in 8834</p>
+                          <p className="card-expiry">Expires 08/28</p>
+                        </div>
+                      </div>
+                      <div className="card-actions">
+                        <button className="make-default-btn">Make Default</button>
+                        <button className="remove-card-btn">Remove</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <button 
+                <button
                   type="button"
                   className="add-button"
                   onClick={() => handleAddClick('credit-card')}
@@ -392,46 +425,9 @@ function PaymentMethods() {
               </div>
               <div className="section-divider"></div>
             </div>
-
-            {/* Jared Store Credit Cards Section */}
-            <div className="payment-section">
-              <div className="section-header">
-                <div className="section-left">
-                  <h2 className="section-title">Jared Store Credit Cards</h2>
-                  <p className="section-message">You do not have any saved Jared store credit cards</p>
-                </div>
-                <button 
-                  type="button"
-                  className="add-button"
-                  onClick={() => handleAddClick('jared-card')}
-                >
-                  Add Jared Card
-                </button>
-              </div>
-              <div className="section-divider"></div>
-            </div>
-
-            {/* Gift Cards Section */}
-            <div className="payment-section">
-              <div className="section-header">
-                <div className="section-left">
-                  <h2 className="section-title">Gift Cards</h2>
-                  <p className="section-info">Only Jared gift cards can be used while checking out online or in store</p>
-                  <p className="section-message">You do not have any saved gift cards</p>
-                </div>
-                <button 
-                  type="button"
-                  className="add-button"
-                  onClick={() => handleAddClick('gift-card')}
-                >
-                  Add Gift Card
-                </button>
-              </div>
-             
-            </div>
           </div>
 
-          {/* OFFERS Button */}
+
           <button className="offer-button">
             <i className="fa fa-tag offer-icon"></i>
             <span className="offer-text">OFFERS</span>
