@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useMemo } from 'react';
-import { useGetSubCategoryQuery } from '../Services/CategoryApi';
-import { useGetProductQuery } from '../Services/ProductApi';
+import { useGetProductQuery, useGetFilteredMainMenuQuery } from '../Services/ProductApi';
 import { GetUrl } from '../config/GetUrl';
 import './Jewelry.css';
 import SubCategoryCarousel from '../components/category/subCategoryCarousel';
@@ -29,35 +28,38 @@ function Jewelry() {
   const [selectedFilters, setSelectedFilters] = useState({});
   const [viewAngleChanged, setViewAngleChanged] = useState(false);
 
-  // Fetch subcategories for Wedding category
+  // Fetch filtered main menu items for category
   const {
-    data: subcategoriesData,
-    isLoading: subcategoriesLoading,
-    error: subcategoriesError
-  } = useGetSubCategoryQuery(WEDDING_CATEGORY_ID);
-  // Transform subcategories from API
+    data: mainMenuData,
+    isLoading: mainMenuLoading,
+    error: mainMenuError
+  } = useGetFilteredMainMenuQuery(WEDDING_CATEGORY_ID);
+  
+  // Transform main menu items from API
   const subcategories = useMemo(() => {
-    if (subcategoriesData?.data?.subcategories && subcategoriesData.data.subcategories.length > 0) {
-      return subcategoriesData.data.subcategories.map((sub, index) => ({
-        id: sub._id || index + 1,
-        name: sub.title || sub.subCategoryName || 'Subcategory',
-        image: sub.image
-          ? (sub.image.startsWith('http')
-            ? sub.image
-            : `${GetUrl.IMAGE_URL}${sub.image}`)
+    if (mainMenuData?.data && Array.isArray(mainMenuData.data) && mainMenuData.data.length > 0) {
+      return mainMenuData.data.map((item, index) => ({
+        id: item._id || index + 1,
+        name: item.displayName || item.code || 'Item',
+        image: item.image
+          ? (item.image.startsWith('http')
+            ? item.image
+            : `${GetUrl.IMAGE_URL}${item.image}`)
           : `/media/product/cat-6-${(index % 6) + 1}.jpg`,
+        itemKey: item.itemKey, // Store itemKey for filtering
+        filterId: item._id, // Store the filter ID
       }));
     }
-    // Fallback to default subcategories if API data is not available
+    // Fallback to default items if API data is not available
     return [
-      { id: 1, name: 'Bracelets', image: '/media/product/cat-6-1.jpg' },
-      { id: 2, name: 'Charms', image: '/media/product/cat-6-2.jpg' },
-      { id: 3, name: 'Earrings', image: '/media/product/cat-6-3.jpg' },
-      { id: 4, name: 'Necklaces', image: '/media/product/cat-6-4.jpg' },
-      { id: 5, name: 'Rings', image: '/media/product/cat-6-5.jpg' },
-      { id: 6, name: 'Rings', image: '/media/product/cat-6-6.jpg' },
+      { id: 1, name: 'Bracelets', image: '/media/product/cat-6-1.jpg', href: '#' },
+      { id: 2, name: 'Charms', image: '/media/product/cat-6-2.jpg', href: '#' },
+      { id: 3, name: 'Earrings', image: '/media/product/cat-6-3.jpg', href: '#' },
+      { id: 4, name: 'Necklaces', image: '/media/product/cat-6-4.jpg', href: '#' },
+      { id: 5, name: 'Rings', image: '/media/product/cat-6-5.jpg', href: '#' },
+      { id: 6, name: 'Rings', image: '/media/product/cat-6-6.jpg', href: '#' },
     ];
-  }, [subcategoriesData]);
+  }, [mainMenuData]);
 
   // Clean up filters - remove null, undefined, and empty arrays
   const cleanedFilters = useMemo(() => {
@@ -178,7 +180,7 @@ function Jewelry() {
     return [];
   }, [productsData]);
 
-  const isLoading = subcategoriesLoading || productsLoading;
+  const isLoading = mainMenuLoading || productsLoading;
 
   // View dropdown options with images
   const viewOptions = [
@@ -242,6 +244,52 @@ function Jewelry() {
     setSelectedFilters(filters);
   };
 
+  const handleCarouselItemClick = (itemKey, filterId) => {
+    console.log('Carousel item clicked:', { itemKey, filterId });
+    
+    // Update the selected filter based on itemKey
+    setSelectedFilters(prevFilters => {
+      const newFilters = { ...prevFilters };
+      
+      // Check if the same filter is already selected, if so, deselect it
+      if (newFilters[itemKey] === filterId || 
+          (Array.isArray(newFilters[itemKey]) && newFilters[itemKey].includes(filterId))) {
+        // Deselect: remove the filter
+        if (Array.isArray(newFilters[itemKey])) {
+          newFilters[itemKey] = newFilters[itemKey].filter(id => id !== filterId);
+          if (newFilters[itemKey].length === 0) {
+            delete newFilters[itemKey];
+          }
+        } else {
+          delete newFilters[itemKey];
+        }
+      } else {
+        // Select: add the filter
+        // Some filters accept arrays, others are single values
+        const arrayFilters = [
+          'shankTreatments',
+          'styles',
+          'settingFeatures',
+          'motifThemes',
+          'ornamentDetails',
+          'accentStoneShapes'
+        ];
+        
+        if (arrayFilters.includes(itemKey)) {
+          // Array filter - add to array
+          newFilters[itemKey] = Array.isArray(newFilters[itemKey]) 
+            ? [...newFilters[itemKey], filterId]
+            : [filterId];
+        } else {
+          // Single value filter - replace
+          newFilters[itemKey] = filterId;
+        }
+      }
+      
+      return newFilters;
+    });
+  };
+
   // Show loading state
   if (isLoading) {
     return (
@@ -256,13 +304,13 @@ function Jewelry() {
   }
 
   // Show error state
-  if (subcategoriesError || productsError) {
+  if (mainMenuError || productsError) {
     return (
       <div id="site-main" className="site-main">
         <div className="section-padding">
           <div className="section-container p-l-r text-center">
             <p>Error loading data. Please try again later.</p>
-            {subcategoriesError && <p className="text-danger">Subcategories Error: {subcategoriesError.message}</p>}
+            {mainMenuError && <p className="text-danger">Main Menu Error: {mainMenuError.message}</p>}
             {productsError && <p className="text-danger">Products Error: {productsError.message}</p>}
           </div>
         </div>
@@ -276,6 +324,7 @@ function Jewelry() {
         onClose={() => setIsFilterOpen(false)}
         selectedFilters={selectedFilters}
         onFilterChange={handleFilterChange}
+        categoryId={WEDDING_CATEGORY_ID}
       />
       <div id="main-content" className="main-content">
         <div id="primary" className="content-area">
@@ -305,7 +354,11 @@ function Jewelry() {
             </div>
 
             {/* subcategories Slider Section */}
-            <SubCategoryCarousel data={subcategories} />
+            <SubCategoryCarousel 
+              data={subcategories} 
+              onItemClick={handleCarouselItemClick}
+              selectedFilters={selectedFilters}
+            />
 
 
             {/* Products Section */}

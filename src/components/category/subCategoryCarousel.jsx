@@ -8,13 +8,29 @@ import { useEffect } from "react";
 
 
 
-export default function SubCategoryCarousel({ data }) {
+export default function SubCategoryCarousel({ data, onItemClick, selectedFilters = {} }) {
 
   useEffect(() => {
 
-  }, [data])
+  }, [data, selectedFilters])
 
+  const handleItemClick = (item) => {
+    if (onItemClick && item.itemKey && item.filterId) {
+      onItemClick(item.itemKey, item.filterId);
+    }
+  }
 
+  const isItemSelected = (item) => {
+    if (!item.itemKey || !item.filterId) return false;
+    const filterValue = selectedFilters[item.itemKey];
+    if (!filterValue) return false;
+    
+    if (Array.isArray(filterValue)) {
+      return filterValue.includes(item.filterId);
+    }
+    return filterValue === item.filterId;
+  }
+ 
   return (
     <section className="section section-padding top-border p-t-5 m-b-0">
       <div className="section-container">
@@ -73,13 +89,19 @@ export default function SubCategoryCarousel({ data }) {
                   //   </div>
                   // </SwiperSlide>
                   <SwiperSlide key={item.id} className="py-6">
-                    <div className="group flex flex-col items-center text-center cursor-pointer">
-
-                      <Link to={item.href} className="flex flex-col items-center">
+                    <div 
+                      className={`group flex flex-col items-center text-center cursor-pointer ${isItemSelected(item) ? 'opacity-100' : ''}`}
+                      onClick={() => handleItemClick(item)}
+                    >
+                      <div className="flex flex-col items-center">
 
                         {/* Image Container */}
-                        <div className="w-20 h-20 flex items-center justify-center bg-gray-50 shadow-sm 
-                      transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1">
+                        <div className={`w-20 h-20 flex items-center justify-center shadow-sm 
+                      transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1 ${
+                        isItemSelected(item) 
+                          ? 'bg-[#cb8161] shadow-md ring-2 ring-[#cb8161] ring-offset-2' 
+                          : 'bg-gray-50'
+                      }`}>
                           <img
                             className="w-24 h-24 object-contain transition-transform duration-500 group-hover:scale-110"
                             src={item.image}
@@ -88,13 +110,16 @@ export default function SubCategoryCarousel({ data }) {
                         </div>
 
                         {/* Title */}
-                        <p className="mt-3 text-xs tracking-wide text-gray-700 
-                     group-hover:text-[#cb8161] transition-colors duration-300 
-                     truncate w-24">
+                        <p className={`mt-3 text-xs tracking-wide transition-colors duration-300 
+                     truncate w-24 ${
+                       isItemSelected(item)
+                         ? 'text-[#cb8161] font-semibold'
+                         : 'text-gray-700 group-hover:text-[#cb8161]'
+                     }`}>
                           {item.name}
                         </p>
 
-                      </Link>
+                      </div>
                     </div>
                   </SwiperSlide>
                 ))}

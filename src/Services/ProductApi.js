@@ -30,8 +30,18 @@ export const ProductApi = createApi({
         }),
 
         GetFilteredVisibility: builder.query({
-            query: () => ({
-                url: `/getFilteredVisibility`,
+            query: (categoryId) => ({
+                url: `/getFilteredVisibility${categoryId ? `?categoryId=${categoryId}` : ''}`,
+                method: "GET",
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("customerToken")}`,
+                },
+            }),
+        }),
+
+        GetFilteredMainMenu: builder.query({
+            query: (categoryId) => ({
+                url: `/getFilteredMainMenu${categoryId ? `?categoryId=${categoryId}` : ''}`,
                 method: "GET",
                 headers: {
                     authorization: `Bearer ${localStorage.getItem("customerToken")}`,
@@ -47,4 +57,5 @@ export const {
     useGetProductQuery,
     useGetSingleProductQuery,
     useGetFilteredVisibilityQuery,
+    useGetFilteredMainMenuQuery,
 } = ProductApi;

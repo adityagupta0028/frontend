@@ -2,13 +2,15 @@ import { useState, useMemo, useEffect } from 'react';
 import { useGetFilteredVisibilityQuery } from '../Services/ProductApi';
 import { GetUrl } from '../config/GetUrl';
 
-function FilterSidebar({ isOpen, onClose, selectedFilters = {}, onFilterChange }) {
+function FilterSidebar({ isOpen, onClose, selectedFilters = {}, onFilterChange, categoryId }) {
   // Fetch filtered visibility data
   const {
     data: filtersData,
     isLoading: filtersLoading,
     error: filtersError
-  } = useGetFilteredVisibilityQuery();
+  } = useGetFilteredVisibilityQuery(categoryId, {
+    skip: !categoryId, // Skip query if categoryId is not provided
+  });
 
   // Transform filter data from API to match filterSections structure
   const filterSections = useMemo(() => {
@@ -24,59 +26,29 @@ function FilterSidebar({ isOpen, onClose, selectedFilters = {}, onFilterChange }
           return `${baseUrl}${cleanPath}`;
         };
 
+        const items = Array.isArray(filter.data) && filter.data.length > 0
+          ? filter.data.map((item, index) => ({
+              id: item._id ? String(item._id) : null,
+              title: item.displayName || item.code || 'Item',
+              image: item.image 
+                ? buildImageUrl(item.image)
+                : `/media/product/cat-6-${(index % 6) + 1}.jpg`,
+            }))
+          : [];
+
         return {
           key: filter.filterKey,
           title: filter.filterName,
-          items: filter.data.map((item, index) => ({
-            id: item._id ? String(item._id) : null,
-            title: item.displayName || item.code || 'Item',
-            image: item.image 
-              ? buildImageUrl(item.image)
-              : `/media/product/cat-6-${(index % 6) + 1}.jpg`,
-          })),
+          items,
         };
-      });
+      }).filter((section) => section.items.length > 0); // Only include sections that have options
     }
-    // Fallback to default filter sections if API data is not available
-    return [
-      {
-        key: 'ringStyle',
-        title: 'Ring Style',
-        items: [
-          { title: 'Classic', image: '/media/product/cat-6-1.jpg' },
-          { title: 'Vintage', image: '/media/product/cat-6-2.jpg' },
-          { title: 'Halo', image: '/media/product/cat-6-3.jpg' },
-          { title: 'Solitaire', image: '/media/product/cat-6-4.jpg' },
-          { title: 'Three-Stone', image: '/media/product/cat-6-5.jpg' },
-          { title: 'Pavé', image: '/media/product/cat-6-6.jpg' },
-        ],
-      },
-      {
-        key: 'diamondShape',
-        title: 'Diamond Shape',
-        items: [
-          { title: 'Round', image: '/media/product/cat-6-1.jpg' },
-          { title: 'Princess', image: '/media/product/cat-6-2.jpg' },
-          { title: 'Oval', image: '/media/product/cat-6-3.jpg' },
-          { title: 'Cushion', image: '/media/product/cat-6-4.jpg' },
-          { title: 'Radiant', image: '/media/product/cat-6-5.jpg' },
-          { title: 'Pear', image: '/media/product/cat-6-6.jpg' },
-        ],
-      },
-      {
-        key: 'metal',
-        title: 'Metal',
-        items: [
-          { title: 'Platinum', image: '/media/product/cat-6-1.jpg' },
-          { title: 'White Gold', image: '/media/product/cat-6-2.jpg' },
-          { title: 'Yellow Gold', image: '/media/product/cat-6-3.jpg' },
-          { title: 'Rose Gold', image: '/media/product/cat-6-4.jpg' },
-          { title: 'Mixed Metal', image: '/media/product/cat-6-5.jpg' },
-          { title: 'Sterling Silver', image: '/media/product/cat-6-6.jpg' },
-        ],
-      },
-    ];
+    // No API data: return empty so we show "No Filter Found"
+    return [];
   }, [filtersData]);
+
+  // True when there are no filter options to show
+  const hasNoFilterData = filterSections.length === 0;
 
   const [accordionState, setAccordionState] = useState({});
 
@@ -191,7 +163,7 @@ function FilterSidebar({ isOpen, onClose, selectedFilters = {}, onFilterChange }
     );
   }
 
-  // Show error state (still show sidebar with error message)
+  // Show error state (still show sidebar with error message or No Filter Found)
   if (filtersError) {
     return (
       <>
@@ -202,11 +174,14 @@ function FilterSidebar({ isOpen, onClose, selectedFilters = {}, onFilterChange }
             <button className="filter-close-btn" aria-label="Close filters" onClick={onClose}>×</button>
           </div>
           <div className="filter-sidebar-body">
-            <div className="text-center p-4 text-danger">
-              Error loading filters. Using default filters.
-            </div>
-            {/* Render default filters even on error */}
-            {filterSections.map((section) => (
+            {hasNoFilterData ? (
+              <div className="text-center p-4" style={{ fontWeight: 'bold' }}>No Filters Found</div>
+            ) : (
+              <>
+                <div className="text-center p-4 text-danger">
+                  Error loading filters.
+                </div>
+                {filterSections.map((section) => (
               <div key={section.key} className="filter-accordion">
                 <button
                   className="filter-accordion-toggle d-flex justify-content-between align-items-center w-100"
@@ -267,6 +242,8 @@ function FilterSidebar({ isOpen, onClose, selectedFilters = {}, onFilterChange }
                 )}
               </div>
             ))}
+              </>
+            )}
           </div>
         </div>
       </>
@@ -282,45 +259,49 @@ function FilterSidebar({ isOpen, onClose, selectedFilters = {}, onFilterChange }
           <button className="filter-close-btn" aria-label="Close filters" onClick={onClose}>×</button>
         </div>
         <div className="filter-sidebar-body">
-          {filterSections.map((section) => (
-            <div key={section.key} className="filter-accordion">
-              <button
-                className="filter-accordion-toggle d-flex justify-content-between align-items-center w-100"
-                onClick={() => toggleAccordion(section.key)}
-              >
-                <span>{section.title}</span>
-                <span className="toggle-indicator">{accordionState[section.key] ? '−' : '+'}</span>
-              </button>
-              {accordionState[section.key] && (
-                <div className="filter-accordion-content">
-                    <div className="filter-items">
-                      {section.items.map((item, idx) => (
-                        <div 
-                          key={`${section.key}-${idx}`} 
-                          className="filter-item"
-                          style={{ cursor: 'pointer' }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.opacity = '0.8';
-                            e.currentTarget.style.transform = 'scale(1.02)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.opacity = '1';
-                            e.currentTarget.style.transform = 'scale(1)';
-                          }}
-                          onClick={() => handleFilterItemClick(section.key, item.id)}
-                        >
-                         
-                          <div className="filter-item-thumb">
-                            <img src={item.image} alt={item.title} style={{ cursor: 'pointer' }} />
+          {hasNoFilterData ? (
+            <div className="text-center p-4" style={{ fontWeight: 'bold' }}>No Filters Found</div>
+          ) : (
+            filterSections.map((section) => (
+              <div key={section.key} className="filter-accordion">
+                <button
+                  className="filter-accordion-toggle d-flex justify-content-between align-items-center w-100"
+                  onClick={() => toggleAccordion(section.key)}
+                >
+                  <span>{section.title}</span>
+                  <span className="toggle-indicator">{accordionState[section.key] ? '−' : '+'}</span>
+                </button>
+                {accordionState[section.key] && (
+                  <div className="filter-accordion-content">
+                      <div className="filter-items">
+                        {section.items.map((item, idx) => (
+                          <div 
+                            key={`${section.key}-${idx}`} 
+                            className="filter-item"
+                            style={{ cursor: 'pointer' }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.opacity = '0.8';
+                              e.currentTarget.style.transform = 'scale(1.02)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.opacity = '1';
+                              e.currentTarget.style.transform = 'scale(1)';
+                            }}
+                            onClick={() => handleFilterItemClick(section.key, item.id)}
+                          >
+                           
+                            <div className="filter-item-thumb">
+                              <img src={item.image} alt={item.title} style={{ cursor: 'pointer' }} />
+                            </div>
+                            <div className="filter-item-title" style={{ cursor: 'pointer' }}>{item.title}</div>
                           </div>
-                          <div className="filter-item-title" style={{ cursor: 'pointer' }}>{item.title}</div>
-                        </div>
-                      ))}
-                    </div>
-                </div>
-              )}
-            </div>
-          ))}
+                        ))}
+                      </div>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </>
