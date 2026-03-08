@@ -308,6 +308,14 @@ export const customerApi = createApi({
         },
       }),
     }),
+
+    // Hero menu for category dropdown (column1–column4)
+    getHeroMenu: builder.query({
+      query: (categoryId) => ({
+        url: `/getHeroMenu?categoryId=${categoryId}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -338,5 +346,6 @@ export const {
   useCheckoutMutation,
   useGetOrdersQuery,
   useGetOrderByIdQuery,
+  useGetHeroMenuQuery,
 } = customerApi;
 

@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useState, useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { parseFiltersFromSearchParams } from '../utils/filterUrlUtils';
 import { useGetProductQuery, useGetFilteredMainMenuQuery } from '../Services/ProductApi';
 import { GetUrl } from '../config/GetUrl';
 import './Wedding.css';
@@ -28,6 +29,12 @@ function Engagement() {
   const [selectedFilters, setSelectedFilters] = useState({});
   const [viewAngleChanged, setViewAngleChanged] = useState(false);
   const [metalImageFilter, setMetalImageFilter] = useState(null);
+
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    const fromUrl = parseFiltersFromSearchParams(searchParams);
+    if (Object.keys(fromUrl).length > 0) setSelectedFilters(fromUrl);
+  }, [searchParams]);
 
   // Fetch filtered main menu items for category
   const {
@@ -92,10 +99,12 @@ function Engagement() {
       ...cleanedFilters,
     };
 
-
+    if (selectedSort && selectedSort !== 'Featured') {
+      params.sortBy = selectedSort;
+    }
 
     return params;
-  }, [cleanedFilters, viewAngleChanged]);
+  }, [cleanedFilters, viewAngleChanged, selectedSort]);
 
   // Fetch products for Wedding category
   const {

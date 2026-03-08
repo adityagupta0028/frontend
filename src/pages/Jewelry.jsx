@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useState, useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { parseFiltersFromSearchParams } from '../utils/filterUrlUtils';
 import { useGetProductQuery, useGetFilteredMainMenuQuery } from '../Services/ProductApi';
 import { GetUrl } from '../config/GetUrl';
 import './Jewelry.css';
@@ -27,6 +28,12 @@ function Jewelry() {
   const [selectedSort, setSelectedSort] = useState('Featured');
   const [selectedFilters, setSelectedFilters] = useState({});
   const [viewAngleChanged, setViewAngleChanged] = useState(false);
+
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    const fromUrl = parseFiltersFromSearchParams(searchParams);
+    if (Object.keys(fromUrl).length > 0) setSelectedFilters(fromUrl);
+  }, [searchParams]);
 
   // Fetch filtered main menu items for category
   const {
@@ -95,11 +102,15 @@ function Jewelry() {
       params.viewAngle = selectedView.value;
     }
 
+    if (selectedSort && selectedSort !== 'Featured') {
+      params.sortBy = selectedSort;
+    }
+
     // Debug: Log query params
     console.log('Jewelry Query Params being sent:', params);
 
     return params;
-  }, [cleanedFilters, viewAngleChanged, selectedView]);
+  }, [cleanedFilters, viewAngleChanged, selectedView, selectedSort]);
 
   // Fetch products for Wedding category
   const {
