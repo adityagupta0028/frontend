@@ -152,6 +152,14 @@
   white-space: nowrap;
 }
 
+.products-topbar {
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
 .shape-scroll li a {
   color: #2C2C2C;
   text-decoration: none;

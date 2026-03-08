@@ -81,9 +81,9 @@ function Wishlist() {
       if (!productId) return;
 
       // Try to determine category from product data or category name
-      const categoryName = item.productId?.categoryId?.category_name?.toLowerCase() || 
-                         item.productId?.category_name?.toLowerCase() || '';
-      
+      const categoryName = item.productId?.categoryId?.category_name?.toLowerCase() ||
+        item.productId?.category_name?.toLowerCase() || '';
+
       if (categoryName.includes('engagement')) {
         groups.engagement.push(item);
       } else if (categoryName.includes('wedding')) {
@@ -132,7 +132,7 @@ function Wishlist() {
       // Get product details for modal
       const product = item.productId;
       let productName, productPrice, productImage;
-      
+
       if (product && typeof product === 'object' && product.product_name) {
         // Logged-in user - product is populated
         productName = product.product_name;
@@ -157,7 +157,7 @@ function Wishlist() {
       };
 
       const result = await addToCart(productData, addToCartApi);
-      
+
       if (result.success) {
         // Update cart data
         if (isLoggedIn && refetchCart) {
@@ -165,17 +165,17 @@ function Wishlist() {
         } else {
           setCartUpdateTrigger(prev => prev + 1);
         }
-        
+
         // Set selected product for modal
         setSelectedProduct({
           name: productName,
           price: productPrice,
           images: [productImage]
         });
-        
+
         // Show modal
         setShowAddToCartModal(true);
-        
+
         // Dispatch cart update event
         window.dispatchEvent(new Event('cartUpdated'));
       }
@@ -206,7 +206,7 @@ function Wishlist() {
   // Get product price - handle variants if selectedVariant is provided
   const getProductPrice = (product, selectedVariant = {}) => {
     if (!product) return 0;
-    
+
     // If product has variants and selectedVariant is provided, find matching variant
     if (product.variants && product.variants.length > 0 && selectedVariant && Object.keys(selectedVariant).length > 0) {
       const matchingVariant = product.variants.find(variant => {
@@ -216,12 +216,12 @@ function Wishlist() {
           String(variant.carat_weight) === String(selectedVariant.carat_weight);
         return metalMatch && caratMatch;
       });
-      
+
       if (matchingVariant) {
         return matchingVariant.discounted_price || matchingVariant.price || matchingVariant.original_price || product.discounted_price || product.original_price || 0;
       }
     }
-    
+
     // Fallback to product price
     return product.discounted_price || product.original_price || 0;
   };
@@ -231,24 +231,24 @@ function Wishlist() {
     // Handle both cases: populated product (logged-in) or stored metadata (localStorage)
     const product = item.productId;
     const productId = product?._id || item.productId;
-    
+
     // For logged-in users, product is populated object
     // For localStorage, we have stored metadata
     let productName, productImage, productPrice;
-    
+
     if (product && typeof product === 'object' && product.product_name) {
       // Logged-in user - product is populated
       productName = product.product_name;
       productImage = getProductImage(product);
       // Calculate price based on selected variant if available
       productPrice = getProductPrice(product, item.selectedVariant || {});
-      
+
       // If price is still 0, try to get from product base price
       if (productPrice === 0) {
-        productPrice = product.discounted_price || product.original_price || 
-                      (product.variants && product.variants.length > 0 && product.variants[0]?.price) || 
-                      (product.variants && product.variants.length > 0 && product.variants[0]?.discounted_price) ||
-                      (product.variants && product.variants.length > 0 && product.variants[0]?.original_price) || 0;
+        productPrice = product.discounted_price || product.original_price ||
+          (product.variants && product.variants.length > 0 && product.variants[0]?.price) ||
+          (product.variants && product.variants.length > 0 && product.variants[0]?.discounted_price) ||
+          (product.variants && product.variants.length > 0 && product.variants[0]?.original_price) || 0;
       }
     } else {
       // Guest user - use stored metadata
@@ -258,7 +258,7 @@ function Wishlist() {
       // Convert to number and check if price exists and is greater than 0
       const storedPrice = Number(item.productPrice) || 0;
       const storedOriginalPrice = Number(item.productOriginalPrice) || 0;
-      
+
       if (storedPrice > 0) {
         productPrice = storedPrice;
       } else if (storedOriginalPrice > 0) {
@@ -273,7 +273,7 @@ function Wishlist() {
       <div key={item._id || item.tempId || productId} className="wishlist-product-card">
         <div className="product-image-wrapper">
           <Link to={`/product/details/${productId}`}>
-            <img 
+            <img
               src={productImage}
               alt={productName}
               className="product-image"
@@ -283,7 +283,7 @@ function Wishlist() {
             />
           </Link>
           <div className="product-actions">
-            <button 
+            <button
               className="action-icon"
               onClick={(e) => {
                 e.preventDefault();
@@ -302,7 +302,7 @@ function Wishlist() {
           <p className="product-price">
             {productPrice > 0 ? `$${productPrice.toLocaleString()}` : 'Price not available'}
           </p>
-          <button 
+          <button
             className="complete-ring-btn"
             onClick={(e) => {
               e.preventDefault();
@@ -330,8 +330,8 @@ function Wishlist() {
             {title === 'Engagement Rings' && (
               <div className="promotional-card">
                 <div className="promo-image">
-                  <img 
-                    src="https://css.brilliantearth.com/static/img/wishlist/wish-list-tile/Wishlist-StylizedTile-ER-3x.jpg" 
+                  <img
+                    src="https://css.brilliantearth.com/static/img/wishlist/wish-list-tile/Wishlist-StylizedTile-ER-3x.jpg"
                     alt="Visit Our Showrooms"
                     className="promo-bg-image"
                   />
@@ -387,114 +387,114 @@ function Wishlist() {
 
   return (
     <>
-    <div id="site-main" className="site-main">
-      <div id="main-content" className="main-content">
-        <div id="primary" className="content-area">
-          {/* Breadcrumb */}
-          <div className="wishlist-breadcrumb">
-            <Link to="/">Home</Link>
-            <span className="breadcrumb-separator">/</span>
-            <span className="breadcrumb-current">Wish List</span>
-          </div>
-
-          {/* Page Header */}
-          <div className="wishlist-header">
-            <h1 className="wishlist-title">{customerName}'s Wish List</h1>
-            <button className="share-wishlist-btn">
-              Share Wish List
-              <IoMailOutline className='text-2xl' />
-            </button>
-          </div>
-
-          {/* Category Tabs */}
-          {wishlistItems.length > 0 && (
-            <div className="wishlist-tabs">
-              <div className='wishlist-tabs-buttons'>
-                <button 
-                  className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('all')}
-                >
-                  View All ({counts.all})
-                </button>
-                {counts.engagement > 0 && (
-                  <button 
-                    className={`tab-btn ${activeTab === 'engagement' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('engagement')}
-                  >
-                    Engagement Rings ({counts.engagement})
-                  </button>
-                )}
-                {counts.wedding > 0 && (
-                  <button 
-                    className={`tab-btn ${activeTab === 'wedding' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('wedding')}
-                  >
-                    Wedding Rings ({counts.wedding})
-                  </button>
-                )}
-                {counts.jewellery > 0 && (
-                  <button 
-                    className={`tab-btn ${activeTab === 'jewellery' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('jewellery')}
-                  >
-                    Jewellery ({counts.jewellery})
-                  </button>
-                )}
-              </div>
+      <div id="site-main" className="site-main">
+        <div id="main-content" className="main-content">
+          <div id="primary" className="content-area">
+            {/* Breadcrumb */}
+            <div className="wishlist-breadcrumb">
+              <Link to="/">Home</Link>
+              <span className="breadcrumb-separator">/</span>
+              <span className="breadcrumb-current">Wishlist</span>
             </div>
-          )}
 
-          {/* Empty State */}
-          {wishlistItems.length === 0 && (
-            <div className="empty-wishlist-container">
-              <div className="empty-wishlist">
-                <GoHeart size={64} className="empty-wishlist-icon" />
-                <h2>Your wishlist is empty</h2>
-                <p>Start adding products you love to your wishlist!</p>
-                <Link to="/shop" className="shop-now-btn">
-                  Shop Now
-                </Link>
-              </div>
+            {/* Page Header */}
+            <div className="wishlist-header">
+              <h1 className="wishlist-title">{customerName}'s Wishlist</h1>
+              <button className="share-wishlist-btn">
+                Share Wishlist
+                <IoMailOutline className='text-2xl' />
+              </button>
             </div>
-          )}
 
-          {/* Engagement Rings Section */}
-          {(activeTab === 'all' || activeTab === 'engagement') && 
-            renderSection('Engagement Rings', groupedWishlist.engagement, activeTab === 'engagement')
-          }
+            {/* Category Tabs */}
+            {wishlistItems.length > 0 && (
+              <div className="wishlist-tabs">
+                <div className='wishlist-tabs-buttons'>
+                  <button
+                    className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('all')}
+                  >
+                    View All ({counts.all})
+                  </button>
+                  {counts.engagement > 0 && (
+                    <button
+                      className={`tab-btn ${activeTab === 'engagement' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('engagement')}
+                    >
+                      Engagement Rings ({counts.engagement})
+                    </button>
+                  )}
+                  {counts.wedding > 0 && (
+                    <button
+                      className={`tab-btn ${activeTab === 'wedding' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('wedding')}
+                    >
+                      Wedding Rings ({counts.wedding})
+                    </button>
+                  )}
+                  {counts.jewellery > 0 && (
+                    <button
+                      className={`tab-btn ${activeTab === 'jewellery' ? 'active' : ''}`}
+                      onClick={() => setActiveTab('jewellery')}
+                    >
+                      Jewellery ({counts.jewellery})
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
 
-          {/* Wedding Rings Section */}
-          {(activeTab === 'all' || activeTab === 'wedding') && 
-            renderSection('Wedding Rings', groupedWishlist.wedding, activeTab === 'wedding')
-          }
+            {/* Empty State */}
+            {wishlistItems.length === 0 && (
+              <div className="empty-wishlist-container">
+                <div className="empty-wishlist">
+                  <GoHeart size={64} className="empty-wishlist-icon" />
+                  <h2>Your wishlist is empty</h2>
+                  <p>Start adding products you love to your wishlist!</p>
+                  <Link to="/shop" className="shop-now-btn">
+                    Shop Now
+                  </Link>
+                </div>
+              </div>
+            )}
 
-          {/* Jewellery Section */}
-          {(activeTab === 'all' || activeTab === 'jewellery') && 
-            renderSection('Jewellery', groupedWishlist.jewellery, activeTab === 'jewellery')
-          }
+            {/* Engagement Rings Section */}
+            {(activeTab === 'all' || activeTab === 'engagement') &&
+              renderSection('Engagement Rings', groupedWishlist.engagement, activeTab === 'engagement')
+            }
 
-          {/* Other Items Section */}
-          {activeTab === 'all' && groupedWishlist.other.length > 0 && 
-            renderSection('Other Items', groupedWishlist.other)
-          }
+            {/* Wedding Rings Section */}
+            {(activeTab === 'all' || activeTab === 'wedding') &&
+              renderSection('Wedding Rings', groupedWishlist.wedding, activeTab === 'wedding')
+            }
+
+            {/* Jewellery Section */}
+            {(activeTab === 'all' || activeTab === 'jewellery') &&
+              renderSection('Jewellery', groupedWishlist.jewellery, activeTab === 'jewellery')
+            }
+
+            {/* Other Items Section */}
+            {activeTab === 'all' && groupedWishlist.other.length > 0 &&
+              renderSection('Other Items', groupedWishlist.other)
+            }
+          </div>
         </div>
       </div>
-    </div>
 
-    {/* Add to Cart Modal */}
-    {selectedProduct && (
-      <AddToCartModal
-        show={showAddToCartModal}
-        onHide={() => {
-          setShowAddToCartModal(false);
-          setSelectedProduct(null);
-        }}
-        product={selectedProduct}
-        quantity={1}
-        cartTotal={cartTotal}
-        cartItemCount={cartItemCount}
-      />
-    )}
+      {/* Add to Cart Modal */}
+      {selectedProduct && (
+        <AddToCartModal
+          show={showAddToCartModal}
+          onHide={() => {
+            setShowAddToCartModal(false);
+            setSelectedProduct(null);
+          }}
+          product={selectedProduct}
+          quantity={1}
+          cartTotal={cartTotal}
+          cartItemCount={cartItemCount}
+        />
+      )}
     </>
   );
 }

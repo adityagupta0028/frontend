@@ -353,7 +353,7 @@ function Engagement() {
                     </h1>
                   </div>
                   <p className="hero-description">
-                    Discover handcrafted engagement rings that celebrate your unique love story. Each Tacori ring is meticulously designed and handcrafted in California.
+                    Discover handcrafted engagement rings that celebrate your unique love story. Each ring is meticulously designed and handcrafted in California.
                   </p>
                 </div>
               </div>

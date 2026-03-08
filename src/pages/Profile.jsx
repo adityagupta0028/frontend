@@ -6,7 +6,7 @@ function Profile() {
   const [userData, setUserData] = useState({
     firstName: 'Mohammad',
     lastName: 'Ali',
-    phoneNumber: '',
+    phoneNumber: '+1231234218',
     email: 'mohammadali10298@gmail.com',
     password: '************',
     anniversary: '',
@@ -127,7 +127,7 @@ function Profile() {
               <div className="section-header-row">
                 <h2 className="section-title">Account</h2>
               </div>
-              
+
               <div className="info-row">
                 <div className="info-label">Name</div>
                 <div className="info-value">{getFullName()}</div>
@@ -158,59 +158,9 @@ function Profile() {
                 <h2 className="section-title">Shipping</h2>
                 <button onClick={() => handleEditClick('shipping')} className="add-link">Add</button>
               </div>
-              
+
               <div className="info-message">
                 You do not have any saved addresses.
-              </div>
-            </div>
-
-            {/* Personal Info Section */}
-            <div className="profile-section">
-              <div className="section-header-row">
-                <h2 className="section-title">Personal Info</h2>
-              </div>
-              
-              <div className="info-row">
-                <div className="info-label">Anniversary</div>
-                <div className="info-value">
-                  {userData.anniversary || 'You do not have a saved anniversary.'}
-                </div>
-                <button onClick={() => handleEditClick('personal-info')} className="edit-link">Edit</button>
-              </div>
-
-              <div className="info-row">
-                <div className="info-label">Birthday</div>
-                <div className="info-value">
-                  {userData.birthday || 'You do not have a saved birthday.'}
-                </div>
-                
-              </div>
-
-              <div className="info-row">
-                <div className="info-label">Social Media Accounts</div>
-                <div className="info-value"></div>
-                
-              </div>
-
-              <div className="social-buttons">
-                {!userData.hasFacebook && (
-                  <button className="social-button facebook-button">
-                    <i className="fa fa-facebook"></i>
-                    Link with Facebook
-                  </button>
-                )}
-                
-                {userData.hasGoogle ? (
-                  <button className="social-button google-button unlink">
-                    <i className="fa fa-google"></i>
-                    Unlink with Google
-                  </button>
-                ) : (
-                  <button className="social-button google-button">
-                    <i className="fa fa-google"></i>
-                    Link with Google
-                  </button>
-                )}
               </div>
             </div>
           </div>
@@ -271,11 +221,11 @@ function Profile() {
                     />
                   </div>
                   <div className="modal-actions">
-                    <button className="save-button" onClick={() => handleSave('name-phone')}>
-                      SAVE
-                    </button>
                     <button className="cancel-link" onClick={handleCloseModal}>
                       Cancel
+                    </button>
+                    <button className="save-button" onClick={() => handleSave('name-phone')}>
+                      SAVE
                     </button>
                   </div>
                 </div>
@@ -352,11 +302,11 @@ function Profile() {
                     </div>
                   </div>
                   <div className="modal-actions">
-                    <button className="save-button" onClick={() => handleSave('password')}>
-                      SAVE
-                    </button>
                     <button className="cancel-link" onClick={handleCloseModal}>
                       Cancel
+                    </button>
+                    <button className="save-button" onClick={() => handleSave('password')}>
+                      SAVE
                     </button>
                   </div>
                 </div>
@@ -398,11 +348,11 @@ function Profile() {
                     <p className="form-hint">(Use mm/dd format.)</p>
                   </div>
                   <div className="modal-actions">
-                    <button className="save-button" onClick={() => handleSave('personal-info')}>
-                      SAVE
-                    </button>
                     <button className="cancel-link" onClick={handleCloseModal}>
                       Cancel
+                    </button>
+                    <button className="save-button" onClick={() => handleSave('personal-info')}>
+                      SAVE
                     </button>
                   </div>
                 </div>
@@ -506,11 +456,11 @@ function Profile() {
                     />
                   </div>
                   <div className="modal-actions">
-                    <button className="save-button" onClick={() => handleSave('shipping')}>
-                      SAVE
-                    </button>
                     <button className="cancel-link" onClick={handleCloseModal}>
                       Cancel
+                    </button>
+                    <button className="save-button" onClick={() => handleSave('shipping')}>
+                      SAVE
                     </button>
                   </div>
                 </div>

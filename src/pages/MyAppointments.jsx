@@ -1,7 +1,29 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './MyAppointments.css';
 
 function MyAppointments() {
+  const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    purpose: '',
+    date: '',
+    startTime: '',
+    endTime: ''
+  });
+
+  const handleRequestSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowModal(false);
+      setFormData({ purpose: '', date: '', startTime: '', endTime: '' });
+      alert('Appointment request submitted successfully!');
+    }, 1000);
+  };
+
   // Sample appointment data - replace with actual data from API/state
   const appointments = [
     {
@@ -35,10 +57,10 @@ function MyAppointments() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
     });
   };
 
@@ -63,7 +85,12 @@ function MyAppointments() {
 
           {/* Main Title */}
           <div className="my-appointments-header">
-            <h1 className="my-appointments-title">My Appointments</h1>
+            <div className="my-appointments-title-row">
+              <h1 className="my-appointments-title">My Appointments</h1>
+              <button className="request-appointment-btn" onClick={() => setShowModal(true)}>
+                Request Appointment
+              </button>
+            </div>
             <div className="title-divider"></div>
           </div>
 
@@ -87,9 +114,9 @@ function MyAppointments() {
                       <tr key={appointment.id}>
                         <td className="meeting-id">{appointment.meetingId}</td>
                         <td className="meeting-link">
-                          <a 
-                            href={appointment.meetingLink} 
-                            target="_blank" 
+                          <a
+                            href={appointment.meetingLink}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="link-text"
                           >
@@ -120,6 +147,65 @@ function MyAppointments() {
           </div>
         </div>
       </div>
+
+      {/* Appointment Request Modal */}
+      {showModal && (
+        <div className="appointment-modal-overlay">
+          <div className="appointment-modal">
+            <div className="appointment-modal-header">
+              <h2>Request Appointment</h2>
+              <button className="close-modal-btn" onClick={() => setShowModal(false)}>&times;</button>
+            </div>
+            <form onSubmit={handleRequestSubmit} className="appointment-modal-form">
+              <div className="form-group">
+                <label>Purpose</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Consultation, Custom Design"
+                  value={formData.purpose}
+                  onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
+                />
+              </div>
+              <div className="form-group">
+                <label>Availability Date</label>
+                <input
+                  type="date"
+                  required
+                  value={formData.date}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                />
+              </div>
+              <div className="time-group">
+                <div className="form-group">
+                  <label>Start Time</label>
+                  <input
+                    type="time"
+                    required
+                    value={formData.startTime}
+                    onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>End Time</label>
+                  <input
+                    type="time"
+                    required
+                    value={formData.endTime}
+                    onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="appointment-modal-actions">
+                <button type="button" className="cancel-btn" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : 'Submit Request'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

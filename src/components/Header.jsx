@@ -12,9 +12,113 @@ const menusData = [
     href: '/',
     subMenus: null
   },
+  // {
+  //   menu:"Shop",
+  //   href:'/',
+  //   subMenus:{
+  //     rings:{
+  //       title:"Curated Rings",
+  //       styles:[
+  //         {
+  //           name:'Solitaire',
+  //           link:'Solitaire'
+  //         },
+  //         {
+  //           name:'Side Stone',
+  //           link:'side-stone'
+  //         },
+  //         {
+  //           name:'Halo',
+  //           link:'halo'
+  //         },
+  //         {
+  //           name:'Vintage',
+  //           link:'vintage'
+  //         },
+  //         {
+  //           name:'Botanical',
+  //           link:'botanical'
+  //         },
+  //       ],
+  //       shapes:[
+  //         {
+  //           name:'Round',
+  //           link:'round'
+  //         },
+  //         {
+  //           name:'Princess',
+  //           link:'princess'
+  //         },
+  //         {
+  //           name:'Oval',
+  //           link:'oval'
+  //         },
+  //         {
+  //           name:'Cushio',
+  //           link:'cushio'
+  //         },
+  //         {
+  //           name:'Radiant',
+  //           link:'radiant'
+  //         },
+  //         {
+  //           name:'Pear',
+  //           link:'pear'
+  //         },
+  //         {
+  //           name:'Assher',
+  //           link:'Assher'
+  //         },
+  //         {
+  //           name:'Heart',
+  //           link:'Heart'
+  //         },
+  //         {
+  //           name:'Vintage Cuts',
+  //           link:'Vintage Cuts'
+  //         },
+  //       ],
+  //     },
+  //     studio:{
+  //       title:"Design Studio",
+  //       gallery:{
+  //           imgSrc:"/media/site-headdder.jpg",
+  //           alt:"gallery image"
+  //         },
+  //       diamond:[
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //       ],
+  //       jewellery:[
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //         {
+  //           title:'Lorem Ipsum 1',
+  //           url:"",
+  //         },
+  //       ],
+  //     }
+  //   },
+
+  // },
   {
-    id:"6942e3b741e766bf37919b9c",
-    menu: "Engagement",
+    menu: "Engagement Rings",
     href: '/engagement-rings',
     subMenus: {
       rings: {
@@ -119,8 +223,7 @@ const menusData = [
 
   },
   {
-    id:"6945ae7225a47dcbe1667cb5",
-    menu: "Wedding",
+    menu: "Wedding Rings",
     href: '/wedding',
     subMenus: {
       rings: {
