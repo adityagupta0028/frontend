@@ -27,6 +27,7 @@ import Wedding from './pages/Wedding';
 import Jewelry from './pages/Jewelry';
 import NotFound from './pages/NotFound';
 import Refer from './pages/Refer';
+import CustomRequests from './pages/CustomRequests';
 import './App.css';
 
 function AppContent() {
@@ -61,6 +62,7 @@ function AppContent() {
         <Route path="/wedding" element={<Wedding />} />
         <Route path="/jewelry" element={<Jewelry />} />
         <Route path="/refer" element={<Refer />} />
+        <Route path="/custom-requests" element={<CustomRequests />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!isLoginPage && <Footer />}
